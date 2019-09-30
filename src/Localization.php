@@ -25,6 +25,8 @@ class Localization
     
     const ERROR_UNKNOWN_APPLICATION_LOCALE = 39002;
     
+    const ERROR_NO_STORAGE_FILE_SET = 39003;
+    
     /**
      * The name of the default application locale, i.e. the
      * locale in which application textual content is written.
@@ -487,6 +489,8 @@ class Localization
         return null;
     }
     
+    protected static $storageFile;
+    
    /**
     * Creates the scanner instance that is used to find
     * all translateable strings in the application.
@@ -494,14 +498,28 @@ class Localization
     * @param string $storageFile Path to the file in which to store string information.
     * @return Localization_Scanner
     */
-    public static function createScanner(string $storageFile)
+    public static function createScanner()
     {
-        return new Localization_Scanner($storageFile);
+        if(!isset(self::$storageFile)) 
+        {
+            throw new Localization_Exception(
+                'No localization storage file set',
+                'To use the scanner, the storage file has to be set using the setStorageFile method.',
+                self::ERROR_NO_STORAGE_FILE_SET
+            );
+        }
+        
+        return new Localization_Scanner(self::$storageFile);
     }
     
     public static function log($message)
     {
         // FIXME: TODO: Add this
+    }
+    
+    public static function setStorageFile(string $storageFile)
+    {
+        self::$storageFile = $storageFile;
     }
 }
 
