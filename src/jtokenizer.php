@@ -58,6 +58,8 @@ abstract class Lex
 
     static function get($class)
     {
+        $class = '\JTokenizer\\'.$class;
+        
         if (!isset(self::$singletons[$class])) {
             self::$singletons[$class] = new $class;
         }
@@ -494,5 +496,12 @@ class JTokenizer extends JTokenizerBase
         $Tokenizer = new JTokenizer($whitespace, $unicode);
         
         return $Tokenizer->get_all_tokens($src);
+    }
+    
+    public static function getTokenName($t)
+    {
+        $Lex = Lex::get('JLex');
+        
+        return $Lex->name($t);
     }
 }
