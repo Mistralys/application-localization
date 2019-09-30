@@ -27,6 +27,9 @@
  * For original source code download the devel package from http://web.2point1.com/tag/jparser
  * Sat, 14 Nov 2009 17:19:32 +0000
  */
+
+namespace JTokenizer;
+
 define('P_EPSILON', -1);
 define('P_EOF', -2);
 define('P_GOAL', -3);
@@ -485,18 +488,11 @@ class JTokenizer extends JTokenizerBase
         parent::__construct($whitespace, $unicode);
         $this->Lex = Lex::get('JLex');
     }
-}
-
-function j_token_get_all($src, $whitespace = true, $unicode = true)
-{
-    $Tokenizer = new JTokenizer($whitespace, $unicode);
-
-    return $Tokenizer->get_all_tokens($src);
-}
-
-function j_token_name($t)
-{
-    $Lex = Lex::get('JLex');
-
-    return $Lex->name($t);
+    
+    public static function getTokens($src, $whitespace = true, $unicode = true)
+    {
+        $Tokenizer = new JTokenizer($whitespace, $unicode);
+        
+        return $Tokenizer->get_all_tokens($src);
+    }
 }

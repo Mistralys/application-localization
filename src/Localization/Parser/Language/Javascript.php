@@ -17,7 +17,7 @@ class Localization_Parser_Language_Javascript extends Localization_Parser_Langua
     
     protected function _parse()
     {
-        $this->tokens = j_token_get_all($this->content);
+        $this->tokens = \JTokenizer\JTokenizer::getTokens($this->content);
 
         $this->totalTokens = count($this->tokens);
         for ($i = 0; $i < $this->totalTokens; $i++) {
