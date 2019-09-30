@@ -75,12 +75,12 @@ class Localization_String
      */
     public function getCurrent()
     {
-        return $this->get(Localization::getCurrentContentLocale());
+        return $this->get(Localization::getContentLocale());
     }
 
     public function setCurrent($value)
     {
-        $this->set(Localization::getCurrentContentLocale(), $value);
+        $this->set(Localization::getContentLocale(), $value);
     }
 
     /**
@@ -155,7 +155,7 @@ class Localization_String
      */
     public function isCurrentLocaleComplete()
     {
-        return $this->isLocaleComplete(Localization::getCurrentContentLocale());
+        return $this->isLocaleComplete(Localization::getContentLocale());
     }
 
     /**
@@ -181,7 +181,7 @@ class Localization_String
      */
     public function __toString()
     {
-        $value = $this->get(Localization::getCurrentContentLocale());
+        $value = $this->get(Localization::getContentLocale());
         if (is_string($value)) {
             return $value;
         }

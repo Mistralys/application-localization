@@ -76,7 +76,7 @@ class Localization_Parser
     {
         if(!isset($this->parsers[$language])) 
         {
-            $class = 'Localization_Parser_Language_'.$language;
+            $class = '\AppLocalize\Localization_Parser_Language_'.$language;
         
             $this->parsers[$language] = new $class($this);
         }

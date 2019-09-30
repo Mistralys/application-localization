@@ -40,7 +40,7 @@ class Localization
      * @var array
      * @see getContentLocales()
      * @see getContentLocale()
-     * @see getCurrentContentLocale()
+     * @see getContentLocale()
      * @see Localization_Locale
      */
     private static $contentLocales = array();
@@ -50,7 +50,7 @@ class Localization
      * array with locale name => locale object value pairs.
      *
      * @var array
-     * @see getApplicationLocales()
+     * @see getAppLocales()
      * @see getAppLocale()
      * @see Localization_Locale
      */
@@ -71,10 +71,10 @@ class Localization
             return;
         }
 
-        self::addApplicationLocale(self::BUILTIN_LOCALE_NAME);
+        self::addAppLocale(self::BUILTIN_LOCALE_NAME);
         self::addContentLocale(self::BUILTIN_LOCALE_NAME);
         
-        self::selectApplicationLocale(self::BUILTIN_LOCALE_NAME);
+        self::selectAppLocale(self::BUILTIN_LOCALE_NAME);
         self::selectContentLocale(self::BUILTIN_LOCALE_NAME);
         
         self::$initDone = true;
@@ -87,7 +87,7 @@ class Localization
      * @return Localization_Locale[]
      * @see getAppLocale()
      */
-    public static function getApplicationLocales()
+    public static function getAppLocales()
     {
         $locales = array_values(self::$applicationLocales);
 
@@ -104,7 +104,7 @@ class Localization
     * @param string $localeName
     * @return Localization_Locale
     */
-    public static function addApplicationLocale(string $localeName) : Localization_Locale
+    public static function addAppLocale(string $localeName) : Localization_Locale
     {
         if(!isset(self::$applicationLocales[$localeName])) {
             self::$applicationLocales[$localeName] = self::createLocale($localeName);
@@ -145,7 +145,7 @@ class Localization
      */
     public static function createCountry(string $id)
     {
-        $className = 'Localization_Country_' . strtoupper($id);
+        $className = '\AppLocalize\Localization_Country_' . strtoupper($id);
         return new $className();
     }
 
@@ -176,9 +176,9 @@ class Localization
     * @param string $localeName
     * @return Localization_Locale
     */
-    public static function selectApplicationLocale(string $localeName) : Localization_Locale
+    public static function selectAppLocale(string $localeName) : Localization_Locale
     {
-        self::$applicationLocale = self::addApplicationLocale($localeName);
+        self::$applicationLocale = self::addAppLocale($localeName);
         self::$applicationLocaleName = $localeName;
         
         return self::$applicationLocale;
@@ -191,9 +191,9 @@ class Localization
     * @param string $localeName
     * @throws Localization_Exception
     * @return Localization_Locale
-    * @see Localization::applicationLocaleExists()
+    * @see Localization::appLocaleExists()
     */
-    public static function getApplicationLocaleByName(string $localeName) : Localization_Locale
+    public static function getAppLocaleByName(string $localeName) : Localization_Locale
     {
         if(isset(self::$applicationLocales[$localeName])) {
             return self::$applicationLocales[$localeName];
@@ -217,7 +217,7 @@ class Localization
      * @param string $localeName
      * @return boolean
      */
-    public static function applicationLocaleExists(string $localeName) : bool
+    public static function appLocaleExists(string $localeName) : bool
     {
         return isset(self::$applicationLocales[$localeName]);
     }
@@ -296,17 +296,17 @@ class Localization
      *
      * @return Localization_Locale
      */
-    public static function getCurrentContentLocale() : Localization_Locale
+    public static function getContentLocale() : Localization_Locale
     {
         return self::$contentLocale;
     }
 
-    public static function getCurrentContentLocaleName() : string
+    public static function getContentLocaleName() : string
     {
-        return self::$currentContentLocaleName = self::getCurrentContentLocale()->getName();
+        return self::$currentContentLocaleName = self::getContentLocale()->getName();
     }
 
-    public static function isCurrentLocale(Localization_Locale $locale)
+    public static function isActiveAppLocale(Localization_Locale $locale)
     {
         return $locale->getName() === self::$applicationLocaleName;
     }
@@ -316,7 +316,7 @@ class Localization
      * @param Localization_Locale $locale
      * @return boolean
      */
-    public static function isCurrentContentLocale(Localization_Locale $locale)
+    public static function isActiveContentLocale(Localization_Locale $locale)
     {
         return $locale->getName() === self::$contentLocaleName;
     }
@@ -382,7 +382,7 @@ class Localization
         $select->setId('f-' . $name);
         $select->addClass('input-xlarge');
 
-        foreach (self::$locales as $locale) {
+        foreach (self::$applicationLocales as $locale) {
             $select->addOption($locale->getLabel(), $locale->getName());
         }
 

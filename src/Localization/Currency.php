@@ -52,7 +52,7 @@ abstract class Localization_Currency
             return self::$instances[$id];
         }
 
-        $className = 'Localization_Currency_' . $id;
+        $className = '\AppLocalize\Localization_Currency_' . $id;
 
         return new $className($country);
     }
@@ -64,7 +64,8 @@ abstract class Localization_Currency
     protected function __construct(Localization_Country $country)
     {
         $this->country = $country;
-        $this->id = str_replace('Localization_Currency_', '', get_class($this));
+        
+        $this->id = str_replace('AppLocalize\Localization_Currency_', '', get_class($this));
 
         if ($this->country->getCurrencyID() != $this->id) {
             throw new Localization_Exception(

@@ -36,7 +36,7 @@ abstract class Localization_Country implements Localization_Country_Interface
     public function __construct()
     {
         $this->currency = Localization_Currency::create($this->getCurrencyID(), $this);
-        $this->code = strtolower(str_replace('Localization_Country_', '', get_class($this)));
+        $this->code = strtolower(str_replace('AppLocalize\Localization_Country_', '', get_class($this)));
     }
 
     public function getCode()

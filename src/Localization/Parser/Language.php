@@ -24,7 +24,7 @@ abstract class Localization_Parser_Language
     public function getID()
     {
         if(!isset($this->id)) {
-            $this->id = str_replace('Localization_Parser_Language_', '', get_class($this));
+            $this->id = str_replace('AppLocalize\Localization_Parser_Language_', '', get_class($this));
         }
         
         return $this->id;
