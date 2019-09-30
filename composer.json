@@ -1,0 +1,50 @@
+{
+	"name" : "mistralys/application-localization",
+	"description" : "PHP and Javascript localization library.",
+	"type" : "library",
+	"authors" : 
+	[
+		{
+			"email" : "s.mordziol@mistralys.eu",
+			"name" : "Sebastian Mordziol",
+			"role" : "Lead"
+		}
+	],
+	"autoload" : 
+	{
+		"psr-4" : 
+		{
+			"AppLocalize\\" : "src/"
+		},
+        "files" :
+        [
+            "src/functions.php"
+        ],
+		"classmap" : 
+		[
+			"src/"
+		]
+	},
+	"repositories" : 
+	[
+		{
+			"type" : "vcs",
+			"url" : "https://github.com/Mistralys/HTML_QuickForm2.git"
+		},
+		{
+			"type" : "vcs",
+			"url" : "https://github.com/Mistralys/application-utils.git"
+		}
+	],
+	"minimum-stability" : "dev",
+	"prefer-stable" : true,
+	"require" : 
+	{
+		"mistralys/application-utils" : "dev-master",
+		"pear/html_quickform2" : "dev-trunk"
+	},
+	"require-dev" : 
+	{
+		"phpunit/phpunit" : "8.2.5"
+	}
+}
