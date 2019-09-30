@@ -51,7 +51,7 @@ class Localization
      *
      * @var array
      * @see getApplicationLocales()
-     * @see getCurrentLocale()
+     * @see getAppLocale()
      * @see Localization_Locale
      */
     private static $applicationLocales = array();
@@ -85,7 +85,7 @@ class Localization
      * array with locale objects sorted by locale label.
      *
      * @return Localization_Locale[]
-     * @see getCurrentLocale()
+     * @see getAppLocale()
      */
     public static function getApplicationLocales()
     {
@@ -165,7 +165,7 @@ class Localization
      *
      * @return Localization_Locale
      */
-    public static function getCurrentLocale() : Localization_Locale
+    public static function getAppLocale() : Localization_Locale
     {
         return self::$applicationLocale;
     }
@@ -345,7 +345,7 @@ class Localization
         {
             $obj = new Localization_Translator();
             $obj->addSources(self::getSources());
-            $obj->setTargetLocale(self::getCurrentLocale());
+            $obj->setTargetLocale(self::getAppLocale());
             self::$translator = $obj;
         }
 
@@ -395,7 +395,7 @@ class Localization
     */
     public static function getCurrentCurrency()
     {
-        return self::getCurrentLocale()->getCurrency();
+        return self::getAppLocale()->getCurrency();
     }
 
    /**
