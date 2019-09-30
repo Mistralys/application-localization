@@ -31,7 +31,7 @@ class Localization_Parser_Language_Javascript extends Localization_Parser_Langua
             return;
         }
 
-        $token = j_token_name($def[0]);
+        $token = \JTokenizer\JTokenizer::getTokenName($def[0]);
         $value = $def[1];
         $line = $def[2];
 
@@ -50,7 +50,7 @@ class Localization_Parser_Language_Javascript extends Localization_Parser_Langua
             }
             
             $subdef = $this->tokens[$i];
-            $subtoken = j_token_name($subdef[0]);
+            $subtoken = \JTokenizer\JTokenizer::getTokenName($subdef[0]);
             $subvalue = $subdef[1];
             if ($subtoken == 'J_STRING_LITERAL') {
                 $text = $this->trimText($subvalue);
