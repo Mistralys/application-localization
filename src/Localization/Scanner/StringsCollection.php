@@ -4,6 +4,8 @@ namespace AppLocalize;
 
 class Localization_Scanner_StringsCollection
 {
+    const ERROR_UNKNOWN_STRING_HASH = 39201;
+    
     const SOURCE_FILE = 'file';
     
    /**
@@ -64,6 +66,19 @@ class Localization_Scanner_StringsCollection
     public function getHashes()
     {
         return array_values($this->hashes);
+    }
+    
+    public function getHash($hash)
+    {
+        if(isset($this->hashes[$hash])) {
+            return $this->hashes[$hash];
+        }
+        
+        throw new Localization_Exception(
+            'Unknown string hash',
+            sprintf('Could not find string by hash [%s].', $hash),
+            self::ERROR_UNKNOWN_STRING_HASH
+        );
     }
     
     public function toArray()
