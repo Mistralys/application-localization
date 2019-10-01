@@ -182,6 +182,7 @@ class Localization
     {
         self::$applicationLocale = self::addAppLocale($localeName);
         self::$applicationLocaleName = $localeName;
+        self::$translator = null;
         
         return self::$applicationLocale;
     }
@@ -341,8 +342,16 @@ class Localization
     /**
      * @return Localization_Translator
      */
-    public static function getTranslator() : Localization_Translator
+    public static function getTranslator(Localization_Locale $locale=null) : Localization_Translator
     {
+        if($locale !== null)
+        {
+            $obj = new Localization_Translator();
+            $obj->addSources(self::getSources());
+            $obj->setTargetLocale($locale);
+            return $obj;
+        }
+            
         if(!isset(self::$translator)) 
         {
             $obj = new Localization_Translator();
