@@ -462,7 +462,7 @@ abstract class JTokenizerBase
         }
         $len = strlen($s);
         if ($len === 0) {
-            throw new Exception('Failed to extract anything');
+            throw new \Exception('Failed to extract anything');
         }
         if ($t !== false) {
             $token = array($t, $s, $this->line, $this->col);
