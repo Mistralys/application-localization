@@ -52,12 +52,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils.git",
-                "reference": "39cf032ab16b74fe235cb46c7022ffc32e65fae0"
+                "reference": "ce1274e0769e8e928fe449f5bb40ee42176f649f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/39cf032ab16b74fe235cb46c7022ffc32e65fae0",
-                "reference": "39cf032ab16b74fe235cb46c7022ffc32e65fae0",
+                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/ce1274e0769e8e928fe449f5bb40ee42176f649f",
+                "reference": "ce1274e0769e8e928fe449f5bb40ee42176f649f",
                 "shasum": ""
             },
             "require": {
@@ -93,7 +93,7 @@
                 "source": "https://github.com/Mistralys/application-utils/tree/master",
                 "issues": "https://github.com/Mistralys/application-utils/issues"
             },
-            "time": "2019-09-30T06:34:45+00:00"
+            "time": "2019-10-01T06:41:20+00:00"
         },
         {
             "name": "neitanod/forceutf8",
