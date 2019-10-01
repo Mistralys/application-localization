@@ -1,94 +1,55 @@
-var translator =
+var Editor = 
 {
-	'cutLength':50,
-	'stringInfo':{},
-
-	addStringInfo:function(hash, nativeText, translatedText, files)
+	'el':null,
+	'form':null,
+	'textarea':null,
+		
+	Toggle:function(hash)
 	{
-		var stringInfo = {
-			'hash':hash,
-			'nativeText':nativeText,
-			'translatedText':translatedText,
-			'files':files,
-			'dialog':null,
-
-			showDialog:function()
-			{
-				if(this.dialog==null) {
-					this.renderDialog();
-				}
-
-                this.dialog.modal('show');
-			},
-
-			renderDialog:function()
-			{
-				var body =
-				'<p>'+t('Native text:')+'</p>'+
-				'<p>'+htmlspecialchars(this.nativeText)+'</p>'+
-				'<p>'+t('Translation:')+'</p>'+
-				'<p><textarea id="'+this.hash+'_value" style="width:90%" rows="4">'+this.translatedText+'</textarea></p>'+
-				'<p>'+t('Found in:')+'</p>'+
-				'<p>'+this.files+'</p>';
-
-				var footer =
-				DialogHelper.renderButton_close(t('Cancel'))+
-				DialogHelper.renderButton_primary(t('Ok'), "translator.getInfo('"+this.hash+"').handle_confirmEdit()");
-
-				this.dialog = DialogHelper.createDialog(
-					t('Translation details'),
-					body,
-					footer
-				);
-
-				var info = this;
-				this.dialog.on('shown', function() {
-					$('#'+info.hash+'_value').focus();
-				});
-			},
-
-			handle_confirmEdit:function()
-			{
-				this.translatedText = $('#'+this.hash+'_value').val();
-				$('#'+this.hash+'_storage').val(this.translatedText);
-				this.dialog.modal('hide');
-
-				this.checkTranslation();
-			},
-
-			checkTranslation:function()
-			{
-				if(this.translatedText.length >= 1) {
-					$('#'+this.hash+'_status').html(UI.Icon().OK().MakeSuccess().Render());
-					$('#'+this.hash+'_display').html(this.trimText(this.translatedText));
-				} else {
-					$('#'+this.hash+'_status').html(UI.Icon().NotAvailable().MakeDangerous().Render());
-					$('#'+this.hash+'_display').html(this.trimText(this.nativeText));
-				}
-			},
-
-			trimText:function(text)
-			{
-				text = strip_tags(text);
-				if(text.length > translator.cutLength) {
-					text = text.substring(0, translator.cutLength)+' [...]';
-				}
-
-				return text;
-			}
-
-		};
-
-		this.stringInfo[hash] = stringInfo;
+		this.DetectElement(hash);
+		
+		if(this.el.hasClass('active'))
+		{
+			this.el.removeClass('active');
+			this.el.addClass('inactive');
+			this.form.hide();
+		}
+		else
+		{
+			this.el.addClass('active');
+			this.el.removeClass('inactive');
+			this.form.show();
+			
+			this.textarea.focus();
+		}
 	},
-
-	getInfo:function(hash)
+	
+	Confirm:function(hash)
 	{
-		return this.stringInfo[hash];
+		this.DetectElement(hash);
+		
+		var value = this.textarea.val();
+		value = value.trim();
+		
+		if(value == '') {
+			this.textarea.focus();
+			return;
+		}
+		
+		// save the trimmed value
+		this.textarea.val(value);
+		
+		this.el.find('TD.string-status').html('<i class="fa fa-check text-success"></i>');
+		this.el.find('TD.string-text').html(value);
+		this.el.addClass('table-success');
+		
+		this.Toggle(hash);
 	},
-
-	showDialog:function(hash)
+	
+	DetectElement:function(hash)
 	{
-		this.stringInfo[hash].showDialog();
+		this.el = $("tr[data-hash='"+hash+"']");
+		this.form = this.el.next();
+		this.textarea = this.form.find('textarea');
 	}
 };

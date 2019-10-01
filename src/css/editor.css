@@ -10,3 +10,21 @@ TD.align-center,
 TH.align-center{
 text-align:center;
 }
+
+TR.string-entry{
+cursor:pointer;
+}
+
+TR.string-form{
+display:none;
+}
+
+.native-text{
+color:#888;
+font-style:italic;
+}
+
+.nav-item .btn-sm{
+margin-top:5px;
+margin-left:20px;
+}

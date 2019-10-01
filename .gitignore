@@ -1,2 +1,4 @@
 vendor
 example/data/storage.json
+example/data/de_DE-main-client.ini
+example/data/de_DE-main-server.ini
