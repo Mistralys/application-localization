@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 abstract class Localization_Source
@@ -22,7 +24,7 @@ abstract class Localization_Source
     */
     protected $storageFolder;
     
-    public function __construct($alias, $label, $group, $storageFolder)
+    public function __construct(string $alias, string $label, string $group, string $storageFolder)
     {
         $this->alias = $alias;
         $this->label = $label;
@@ -30,24 +32,24 @@ abstract class Localization_Source
         $this->storageFolder = $storageFolder;
     }
     
-    abstract public function getID();
+    abstract public function getID() : string;
     
-    public function getAlias()
+    public function getAlias() : string
     {
         return $this->alias;
     }
     
-    public function getLabel()
+    public function getLabel() : string
     {
         return $this->label;
     }
     
-    public function getGroup()
+    public function getGroup() : string
     {
         return $this->group;
     }
     
-    public function getStorageFolder()
+    public function getStorageFolder() : string
     {
         return $this->storageFolder;
     }

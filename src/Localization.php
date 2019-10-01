@@ -521,6 +521,33 @@ class Localization
     {
         self::$storageFile = $storageFile;
     }
+    
+   /**
+    * Creates the editor instance that can be used to 
+    * display the localization UI to edit translateable
+    * strings in the browser.
+    * 
+    * @return \AppLocalize\Localization_Editor
+    */
+    public static function createEditor()
+    {
+        return new Localization_Editor();
+    }
+    
+   /**
+    * Retrieves a list of all available source IDs.
+    * @return string[]
+    */
+    public static function getSourceIDs()
+    {
+        $ids = array();
+        
+        foreach(self::$sources as $source) {
+            $ids[] = $source->getID();
+        }
+        
+        return $ids;
+    }
 }
 
 Localization::init();

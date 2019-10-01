@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 class Localization_Source_Folder extends Localization_Source
@@ -8,26 +10,36 @@ class Localization_Source_Folder extends Localization_Source
     * The folder under which all translateable files are kept.
     * @var string
     */
-    protected $rootFolder;
+    protected $sourcesFolder;
     
+   /**
+    * @var string
+    */
     protected $id;
-    
-    public function __construct($alias, $label, $group, $storageFolder, $rootFolder)
+
+   /**
+    * @param string $alias An alias for this source, to recognize it by.
+    * @param string $label The human readable label, used in the editor.
+    * @param string $group A human readable group label to group several sources by. Used in the editor.
+    * @param string $storageFolder The folder in which to store the localization files.
+    * @param string $sourcesFolder The folder in which to analyze files to find translateable strings. 
+    */
+    public function __construct(string $alias, string $label, string $group, string $storageFolder, string $sourcesFolder)
     {
         parent::__construct($alias, $label, $group, $storageFolder);
         
-        $this->rootFolder = $rootFolder;
-        $this->id = md5($rootFolder);
+        $this->sourcesFolder = $sourcesFolder;
+        $this->id = md5($sourcesFolder);
     }
     
-    public function getID()
+    public function getID() : string
     {
         return $this->id;
     }
     
-    public function getRootFolder()
+    public function getSourcesFolder() : string
     {
-        return $this->rootFolder;
+        return $this->sourcesFolder;
     }
 
     protected $excludes = array(
@@ -35,9 +47,21 @@ class Localization_Source_Folder extends Localization_Source
         'files' => array()
     );
     
-    public function excludeFolders($folders)
+    public function excludeFolder(string $folder) : Localization_Source_Folder
     {
-        $this->excludes['folders'] = array_merge($this->excludes['folders'], $folders);
+        if(!in_array($folder, $this->excludes['folders'])) {
+            $this->excludes['folders'][] = $folder;
+        }
+        
+        return $this;
+    }
+    
+    public function excludeFolders(array $folders) : Localization_Source_Folder
+    {
+        foreach($folders as $folder) {
+            $this->excludeFolder($folder);
+        }
+        
         return $this;
     }
     
@@ -49,7 +73,7 @@ class Localization_Source_Folder extends Localization_Source
     
     protected function _scan()
     {
-        $this->processFolder($this->getRootFolder());
+        $this->processFolder($this->getSourcesFolder());
     }
 
     /**
@@ -92,6 +116,6 @@ class Localization_Source_Folder extends Localization_Source
     
     protected function relativizePath($filePath)
     {
-        return ltrim(str_replace('\\', '/', str_replace($this->getRootFolder(), '', $filePath)), '/');
+        return \AppUtils\FileHelper::relativizePath($filePath, $this->getSourcesFolder());
     }
 }

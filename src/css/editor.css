@@ -1,0 +1,12 @@
+body {
+padding-top: 5rem;
+}
+
+H1{
+margin-bottom:2rem;
+}
+
+TD.align-center,
+TH.align-center{
+text-align:center;
+}

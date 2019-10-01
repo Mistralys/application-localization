@@ -82,7 +82,7 @@ class Localization_Scanner
     */
     protected $collection;
     
-    public function getCollection()
+    public function getCollection() : Localization_Scanner_StringsCollection
     {
         if(!isset($this->collection)) {
             $this->collection = new Localization_Scanner_StringsCollection($this);
