@@ -68,6 +68,11 @@ class Localization_Scanner_StringsCollection
         return array_values($this->hashes);
     }
     
+    public function hashExists($hash)
+    {
+        return isset($this->hashes[$hash]);
+    }
+    
     public function getHash($hash)
     {
         if(isset($this->hashes[$hash])) {
