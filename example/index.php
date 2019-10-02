@@ -17,6 +17,7 @@
     
     // add the locales we wish to manage (en_UK is always present)
     \AppLocalize\Localization::addAppLocale('de_DE');
+    \AppLocalize\Localization::addAppLocale('fr_FR');
     
     // register the sources folder.
     \AppLocalize\Localization::addSourceFolder(

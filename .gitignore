@@ -5,3 +5,6 @@ example/data/de_DE-main-server.ini
 example/data/client-libraries/locale-de.js
 example/data/client-libraries/md5.min.js
 example/data/client-libraries/translator.js
+example/data/client-libraries/locale-fr.js
+example/data/fr_FR-main-client.ini
+example/data/fr_FR-main-server.ini
