@@ -27,6 +27,10 @@ class Localization
     
     const ERROR_NO_STORAGE_FILE_SET = 39003;
     
+    const ERROR_CONFIGURE_NOT_CALLED = 39004;
+    
+    const ERROR_NO_SOURCES_ADDED = 39005;
+    
     /**
      * The name of the default application locale, i.e. the
      * locale in which application textual content is written.
@@ -60,12 +64,36 @@ class Localization
 
     /**
      * @var boolean
+     * @see Localization::init()
      */
     private static $initDone = false;
 
+   /**
+    * Path to the file in which the scanner results are stored.
+    * @var string
+    * @see Localization::configure()
+    */
+    protected static $storageFile;
+    
+   /**
+    * Path to the folder into which the client libraries are written.
+    * @var string
+    * @see Localization::configure()
+    */
+    protected static $clientFolder;
+    
+   /**
+    * Whether the configuration has been made.
+    * @var bool
+    * @see Localization::configure()
+    */
+    protected static $configured = false;
+    
     /**
      * Initializes the localization layer. This is done
      * automatically, and only once per request.
+     * 
+     * (Called at the end of this file)
      */
     public static function init()
     {
@@ -344,6 +372,8 @@ class Localization
      */
     public static function getTranslator(Localization_Locale $locale=null) : Localization_Translator
     {
+        self::requireConfiguration();
+        
         if($locale !== null)
         {
             $obj = new Localization_Translator();
@@ -498,8 +528,6 @@ class Localization
         return null;
     }
     
-    protected static $storageFile;
-    
    /**
     * Creates the scanner instance that is used to find
     * all translateable strings in the application.
@@ -509,14 +537,7 @@ class Localization
     */
     public static function createScanner()
     {
-        if(!isset(self::$storageFile)) 
-        {
-            throw new Localization_Exception(
-                'No localization storage file set',
-                'To use the scanner, the storage file has to be set using the setStorageFile method.',
-                self::ERROR_NO_STORAGE_FILE_SET
-            );
-        }
+        self::requireConfiguration();
         
         return new Localization_Scanner(self::$storageFile);
     }
@@ -526,9 +547,72 @@ class Localization
         // FIXME: TODO: Add this
     }
     
-    public static function setStorageFile(string $storageFile)
+   /**
+    * Configures the localization for the application:
+    * sets the location of the required files and folders.
+    * Also updated the client library files as needed.
+    * 
+    * @param string $storageFile Where to store the file analysis storage file.
+    * @param string $clientLibrariesFolder Where to put the client libraries and translation files. Will be created if it does not exist.
+    */
+    public static function configure(string $storageFile, string $clientLibrariesFolder)
     {
+        self::$configured = true;
+        
         self::$storageFile = $storageFile;
+        self::$clientFolder = $clientLibrariesFolder;
+
+        self::writeClientFiles();
+    }
+    
+   /**
+    * Writes / updates the client library files on disk,
+    * at the location specified in the {@link Localization::configure()}
+    * method.
+    * 
+    * @see Localization_ClientGenerator
+    */
+    protected static function writeClientFiles()
+    {
+        $generator = new Localization_ClientGenerator();
+        $generator->writeFiles();
+    }
+    
+    public static function getClientFolder()
+    {
+        self::requireConfiguration();
+        
+        return self::$clientFolder;
+    }
+    
+    protected static function requireConfiguration()
+    {
+        if(!self::$configured) 
+        {
+            throw new Localization_Exception(
+                'The localization configuration is incomplete.',
+                'The configure method has not been called.',
+                self::ERROR_CONFIGURE_NOT_CALLED
+            );
+        }
+
+        if(empty(self::$storageFile))
+        {
+            throw new Localization_Exception(
+                'No localization storage file set',
+                'To use the scanner, the storage file has to be set using the setStorageFile method.',
+                self::ERROR_NO_STORAGE_FILE_SET
+            );
+        }
+        
+        if(empty(self::$sources)) 
+        {
+            throw new Localization_Exception(
+                'No source folders have been defined.',
+                'At least one source folder has to be configured using the addSourceFolder method.',
+                self::ERROR_NO_SOURCES_ADDED
+            );
+        }
     }
     
    /**
@@ -540,6 +624,8 @@ class Localization
     */
     public static function createEditor()
     {
+        self::requireConfiguration();
+        
         return new Localization_Editor();
     }
     
@@ -557,6 +643,8 @@ class Localization
         
         return $ids;
     }
+    
+
 }
 
 Localization::init();

@@ -18,8 +18,6 @@
     // add the locales we wish to manage (en_UK is always present)
     \AppLocalize\Localization::addAppLocale('de_DE');
     
-    \AppLocalize\Localization::setStorageFile($root.'/data/storage.json');
-    
     // register the sources folder.
     \AppLocalize\Localization::addSourceFolder(
         'main', 
@@ -29,6 +27,12 @@
         $sourcesPath
     )
     ->excludeFolder('excludeme');
+
+   // has to be called last after all sources and locales have been configured
+    \AppLocalize\Localization::configure(
+        $root.'/data/storage.json',
+        $root.'/data/client-libraries'
+    );
     
     // create the editor and start it
     $editor = \AppLocalize\Localization::createEditor();

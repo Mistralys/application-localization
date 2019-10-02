@@ -203,6 +203,13 @@ class Localization_Translator
         );
     }
     
+    public function hasStrings(Localization_Locale $locale) : bool
+    {
+        $this->load($locale);
+        
+        return !empty($this->strings[$locale->getName()]);
+    }
+    
    /**
     * @param string $type
     * @param Localization_Scanner_StringHash[] $hashes
