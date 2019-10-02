@@ -306,7 +306,7 @@ class Localization_Translator
      * @param Localization_Locale $locale
      * @return string
      */
-    protected static function resolveStorageFile(Localization_Locale $locale, Localization_Source $source)
+    protected function resolveStorageFile(Localization_Locale $locale, Localization_Source $source)
     {
         return sprintf(
             '%1$s/%2$s-%3$s-server.ini',
@@ -323,7 +323,7 @@ class Localization_Translator
     * @param Localization_Locale $locale
     * @return string
     */
-    protected static function getClientStorageFile(Localization_Locale $locale, Localization_Source $source)
+    protected function getClientStorageFile(Localization_Locale $locale, Localization_Source $source)
     {
         return sprintf(
             '%1$s/%2$s-%3$s-client.ini',
@@ -444,13 +444,28 @@ class Localization_Translator
         return null;
     }
 
-    public static function getServerStrings(Localization_Locale $locale, Localization_Source $source)
+   /**
+    * Retrieves only the strings that are available clientside.
+    * 
+    * @param Localization_Locale $locale
+    * @return array
+    */
+    public function getClientStrings(Localization_Locale $locale)
     {
-        return parse_ini_file(self::resolveStorageFile($locale, $source));
-    }
-    
-    public static function getClientStrings(Localization_Locale $locale, Localization_Source $source)
-    {
-        return parse_ini_file(self::getClientStorageFile($locale, $source));
+        $result = array();
+        
+        foreach($this->sources as $source) 
+        {
+            $localeFile = self::getClientStorageFile($locale, $source);
+            if(!file_exists($localeFile)) {
+                continue;
+            }
+            
+            $strings = parse_ini_file($localeFile);
+            
+            $result = array_merge($result, $strings);
+        }
+        
+        return $result;
     }
 }
