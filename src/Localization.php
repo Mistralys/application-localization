@@ -571,11 +571,12 @@ class Localization
     * method.
     * 
     * @see Localization_ClientGenerator
+    * @param bool $force Whether to refresh the files, even if they exist.
     */
-    protected static function writeClientFiles()
+    public static function writeClientFiles($force=false)
     {
         $generator = new Localization_ClientGenerator();
-        $generator->writeFiles();
+        $generator->writeFiles($force);
     }
     
     public static function getClientFolder()
