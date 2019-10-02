@@ -49,6 +49,11 @@ class Localization_Editor
     */
     protected $activeAppLocale;
     
+   /**
+    * @var Localization_Editor_Filters
+    */
+    protected $filters;
+    
     public function __construct()
     {
         $this->installPath = realpath(__DIR__.'/../');
@@ -68,6 +73,23 @@ class Localization_Editor
         if($this->request->getBool('save')) {
             $this->executeSave();
         }
+        
+        $this->filters = new Localization_Editor_Filters($this);
+    }
+    
+    public function getRequest()
+    {
+        return $this->request;
+    }
+    
+    public function getActiveLocale() : Localization_Locale
+    {
+        return $this->activeAppLocale;
+    }
+    
+    public function getActiveSource() : Localization_Source 
+    {
+        return $this->activeSource;
     }
     
     protected function initSession()
@@ -248,73 +270,8 @@ class Localization_Editor
     				}
     				else
     				{
-        				?>
-        					<form method="post">
-        						<div class="form-hiddens">
-        							<input type="hidden" name="locale" value="<?php echo $this->activeAppLocale->getName() ?>">
-        							<input type="hidden" name="source" value="<?php echo $this->activeSource->getID() ?>">
-        						</div>
-                				<table class="table table-hover">
-                					<thead>
-                						<tr>
-                							<th><?php pt('Text') ?></th>
-                							<th class="align-center"><?php pt('Translated?') ?></th>
-                							<th class="align-center"><?php pt('Places used') ?></th>
-                							<th><?php pt('Location') ?></th>
-                							<th><?php pt('Sources') ?></th>
-                						</tr>
-                					</thead>
-                					<tbody>
-                						<?php 
-                						    $strings = $this->activeSource->getHashes($this->scanner);
-                						    
-                						    foreach($strings as $string)
-                						    {
-                						        if($string->isTranslated()) {
-                						            continue;
-                						        }
-                						        
-                						        $hash = $string->getHash();
-                						        
-                						        ?>
-                						        	<tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
-                						        		<td class="string-text"><?php echo $string->getText() ?></td>
-                						        		<td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
-                						        		<td class="align-center"><?php echo $string->countStrings() ?></td>
-                						        		<td class="align-center"><?php echo $this->renderTypes($string) ?></td>
-                						        		<td><?php echo implode(', ', $string->getFiles()) ?></td>
-                						        	</tr>
-                						        	<tr class="string-form">
-                						        		<td colspan="4">
-                						        			<?php echo pt('Native text:') ?>
-                						        			<p class="native-text"><?php echo $string->getText() ?></p>
-                						        			<p>
-                						        				<textarea rows="4" class="form-control" name="strings[<?php echo $hash ?>]"></textarea>
-                						        			</p>
-                						        			<p>
-                    						        			<button type="button" class="btn btn-outline-primary btn-sm" onclick="Editor.Confirm('<?php echo $hash ?>')">
-                    						        				<?php pt('OK') ?>
-                    						        			</button>
-                    						        			<button type="button" class="btn btn-outline-secondary btn-sm" onclick="Editor.Toggle('<?php echo $hash ?>')">
-                    						        				<?php pt('Cancel') ?>
-                    						        			</button>
-                						        			</p>
-                						        		</td>
-                						        	</tr>
-                						        <?php 
-                						    }
-                						?>
-                					</tbody>
-                				</table>
-                				<br>
-                				<p>
-                					<button type="submit" name="save" value="yes" class="btn btn-primary">
-                						<i class="fas fa-save"></i>
-                						<?php pt('Save now') ?>
-                					</button>
-                				</p>
-            				</form>
-        				<?php 
+    				    echo $this->filters->renderForm();
+    				    echo $this->renderList();
     				}
 				?>
 			</div>
@@ -324,6 +281,84 @@ class Localization_Editor
 <?php
 
         return ob_get_clean();
+    }
+    
+    protected function renderList()
+    {
+        ?>
+			<form method="post">
+				<div class="form-hiddens">
+					<input type="hidden" name="locale" value="<?php echo $this->activeAppLocale->getName() ?>">
+					<input type="hidden" name="source" value="<?php echo $this->activeSource->getID() ?>">
+				</div>
+            	<table class="table table-hover">
+    				<thead>
+    					<tr>
+    						<th><?php pt('Text') ?></th>
+    						<th class="align-center"><?php pt('Translated?') ?></th>
+    						<th class="align-center"><?php pt('Places used') ?></th>
+    						<th><?php pt('Location') ?></th>
+    						<th><?php pt('Sources') ?></th>
+    					</tr>
+    				</thead>
+    				<tbody>
+    					<?php 
+    					    $strings = $this->activeSource->getHashes($this->scanner);
+    					    
+    					    foreach($strings as $string)
+    					    {
+    					        if(!$this->filters->isStringMatch($string)) {
+    					            continue;
+    					        }
+    					        
+    					        $this->renderListEntry($string);
+    					    }
+    					?>
+    				</tbody>
+    			</table>
+				<br>
+				<p>
+					<button type="submit" name="save" value="yes" class="btn btn-primary">
+						<i class="fas fa-save"></i>
+						<?php pt('Save now') ?>
+					</button>
+				</p>
+			</form>
+			
+        <?php 
+    }
+    
+    protected function renderListEntry(Localization_Scanner_StringHash $string)
+    {
+        $hash = $string->getHash();
+        
+        ?>
+        	<tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
+        		<td class="string-text"><?php echo $string->getText() ?></td>
+        		<td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
+        		<td class="align-center"><?php echo $string->countStrings() ?></td>
+        		<td class="align-center"><?php echo $this->renderTypes($string) ?></td>
+        		<td><?php echo implode(', ', $string->getFiles()) ?></td>
+        	</tr>
+        	<tr class="string-form">
+        		<td colspan="4">
+        			<?php echo pt('Native text:') ?>
+        			<p class="native-text"><?php echo $string->getText() ?></p>
+        			<p>
+        				<textarea rows="4" class="form-control" name="strings[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
+        			</p>
+        			<p>
+	        			<button type="button" class="btn btn-outline-primary btn-sm" onclick="Editor.Confirm('<?php echo $hash ?>')">
+	        				<?php pt('OK') ?>
+	        			</button>
+	        			<button type="button" class="btn btn-outline-secondary btn-sm" onclick="Editor.Toggle('<?php echo $hash ?>')">
+	        				<?php pt('Cancel') ?>
+	        			</button>
+        			</p>
+        		</td>
+        	</tr>
+        <?php 
+        
     }
     
     public function display()
@@ -341,26 +376,26 @@ class Localization_Editor
         return file_get_contents($this->installPath.'/css/editor.css');
     }
     
-    protected function getSourceURL(Localization_Source $source, array $params=array())
+    public function getSourceURL(Localization_Source $source, array $params=array())
     {
         $params['source'] = $source->getID();
         
         return $this->getURL($params);
     }
     
-    protected function getLocaleURL(Localization_Locale $locale, array $params=array())
+    public function getLocaleURL(Localization_Locale $locale, array $params=array())
     {
         $params['locale'] = $locale->getName();
         
         return $this->getURL($params);
     }
     
-    protected function getScanURL()
+    public function getScanURL()
     {
         return $this->getSourceURL($this->activeSource, array('scan' => 'yes'));
     }
     
-    protected function getURL(array $params=array())
+    public function getURL(array $params=array())
     {
         if(!isset($params['source'])) {
             $params['source'] = $this->activeSource->getID();
@@ -376,7 +411,7 @@ class Localization_Editor
     protected function executeScan()
     {
         $this->scanner->scan();
-        
+
         $this->addMessage(
             t('The source files haved been analyzed successfully at %1$s.', date('H:i:s')),
             self::MESSAGE_SUCCESS
