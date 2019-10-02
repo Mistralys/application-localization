@@ -24,6 +24,10 @@ class Localization_Scanner
     
     public function scan()
     {
+        if(isset($this->collection)) {
+            $this->collection = null;
+        }
+        
         $this->timeStart = microtime(true);
         
         $sources = Localization::getSources();
