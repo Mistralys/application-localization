@@ -239,7 +239,14 @@ class Localization_Editor
     				}
 				?>
 				<p>
-					<?php pt('You are translating to %1$s.', $this->activeAppLocale->getLabel()) ?><br>
+					<?php 
+				        pt(
+    					    'You are translating to %1$s', 
+    					    '<span class="badge badge-info">'.
+    					       $this->activeAppLocale->getLabel().
+    				        '</span>'
+                        );
+				    ?><br>
 					<?php pt('Found %1$s texts to translate.', $this->activeSource->countUntranslated($this->scanner)) ?>
 				</p>
 				<br>
@@ -259,15 +266,6 @@ class Localization_Editor
                             </p>
     				    <?php 
     				}
-    				else if($this->activeSource->countUntranslated($this->scanner) === 0)
-    				{
-    				    ?>
-    				    	<div class="alert alert-success" role="alert">
-                            	<b><?php pt('Congratulations:') ?></b> 
-                            	<?php pt('All known texts have been translated in this text source.') ?>
-                            </div>
-    				    <?php 
-    				}
     				else
     				{
     				    echo $this->filters->renderForm();
@@ -282,9 +280,38 @@ class Localization_Editor
 
         return ob_get_clean();
     }
+
+    protected function getFilteredStrings()
+    {
+        $strings = $this->activeSource->getHashes($this->scanner);
+        
+        $result = array();
+        
+        foreach($strings as $string)
+        {
+            if($this->filters->isStringMatch($string)) {
+                $result[] = $string;
+            }
+        }
+
+        return $result;
+    }
     
     protected function renderList()
     {
+        $strings = $this->getFilteredStrings();
+        
+        if(empty($strings))
+        {
+            ?>
+            	<div class="alert alert-info">
+            		<?php pt('No matching strings found.') ?>
+            	</div>
+            <?php 
+            
+            return;
+        }
+        
         ?>
 			<form method="post">
 				<div class="form-hiddens">
@@ -303,14 +330,8 @@ class Localization_Editor
     				</thead>
     				<tbody>
     					<?php 
-    					    $strings = $this->activeSource->getHashes($this->scanner);
-    					    
     					    foreach($strings as $string)
     					    {
-    					        if(!$this->filters->isStringMatch($string)) {
-    					            continue;
-    					        }
-    					        
     					        $this->renderListEntry($string);
     					    }
     					?>
