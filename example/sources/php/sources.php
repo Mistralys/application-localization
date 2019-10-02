@@ -7,6 +7,8 @@
     
     t('This text is in the global scope.');
     
+    t('This text is used serverside and on the client.');
+    
     class Texts
     {
         public function display()
