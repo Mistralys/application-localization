@@ -28,8 +28,10 @@ class Localization_ClientGenerator
         $this->targetFolder = Localization::getClientFolder();
     }
     
-    public function writeFiles()
+    public function writeFiles(bool $force=false)
     {
+        $this->force = $force;
+        
         $this->writeLocaleFiles();
         $this->writeLibraryFiles();
     }
@@ -123,11 +125,7 @@ class Localization_ClientGenerator
             return;
         }
         
-        $strings = array();
-        
-        if($this->translator->hasStrings($locale)) {
-            $strings = $this->translator->getStrings($locale);
-        }
+        $strings = $this->translator->getClientStrings($locale);
         
         $tokens = array();
         foreach($strings as $hash => $text)
@@ -145,14 +143,16 @@ class Localization_ClientGenerator
         
         if(empty($tokens))
         {
-            return '/* No strings found. */';
+            $content = '/* No strings found. */';
         }
-        
-        $content =
-        '/**'.PHP_EOL.
-        ' * @generated '.date('Y-m-d H:i:s').PHP_EOL.
-        ' */'.PHP_EOL.
-        'AppLocalize_Translator.'.implode('.', $tokens).';';
+        else
+        {
+            $content =
+            '/**'.PHP_EOL.
+            ' * @generated '.date('Y-m-d H:i:s').PHP_EOL.
+            ' */'.PHP_EOL.
+            'AppLocalize_Translator.'.implode('.', $tokens).';';
+        }
         
         if(file_put_contents($path, $content)) {
             return; 
