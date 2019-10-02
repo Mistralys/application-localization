@@ -260,6 +260,7 @@ class Localization_Editor
                 							<th><?php pt('Text') ?></th>
                 							<th class="align-center"><?php pt('Translated?') ?></th>
                 							<th class="align-center"><?php pt('Places used') ?></th>
+                							<th><?php pt('Location') ?></th>
                 							<th><?php pt('Sources') ?></th>
                 						</tr>
                 					</thead>
@@ -280,6 +281,7 @@ class Localization_Editor
                 						        		<td class="string-text"><?php echo $string->getText() ?></td>
                 						        		<td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
                 						        		<td class="align-center"><?php echo $string->countStrings() ?></td>
+                						        		<td class="align-center"><?php echo $this->renderTypes($string) ?></td>
                 						        		<td><?php echo implode(', ', $string->getFiles()) ?></td>
                 						        	</tr>
                 						        	<tr class="string-form">
@@ -403,6 +405,9 @@ class Localization_Editor
         
         $translator->save($this->activeSource, $this->scanner->getCollection());
         
+        // refresh all the client files
+        Localization::writeClientFiles(true);
+        
         $this->addMessage(
             t('The texts haved been updated successfully at %1$s.', date('H:i:s')),
             self::MESSAGE_SUCCESS
@@ -419,6 +424,21 @@ class Localization_Editor
         }        
         
         return '<i class="fa fa-ban text-danger"></i>';
+    }
+    
+    protected function renderTypes(Localization_Scanner_StringHash $hash)
+    {
+        $types = array();
+        
+        if($hash->hasLanguageType('PHP')) {
+            $types[] = t('Server');
+        }
+        
+        if($hash->hasLanguageType('Javascript')) {
+            $types[] = t('Client');
+        }
+        
+        return implode(', ', $types);
     }
     
     protected function addMessage($message, $type=self::MESSAGE_INFO)
