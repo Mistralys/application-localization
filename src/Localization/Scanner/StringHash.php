@@ -140,4 +140,13 @@ class Localization_Scanner_StringHash
         
         return $files;
     }
+    
+    public function getSearchString()
+    {
+        $parts = array($this->getTranslatedText(), $this->getText());
+        
+        $parts = array_merge($parts, $this->getFiles());
+        
+        return implode(' ', $parts);
+    }
 }
