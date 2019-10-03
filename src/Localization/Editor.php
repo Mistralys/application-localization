@@ -450,15 +450,21 @@ class Localization_Editor
     
     public function getURL(array $params=array())
     {
-        if(!isset($params['source'])) {
-            $params['source'] = $this->activeSource->getID();
-        }
+        $persist = $this->getRequestParams();
         
-        if(!isset($params['locale'])) {
-            $params['locale'] = $this->activeAppLocale->getName();
+        foreach($persist as $name => $value) {
+            if(!isset($params[$name])) {
+                $params[$name] = $value;
+            }
         }
         
         return '?'.http_build_query($params);
+    }
+    
+    public function redirect($url)
+    {
+        header('Location:'.$this->getSourceURL($this->activeSource));
+        exit;
     }
     
     protected function executeScan()
@@ -470,8 +476,7 @@ class Localization_Editor
             self::MESSAGE_SUCCESS
         );
         
-        header('Location:'.$this->getSourceURL($this->activeSource));
-        exit;
+        $this->redirect($this->getSourceURL($this->activeSource));
     }
     
     protected function executeSave()
@@ -501,8 +506,7 @@ class Localization_Editor
             self::MESSAGE_SUCCESS
         );
         
-        header('Location:'.$this->getURL());
-        exit;
+        $this->redirect($this->getURL());
     }
     
     protected function renderStatus(Localization_Scanner_StringHash $hash)
