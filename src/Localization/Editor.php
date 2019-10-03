@@ -323,6 +323,8 @@ class Localization_Editor
         return $params;
     }
     
+    protected $perPage = 20;
+    
     protected function renderList()
     {
         $strings = $this->getFilteredStrings();
@@ -337,6 +339,12 @@ class Localization_Editor
             
             return;
         }
+        
+        $total = count($strings);
+        $page = intval($this->request->registerParam('page')->setInteger()->get(0));
+        $pager = new \AppUtils\PaginationHelper($total, $this->perPage, $page);
+        
+        $keep = array_slice($strings, $pager->getOffsetStart(), $this->perPage);
         
         ?>
 			<form method="post">
@@ -362,13 +370,47 @@ class Localization_Editor
     				</thead>
     				<tbody>
     					<?php 
-    					    foreach($strings as $string)
+    					    foreach($keep as $string)
     					    {
     					        $this->renderListEntry($string);
     					    }
     					?>
     				</tbody>
     			</table>
+    			<?php 
+        			if($pager->hasPages()) 
+        			{
+        			    ?>
+        			    	<nav aria-label="<?php pt('Navigate available pages of texts.') ?>">
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                    	<a class="page-link" href="<?php echo $this->getURL(array('page' => $pager->getPreviousPage())) ?>">
+                                    		<i class="fa fa-arrow-left"></i>
+                                		</a>
+                            		</li>
+                            		<?php 
+                            		    $numbers = $pager->getPageNumbers();
+                            		    foreach($numbers as $number) 
+                            		    {
+                            		        ?>
+                            		        	<li class="page-item <?php if($pager->isCurrentPage($number)) { echo 'active'; } ?>">
+                            		        		<a class="page-link" href="<?php echo $this->getURL(array('page' => $number)) ?>">
+                            		        			<?php echo $number ?>
+                        		        			</a>
+                        		        		</li>
+                            		        <?php 
+                            		    }
+                            		?>
+                                    <li class="page-item">
+                                    	<a class="page-link" href="<?php echo $this->getURL(array('page' => $pager->getNextPage())) ?>">
+                                    		<i class="fa fa-arrow-right"></i>
+                                		</a>
+                                	</li>
+                                </ul>
+                            </nav>
+        			    <?php 
+        			}
+    			?>
 				<br>
 				<p>
 					<button type="submit" name="save" value="yes" class="btn btn-primary">
