@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppUtils\ConvertHelper;
+
 class Localization_Editor
 {
     const MESSAGE_INFO = 'info';
@@ -433,9 +435,11 @@ class Localization_Editor
     {
         $hash = $string->getHash();
         
+        $shortText = ConvertHelper::text_cut($string->getText(), 50);
+        
         ?>
         	<tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
-        		<td class="string-text"><?php echo $string->getText() ?></td>
+        		<td class="string-text"><?php echo htmlspecialchars($shortText) ?></td>
         		<td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
         		<td class="align-center"><?php echo $string->countStrings() ?></td>
         		<td class="align-center"><?php echo $this->renderTypes($string) ?></td>
@@ -444,7 +448,7 @@ class Localization_Editor
         	<tr class="string-form">
         		<td colspan="4">
         			<?php echo pt('Native text:') ?>
-        			<p class="native-text"><?php echo $string->getText() ?></p>
+        			<p class="native-text"><?php echo htmlspecialchars($string->getText()) ?></p>
         			<p>
         				<textarea rows="4" class="form-control" name="strings[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
         			</p>
