@@ -155,8 +155,14 @@ class Localization_Editor_Filters
         ?>
             <form class="form-inline">
             	<div class="form-hiddens">
-            		<input type="hidden" name="locale" value="<?php echo $this->editor->getActiveLocale()->getName() ?>">
-					<input type="hidden" name="source" value="<?php echo $this->editor->getActiveSource()->getID() ?>">
+            		<?php 
+    					$params = $this->editor->getRequestParams();
+    					foreach($params as $name => $value) {
+    					    ?>
+    					    	<input type="hidden" name="<?php echo $name ?>" value="<?php echo $value ?>">
+    					    <?php 
+    					}
+					?>
             	</div>
 		        <input name="search" type="text" class="form-control mb-2 mr-sm-2" placeholder="<?php pt('Search...') ?>" value="<?php echo $this->searchString ?>">
                 <div class="input-group mb-2 mr-sm-2">

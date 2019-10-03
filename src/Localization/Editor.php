@@ -53,6 +53,8 @@ class Localization_Editor
     * @var Localization_Editor_Filters
     */
     protected $filters;
+
+    protected $requestParams = array();
     
     public function __construct()
     {
@@ -80,6 +82,21 @@ class Localization_Editor
     public function getRequest()
     {
         return $this->request;
+    }
+    
+   /**
+    * Adds a request parameter that will be persisted in all URLs
+    * within the editor. This can be used when integrating the
+    * editor in an existing page that needs specific request params.
+    * 
+    * @param string $name
+    * @param string $value
+    * @return Localization_Editor
+    */
+    public function addRequestParam(string $name, string $value) : Localization_Editor
+    {
+        $this->requestParams[$name] = $value;
+        return $this;
     }
     
     public function getActiveLocale() : Localization_Locale
@@ -297,6 +314,15 @@ class Localization_Editor
         return $result;
     }
     
+    public function getRequestParams() : array
+    {
+        $params = $this->requestParams;
+        $params['locale'] = $this->activeAppLocale->getName();
+        $params['source'] = $this->activeSource->getID();
+
+        return $params;
+    }
+    
     protected function renderList()
     {
         $strings = $this->getFilteredStrings();
@@ -315,8 +341,14 @@ class Localization_Editor
         ?>
 			<form method="post">
 				<div class="form-hiddens">
-					<input type="hidden" name="locale" value="<?php echo $this->activeAppLocale->getName() ?>">
-					<input type="hidden" name="source" value="<?php echo $this->activeSource->getID() ?>">
+					<?php 
+    					$params = $this->getRequestParams();
+    					foreach($params as $name => $value) {
+    					    ?>
+    					    	<input type="hidden" name="<?php echo $name ?>" value="<?php echo $value ?>">
+    					    <?php 
+    					}
+					?>
 				</div>
             	<table class="table table-hover">
     				<thead>
