@@ -68,14 +68,6 @@ class Localization_Editor
         $this->scanner = Localization::createScanner();
         $this->scanner->load();
         
-        if($this->request->getBool('scan')) {
-            $this->executeScan();
-        }
-        
-        if($this->request->getBool('save')) {
-            $this->executeSave();
-        }
-        
         $this->filters = new Localization_Editor_Filters($this);
     }
     
@@ -154,8 +146,22 @@ class Localization_Editor
         Localization::selectAppLocale($activeID);
     }
     
+    protected function handleActions()
+    {
+        if($this->request->getBool('scan')) 
+        {
+            $this->executeScan();
+        } 
+        else if($this->request->getBool('save')) 
+        {
+            $this->executeSave();
+        }
+    }
+    
     public function render()
     {
+        $this->handleActions();
+        
         ob_start();
         
 ?><!doctype html>
@@ -505,7 +511,7 @@ class Localization_Editor
     
     public function redirect($url)
     {
-        header('Location:'.$this->getSourceURL($this->activeSource));
+        header('Location:'.$url);
         exit;
     }
     
