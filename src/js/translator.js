@@ -9,7 +9,7 @@
  */
 function t()
 {
-	return AppLocalize_Translator['Translate'].apply(null, arguments);
+	return AppLocalize_Translator['Translate'].apply(AppLocalize_Translator, arguments);
 }
 
 /**
