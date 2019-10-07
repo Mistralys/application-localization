@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
-use AppUtils\ConvertHelper;
-
 class Localization_Editor
 {
     const MESSAGE_INFO = 'info';
@@ -435,7 +433,7 @@ class Localization_Editor
     {
         $hash = $string->getHash();
         
-        $shortText = ConvertHelper::text_cut($string->getText(), 50);
+        $shortText =  \AppUtils\ConvertHelper::text_cut($string->getText(), 50);
         
         ?>
         	<tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
@@ -446,7 +444,7 @@ class Localization_Editor
         		<td><?php echo implode(', ', $string->getFiles()) ?></td>
         	</tr>
         	<tr class="string-form">
-        		<td colspan="4">
+        		<td colspan="5">
         			<?php echo pt('Native text:') ?>
         			<p class="native-text"><?php echo htmlspecialchars($string->getText()) ?></p>
         			<p>
