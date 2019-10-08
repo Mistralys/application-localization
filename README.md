@@ -6,6 +6,7 @@ PHP and Javascript localization library, written in PHP. It is a simple localiza
 
 * Easy to configure for the application's source files structure
 * Built-in UI that can be integrated into an existing UI
+* Supports clientside translations with auto-generated include files
 
 ## Configuration
 
@@ -19,7 +20,9 @@ Note: The native application locale should be english. Any additional locales ca
 ````
 ### 2) Adding file source folders
 
-Source folders are any folders in which to search for PHP or Javascript files to analyze for translation function calls. Register each folder to look in like this: 
+This defines in which folders to search for PHP or Javascript files. These files will be analyzed to find all places where there are translation function calls. 
+
+Register each folder to look in like this: 
 
 ```php
 $source = \AppLocalize\Localization::addSourceFolder(
@@ -30,6 +33,18 @@ $source = \AppLocalize\Localization::addSourceFolder(
     '/path/to/source/files/'
 );
 ```
+
+For performance reasons, it is recommended to exclude any files or folders that do not need to be analyzed. The Javascript analysis in particular still has issues with minified files like Jquery or Bootstrap, so they should definitely be excluded.
+
+To exclude folders or files by name:
+
+```php
+$source->excludeFolder('foldername');
+$source->excludeFile('jquery'); // any file with "jquery" in its name
+$source->excludeFile('jquery-ui.min.js'); // by exact file name match
+```
+
+Note: No need to specifiy the absolute path or file name, as long as the name is unique.
 
 ### 3) Main configuration settings
 
@@ -53,19 +68,47 @@ The locale is english by default, and you can switch the locale anytime using th
 \AppLocalize\Localization::selectAppLocale('de_DE');
 ```
 
-### 4) Include the client libraries
+### 5) Include the client libraries (optional)
 
-The localization library automatically creates the necessary javascript include files in the folder you specified in step 3). In your application, include the following files to enable the translation:
+The localization library automatically creates the necessary javascript include files in the folder you specified in step 3). In your application, include the following files to enable the translation functions:
 
 * `locale-xx.js`
 * `md5.min.js`
 * `translator.js`
 
-Where `xx` is the two-letter ISO code of the target language.
+Where `xx` is the two-letter ISO code of the target language. There is one for each of the locales you added.
 
-### 5) Use the t() function to translate texts
+## Using the translation functions
 
-Be it serverside or clientside, you may now use the `t()` function to have texts automatically translated to the target locale.
+### The t() function
+
+Be it serverside or clientside, you may can use the `t()` function to have texts automatically translated to the target locale. Simply wrap any of the native english texts in the function call.
+
+PHP:
+```php
+$text = t('Text to translate here');
+```
+
+JavaScript:
+```javascript
+var text = t('Text to translate here');
+```
+
+### Injecting dynamic variables
+
+The `t()` function accepts any number of additional parameters, which are injected into the translated string using the `sprintf` PHP function. This means you can do things like this:
+
+```php
+$amount = 50;
+$text = t('We found %1$s entries.', $amount);
+```
+
+Clientside, you may use the same syntax:
+
+```javascript
+var amount = 50;
+var text = t('We found %1$s entries.', amount);
+```
 
 ## Examples
 
