@@ -5,7 +5,7 @@ PHP and Javascript localization library, written in PHP. It is a simple localiza
 ## Highlights
 
 * Easy to configure for the application's source files structure
-* Built-in UI that can be integrated into an existing UI
+* Built-in translator UI that can be integrated into an existing UI
 * Supports clientside translations with auto-generated include files
 
 ## Configuration
