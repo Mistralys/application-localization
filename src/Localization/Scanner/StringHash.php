@@ -172,6 +172,10 @@ class Localization_Scanner_StringHash
             $result[] = basename($path);
         }
         
+        // some files may have the same name, there's no
+        // sense in using duplicates in this context.
+        $result = array_unique($result);
+        
         return $result;
     }
     
