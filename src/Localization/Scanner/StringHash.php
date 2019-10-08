@@ -154,6 +154,8 @@ class Localization_Scanner_StringHash
             }
         }
         
+        sort($files);
+        
         return $files;
     }
     
