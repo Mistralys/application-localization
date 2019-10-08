@@ -31,10 +31,6 @@
 		{
 			"type" : "vcs",
 			"url" : "https://github.com/Mistralys/HTML_QuickForm2.git"
-		},
-		{
-			"type" : "vcs",
-			"url" : "https://github.com/Mistralys/application-utils.git"
 		}
 	],
 	"minimum-stability" : "dev",
