@@ -26,19 +26,12 @@
 			"src/"
 		]
 	},
-	"repositories" : 
-	[
-		{
-			"type" : "vcs",
-			"url" : "https://github.com/Mistralys/HTML_QuickForm2.git"
-		}
-	],
 	"minimum-stability" : "dev",
 	"prefer-stable" : true,
 	"require" : 
 	{
 		"mistralys/application-utils" : "dev-master",
-		"pear/html_quickform2" : "dev-trunk"
+		"mistralys/html_quickform2" : "dev-trunk"
 	},
 	"require-dev" : 
 	{
