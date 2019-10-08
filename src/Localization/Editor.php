@@ -500,8 +500,13 @@ class Localization_Editor
         				<div class="files-scroller">
                 			<ul>
                 				<?php 
-                    				foreach($files as $file) 
+                				    $locations = $string->getStrings();
+                				    
+                    				foreach($locations as $location) 
                     				{
+                    				    $file = $location->getSourceFile();
+                    				    $line = $location->getLine();
+                    				    
                     				    $icon = '';
                     				    
                     				    $ext = \AppUtils\FileHelper::getExtension($file);
@@ -517,7 +522,7 @@ class Localization_Editor
                     				    ?>
                     				    	<li>
                     				    		<i class="<?php echo $icon ?>"></i>
-                    				    		<?php echo $file ?>
+                    				    		<?php echo $file ?><span class="line-number">:<?php echo $line ?></span>
                     				    	</li>
                     				    <?php 
                     				}
