@@ -376,7 +376,6 @@ class Localization_Editor
     					<tr>
     						<th><?php pt('Text') ?></th>
     						<th class="align-center"><?php pt('Translated?') ?></th>
-    						<th class="align-center"><?php pt('Places used') ?></th>
     						<th class="align-center"><?php pt('Location') ?></th>
     						<th class="align-right"><?php pt('Sources') ?></th>
     					</tr>
@@ -460,12 +459,11 @@ class Localization_Editor
         	<tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
         		<td class="string-text"><?php echo htmlspecialchars($shortText) ?></td>
         		<td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
-        		<td class="align-center"><?php echo $string->countStrings() ?></td>
         		<td class="align-center"><?php echo $this->renderTypes($string) ?></td>
-        		<td class="align-right"><?php echo $this->renderFileNames() ?></td>
+        		<td class="align-right"><?php echo $this->renderFileNames($string) ?></td>
         	</tr>
         	<tr class="string-form">
-        		<td colspan="5">
+        		<td colspan="4">
         			<?php echo pt('Native text:') ?>
         			<p class="native-text"><?php echo htmlspecialchars($string->getText()) ?></p>
         			<p>
@@ -528,15 +526,24 @@ class Localization_Editor
         
     }
     
-    protected function renderFileNames(array $names) : string
+    protected function renderFileNames(Localization_Scanner_StringHash $hash) : string
     {
-        $total = count($names);
-        $keep = $names;
         $max = 2;
+        $total = $hash->countFiles();
+        $keep = $hash->getFileNames();
+        $keepTotal = count($keep); // with duplicate file names, this can be less than the file total
         
-        if($total > $max) {
-            $keep = array_slice($keep, 0, $max);
-            $keep[] = '+'.($total-$max); 
+        // add a counter of the additional files if the total
+        // is higher than the maximum to show
+        if($total > $max) 
+        {
+            $length = $max;
+            if($length > $keepTotal) {
+                $length = $keepTotal; 
+            }
+            
+            $keep = array_slice($keep, 0, $length);
+            $keep[] = '+'.($total - $length); 
         }
         
         $result = implode(', ', $keep);
@@ -602,7 +609,7 @@ class Localization_Editor
         $this->scanner->scan();
 
         $this->addMessage(
-            t('The source files haved been analyzed successfully at %1$s.', date('H:i:s')),
+            t('The source files have been analyzed successfully at %1$s.', date('H:i:s')),
             self::MESSAGE_SUCCESS
         );
         
@@ -633,7 +640,7 @@ class Localization_Editor
         Localization::writeClientFiles(true);
         
         $this->addMessage(
-            t('The texts haved been updated successfully at %1$s.', date('H:i:s')),
+            t('The texts have been updated successfully at %1$s.', date('H:i:s')),
             self::MESSAGE_SUCCESS
         );
         
