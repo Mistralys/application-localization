@@ -48,3 +48,8 @@ padding:0;
 margin:0;
 padding:0 0 13px 0;
 }
+
+.files-list .files-scroller{
+max-height:200px;
+overflow:auto;
+}

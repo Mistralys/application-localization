@@ -453,6 +453,7 @@ class Localization_Editor
         $hash = $string->getHash();
         
         $shortText =  \AppUtils\ConvertHelper::text_cut(htmlspecialchars($string->getTranslatedText()), 50);
+        
         $files = $string->getFiles();
         
         ?>
@@ -461,7 +462,7 @@ class Localization_Editor
         		<td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
         		<td class="align-center"><?php echo $string->countStrings() ?></td>
         		<td class="align-center"><?php echo $this->renderTypes($string) ?></td>
-        		<td class="align-right"><?php echo implode(', ', $string->getFileNames()) ?></td>
+        		<td class="align-right"><?php echo $this->renderFileNames() ?></td>
         	</tr>
         	<tr class="string-form">
         		<td colspan="5">
@@ -480,38 +481,67 @@ class Localization_Editor
         			</p>
         			<div class="files-list">
             			<p>
-            				<?php pt('Found in files:') ?>
-            			</p>
-            			<ul class="files-list">
             				<?php 
-            				foreach($files as $file) 
-            				{
-            				    $icon = '';
+            				    $totalFiles = count($files);
             				    
-            				    $ext = \AppUtils\FileHelper::getExtension($file);
-            				    
-            				    if($ext == 'php') {
-            				        $icon = 'fab fa-php';
-            				    } else if($ext == 'js') {
-            				        $icon = 'fab fa-js-square';
-            				    } else {
-            				        $icon = 'fas fa-file-code';
+            				    if($totalFiles == 1)
+            				    {
+            				        pt('Found in a single file:');
             				    }
-            				    
-            				    ?>
-            				    	<li>
-            				    		<i class="<?php echo $icon ?>"></i>
-            				    		<?php echo $file ?>
-            				    	</li>
-            				    <?php 
-            				}
-            				?>
-            			</ul>
+            				    else
+            				    {
+            				        pt('Found in %1$s files:', $totalFiles);
+            				    }
+    				        ?>
+            			</p>
+        				<div class="files-scroller">
+                			<ul>
+                				<?php 
+                    				foreach($files as $file) 
+                    				{
+                    				    $icon = '';
+                    				    
+                    				    $ext = \AppUtils\FileHelper::getExtension($file);
+                    				    
+                    				    if($ext == 'php') {
+                    				        $icon = 'fab fa-php';
+                    				    } else if($ext == 'js') {
+                    				        $icon = 'fab fa-js-square';
+                    				    } else {
+                    				        $icon = 'fas fa-file-code';
+                    				    }
+                    				    
+                    				    ?>
+                    				    	<li>
+                    				    		<i class="<?php echo $icon ?>"></i>
+                    				    		<?php echo $file ?>
+                    				    	</li>
+                    				    <?php 
+                    				}
+                				?>
+                			</ul>
+            			</div>
         			</div>
         		</td>
         	</tr>
         <?php 
         
+    }
+    
+    protected function renderFileNames(array $names) : string
+    {
+        $total = count($names);
+        $keep = $names;
+        $max = 2;
+        
+        if($total > $max) {
+            $keep = array_slice($keep, 0, $max);
+            $keep[] = '+'.($total-$max); 
+        }
+        
+        $result = implode(', ', $keep);
+        
+        return $result;
     }
     
     public function display()
