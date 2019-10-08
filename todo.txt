@@ -1,2 +1,3 @@
 - Replace jtokenizer with peast: https://github.com/mck89/peast
 - Import/Export
+- Validate the amount of placeholders in strings

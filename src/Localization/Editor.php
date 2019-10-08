@@ -451,13 +451,18 @@ class Localization_Editor
     {
         $hash = $string->getHash();
         
-        $shortText =  \AppUtils\ConvertHelper::text_cut(htmlspecialchars($string->getTranslatedText()), 50);
+        $previewText = $string->getTranslatedText();
+        if(empty($previewText)) {
+            $previewText = $string->getText();
+        }
+        
+        $shortText =  $this->renderText($previewText, 50);
         
         $files = $string->getFiles();
         
         ?>
         	<tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
-        		<td class="string-text"><?php echo htmlspecialchars($shortText) ?></td>
+        		<td class="string-text"><?php echo $shortText ?></td>
         		<td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
         		<td class="align-center"><?php echo $this->renderTypes($string) ?></td>
         		<td class="align-right"><?php echo $this->renderFileNames($string) ?></td>
@@ -465,7 +470,7 @@ class Localization_Editor
         	<tr class="string-form">
         		<td colspan="4">
         			<?php echo pt('Native text:') ?>
-        			<p class="native-text"><?php echo htmlspecialchars($string->getText()) ?></p>
+        			<p class="native-text"><?php echo $this->renderText($string->getText()) ?></p>
         			<p>
         				<textarea rows="4" class="form-control" name="<?php echo $this->getVarName('strings') ?>[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
         			</p>
@@ -524,6 +529,39 @@ class Localization_Editor
         	</tr>
         <?php 
         
+    }
+    
+    protected function renderText(string $text, int $cutAt=0) : string
+    {
+        if(empty($text)) {
+            return $text;
+        }
+        
+        if($cutAt > 0) {
+            $text = \AppUtils\ConvertHelper::text_cut($text, $cutAt);
+        }
+        
+        $text = htmlspecialchars($text);
+        
+        $vars = $this->detectVariables($text);
+        
+        foreach($vars as $var) {
+            $text = str_replace($var, '<span class="placeholder">'.$var.'</span>', $text);
+        }
+        
+        return $text; 
+    }
+    
+    protected function detectVariables(string $string) : array
+    {
+        $result = array();
+        preg_match_all('/%[0-9]+d|%s|%[0-9]+\$s/i', $string, $result, PREG_PATTERN_ORDER);
+
+        if(isset($result[0]) && !empty($result[0])) {
+            return $result[0];
+        }
+        
+        return array();
     }
     
     protected function renderFileNames(Localization_Scanner_StringHash $hash) : string
