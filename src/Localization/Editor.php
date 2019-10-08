@@ -56,6 +56,8 @@ class Localization_Editor
 
     protected $requestParams = array();
     
+    protected $varPrefix = 'applocalize_';
+    
     public function __construct()
     {
         $this->installPath = realpath(__DIR__.'/../');
@@ -112,11 +114,16 @@ class Localization_Editor
         }
     }
     
+    public function getVarName($name)
+    {
+        return $this->varPrefix.$name;
+    }
+    
     protected function initSources()
     {
         $this->sources = Localization::getSources();
         
-        $activeID = $this->request->registerParam('source')->setEnum(Localization::getSourceIDs())->get();
+        $activeID = $this->request->registerParam($this->getVarName('source'))->setEnum(Localization::getSourceIDs())->get();
         if(empty($activeID)) {
             $activeID = $this->sources[0]->getID();
         }
@@ -136,7 +143,7 @@ class Localization_Editor
             }
         }
        
-        $activeID = $this->request->registerParam('locale')->setEnum($names)->get();
+        $activeID = $this->request->registerParam($this->getVarName('locale'))->setEnum($names)->get();
         if(empty($activeID)) {
             $activeID = $this->appLocales[0]->getName();
         }
@@ -148,11 +155,11 @@ class Localization_Editor
     
     protected function handleActions()
     {
-        if($this->request->getBool('scan')) 
+        if($this->request->getBool($this->getVarName('scan'))) 
         {
             $this->executeScan();
         } 
-        else if($this->request->getBool('save')) 
+        else if($this->request->getBool($this->getVarName('save'))) 
         {
             $this->executeSave();
         }
@@ -323,8 +330,8 @@ class Localization_Editor
     public function getRequestParams() : array
     {
         $params = $this->requestParams;
-        $params['locale'] = $this->activeAppLocale->getName();
-        $params['source'] = $this->activeSource->getID();
+        $params[$this->getVarName('locale')] = $this->activeAppLocale->getName();
+        $params[$this->getVarName('source')] = $this->activeSource->getID();
 
         return $params;
     }
@@ -347,7 +354,7 @@ class Localization_Editor
         }
         
         $total = count($strings);
-        $page = intval($this->request->registerParam('page')->setInteger()->get(0));
+        $page = intval($this->request->registerParam($this->getVarName('page'))->setInteger()->get(0));
         $pager = new \AppUtils\PaginationHelper($total, $this->perPage, $page);
         
         $keep = array_slice($strings, $pager->getOffsetStart(), $this->perPage);
@@ -386,11 +393,14 @@ class Localization_Editor
     			<?php 
         			if($pager->hasPages()) 
         			{
+        			    $prevUrl = $this->getPaginationURL($pager->getPreviousPage());
+        			    $nextUrl = $this->getPaginationURL($pager->getNextPage());
+        			    
         			    ?>
         			    	<nav aria-label="<?php pt('Navigate available pages of texts.') ?>">
                                 <ul class="pagination">
                                     <li class="page-item">
-                                    	<a class="page-link" href="<?php echo $this->getURL(array('page' => $pager->getPreviousPage())) ?>">
+                                    	<a class="page-link" href="<?php echo $prevUrl ?>">
                                     		<i class="fa fa-arrow-left"></i>
                                 		</a>
                             		</li>
@@ -398,9 +408,11 @@ class Localization_Editor
                             		    $numbers = $pager->getPageNumbers();
                             		    foreach($numbers as $number) 
                             		    {
+                            		        $url = $this->getPaginationURL($number);
+                            		        
                             		        ?>
                             		        	<li class="page-item <?php if($pager->isCurrentPage($number)) { echo 'active'; } ?>">
-                            		        		<a class="page-link" href="<?php echo $this->getURL(array('page' => $number)) ?>">
+                            		        		<a class="page-link" href="<?php echo $url ?>">
                             		        			<?php echo $number ?>
                         		        			</a>
                         		        		</li>
@@ -408,7 +420,7 @@ class Localization_Editor
                             		    }
                             		?>
                                     <li class="page-item">
-                                    	<a class="page-link" href="<?php echo $this->getURL(array('page' => $pager->getNextPage())) ?>">
+                                    	<a class="page-link" href="<?php echo $nextUrl ?>">
                                     		<i class="fa fa-arrow-right"></i>
                                 		</a>
                                 	</li>
@@ -419,7 +431,7 @@ class Localization_Editor
     			?>
 				<br>
 				<p>
-					<button type="submit" name="save" value="yes" class="btn btn-primary">
+					<button type="submit" name="<?php echo $this->getVarName('save') ?>" value="yes" class="btn btn-primary">
 						<i class="fas fa-save"></i>
 						<?php pt('Save now') ?>
 					</button>
@@ -429,11 +441,18 @@ class Localization_Editor
         <?php 
     }
     
+    protected function getPaginationURL(int $page, $params=array())
+    {
+        $params[$this->getVarName('page')] = $page;
+        
+        return $this->getURL($params);
+    }
+    
     protected function renderListEntry(Localization_Scanner_StringHash $string)
     {
         $hash = $string->getHash();
         
-        $shortText =  \AppUtils\ConvertHelper::text_cut($string->getText(), 50);
+        $shortText =  \AppUtils\ConvertHelper::text_cut(htmlspecialchars($string->getTranslatedText()), 50);
         
         ?>
         	<tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
@@ -448,7 +467,8 @@ class Localization_Editor
         			<?php echo pt('Native text:') ?>
         			<p class="native-text"><?php echo htmlspecialchars($string->getText()) ?></p>
         			<p>
-        				<textarea rows="4" class="form-control" name="strings[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
+        				<textarea rows="4" class="form-control" name="<?php echo $this->getVarName('strings') ?>[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
+
         			</p>
         			<p>
 	        			<button type="button" class="btn btn-outline-primary btn-sm" onclick="Editor.Confirm('<?php echo $hash ?>')">
@@ -481,21 +501,21 @@ class Localization_Editor
     
     public function getSourceURL(Localization_Source $source, array $params=array())
     {
-        $params['source'] = $source->getID();
+        $params[$this->getVarName('source')] = $source->getID();
         
         return $this->getURL($params);
     }
     
     public function getLocaleURL(Localization_Locale $locale, array $params=array())
     {
-        $params['locale'] = $locale->getName();
+        $params[$this->getVarName('locale')] = $locale->getName();
         
         return $this->getURL($params);
     }
     
     public function getScanURL()
     {
-        return $this->getSourceURL($this->activeSource, array('scan' => 'yes'));
+        return $this->getSourceURL($this->activeSource, array($this->getVarName('scan') => 'yes'));
     }
     
     public function getURL(array $params=array())
@@ -535,7 +555,8 @@ class Localization_Editor
         
         $translator = Localization::getTranslator($this->activeAppLocale);
         
-        foreach($data['strings'] as $hash => $text) 
+        $strings = $data[$this->getVarName('strings')];
+        foreach($strings as $hash => $text) 
         {
             $text = trim($text);
             

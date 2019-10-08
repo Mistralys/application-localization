@@ -22,46 +22,60 @@ class Localization_Editor_Filters
     */
     protected $sessionName = 'localize_filters';
     
+    protected $vars = array(
+        'resetfilter' => null,
+        'filter' => null,
+        'search' => null,
+        'status' => null,
+        'location' => null
+    );
+    
     public function __construct(Localization_Editor $editor)
     {
         $this->editor = $editor;
         $this->request = $editor->getRequest();
+        
+        foreach($this->vars as $var => $name) {
+            $this->vars[$var] = $this->editor->getVarName($var);
+        }
 
         if(!isset($_SESSION[$this->sessionName])) {
             $_SESSION[$this->sessionName] = array();
         }
 
-        if($this->request->getBool('resetfilter'))
+        if($this->request->getBool($this->vars['resetfilter']))
         {
-            foreach($this->defaultValues as $name => $val) {
+            $defaults = $this->getDefaultValues();
+            
+            foreach($defaults as $name => $val) {
                 $this->setValue($name, $val);
             }
         }
-        else if($this->request->getBool('filter')) 
+        else if($this->request->getBool($this->vars['filter'])) 
         {
-            $this->parseSearchTerms($this->request->getParam('search'));
+            $this->parseSearchTerms($this->request->getParam($this->vars['search']));
             
-            $this->setValue('search', $this->searchString);
+            $this->setValue($this->vars['search'], $this->searchString);
             
             $this->setValue(
-                'status', 
+                $this->vars['status'], 
                 $this->request
-                ->registerParam('status')
+                ->registerParam($this->vars['status'])
                 ->setEnum('translated', 'untranslated')
                 ->get('')
             );
             
             $this->setValue(
-                'location',
+                $this->vars['location'],
                 $this->request
-                ->registerParam('location')
+                ->registerParam($this->vars['location'])
                 ->setEnum('client', 'server')
                 ->get('')
             );
         }
         else
         {
-            $this->parseSearchTerms($this->getValue('search'));
+            $this->parseSearchTerms($this->getValue($this->vars['search']));
         }
     }
     
@@ -76,8 +90,9 @@ class Localization_Editor_Filters
             return $_SESSION[$this->sessionName][$filterName];
         }
         
-        if(isset($this->defaultValues[$filterName])) {
-            return $this->defaultValues[$filterName];
+        $defaults = $this->getDefaultValues();
+        if(isset($defaults[$filterName])) {
+            return $defaults[$filterName];
         }
         
         return '';
@@ -125,14 +140,14 @@ class Localization_Editor_Filters
             }
         }
         
-        $status = $this->getValue('status');
+        $status = $this->getValue($this->vars['status']);
         if($status === 'untranslated' && $string->isTranslated()) {
             return false;
         } else if($status === 'translated' && !$string->isTranslated()) {
             return false;
         }
         
-        $location = $this->getValue('location');
+        $location = $this->getValue($this->vars['location']);
         if($location === 'client' && !$string->hasLanguageType('Javascript')) {
             return false;
         } else if($location === 'server' && !$string->hasLanguageType('PHP')) {
@@ -142,11 +157,14 @@ class Localization_Editor_Filters
         return true;
     }
     
-    protected $defaultValues = array(
-        'search' => '',
-        'status' => 'untranslated',
-        'location' => ''
-    );
+    protected function getDefaultValues()
+    {
+        return array(
+            $this->vars['search'] => '',
+            $this->vars['status'] => 'untranslated',
+            $this->vars['location'] => ''
+        );
+    }
     
     public function renderForm()
     {
@@ -164,11 +182,11 @@ class Localization_Editor_Filters
     					}
 					?>
             	</div>
-		        <input name="search" type="text" class="form-control mb-2 mr-sm-2" placeholder="<?php pt('Search...') ?>" value="<?php echo $this->searchString ?>">
+		        <input name="<?php echo $this->vars['search'] ?>" type="text" class="form-control mb-2 mr-sm-2" placeholder="<?php pt('Search...') ?>" value="<?php echo $this->searchString ?>">
                 <div class="input-group mb-2 mr-sm-2">
                 	<?php
                 	    echo $this->renderSelect(
-                	       'status',
+                	       $this->vars['status'],
                 	       array(
                     	       array(
                     	            'value' => '',
@@ -186,7 +204,7 @@ class Localization_Editor_Filters
                 	   );
                 	
                 	   echo $this->renderSelect(
-                	       'location',
+                	       $this->vars['location'],
                 	       array(
                 	           array(
                 	               'value' => '',
@@ -204,12 +222,12 @@ class Localization_Editor_Filters
             	       );
                 	?>
                 </div>
-				<button type="submit" name="filter" value="yes" class="btn btn-primary mb-2">
+				<button type="submit" name="<?php echo $this->vars['filter'] ?>" value="yes" class="btn btn-primary mb-2">
 					<i class="fa fa-filter"></i>
 					<?php pt('Filter') ?>
 				</button> 
 				&#160;
-				<button type="submit" name="resetfilter" value="yes" class="btn btn-secondary mb-2" title="<?php pt('Reset the filters') ?>">
+				<button type="submit" name="<?php echo $this->vars['resetfilter']?>" value="yes" class="btn btn-secondary mb-2" title="<?php pt('Reset the filters') ?>">
 					<i class="fa fa-times"></i>
 				</button>
             </form>
