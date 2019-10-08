@@ -8,6 +8,16 @@ PHP and Javascript localization library, written in PHP. It is a simple localiza
 * Built-in translator UI that can be integrated into an existing UI
 * Supports clientside translations with auto-generated include files
 
+## Installation
+
+Simply require the package via your composer.json:
+
+```json
+"require": {
+   "mistralys/localization": "dev-master"
+}
+```
+
 ## Configuration
 
 ### 1) Adding locales
@@ -82,15 +92,15 @@ Where `xx` is the two-letter ISO code of the target language. There is one for e
 
 ### Serverside setup
 
-By default, to use the `t()` function, you have to add the namespace at the top of the files in which you wish to use it:
+By default, to use the `t()` function, you have to add the namespace at the top of the PHP files in which you wish to use it:
 
 ```php
 use AppLocalize;
 ```
 
-Otherwise, you would have to use the explicit syntax `\AppLocalize\t()`, which is not very practical.
+Alternatively, you could use the explicit syntax, `\AppLocalize\t()`, which is not very practical.
 
-The optimal way is to add aliases to the translation functions in your application:
+The optimal way is to add alias functions in your application:
 
 ```php
 function t()
