@@ -28,3 +28,23 @@ font-style:italic;
 margin-top:5px;
 margin-left:20px;
 }
+
+
+.files-list{
+font-size:90%;
+}
+
+.files-list > P{
+margin-bottom:6px;
+}
+
+.files-list UL{
+list-style:none;
+margin:0;
+padding:0;
+}
+
+.files-list LI{
+margin:0;
+padding:0 0 13px 0;
+}

@@ -377,8 +377,8 @@ class Localization_Editor
     						<th><?php pt('Text') ?></th>
     						<th class="align-center"><?php pt('Translated?') ?></th>
     						<th class="align-center"><?php pt('Places used') ?></th>
-    						<th><?php pt('Location') ?></th>
-    						<th><?php pt('Sources') ?></th>
+    						<th class="align-center"><?php pt('Location') ?></th>
+    						<th class="align-right"><?php pt('Sources') ?></th>
     					</tr>
     				</thead>
     				<tbody>
@@ -453,6 +453,7 @@ class Localization_Editor
         $hash = $string->getHash();
         
         $shortText =  \AppUtils\ConvertHelper::text_cut(htmlspecialchars($string->getTranslatedText()), 50);
+        $files = $string->getFiles();
         
         ?>
         	<tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
@@ -460,7 +461,7 @@ class Localization_Editor
         		<td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
         		<td class="align-center"><?php echo $string->countStrings() ?></td>
         		<td class="align-center"><?php echo $this->renderTypes($string) ?></td>
-        		<td><?php echo implode(', ', $string->getFiles()) ?></td>
+        		<td class="align-right"><?php echo implode(', ', $string->getFileNames()) ?></td>
         	</tr>
         	<tr class="string-form">
         		<td colspan="5">
@@ -468,7 +469,6 @@ class Localization_Editor
         			<p class="native-text"><?php echo htmlspecialchars($string->getText()) ?></p>
         			<p>
         				<textarea rows="4" class="form-control" name="<?php echo $this->getVarName('strings') ?>[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
-
         			</p>
         			<p>
 	        			<button type="button" class="btn btn-outline-primary btn-sm" onclick="Editor.Confirm('<?php echo $hash ?>')">
@@ -478,6 +478,36 @@ class Localization_Editor
 	        				<?php pt('Cancel') ?>
 	        			</button>
         			</p>
+        			<div class="files-list">
+            			<p>
+            				<?php pt('Found in files:') ?>
+            			</p>
+            			<ul class="files-list">
+            				<?php 
+            				foreach($files as $file) 
+            				{
+            				    $icon = '';
+            				    
+            				    $ext = \AppUtils\FileHelper::getExtension($file);
+            				    
+            				    if($ext == 'php') {
+            				        $icon = 'fab fa-php';
+            				    } else if($ext == 'js') {
+            				        $icon = 'fab fa-js-square';
+            				    } else {
+            				        $icon = 'fas fa-file-code';
+            				    }
+            				    
+            				    ?>
+            				    	<li>
+            				    		<i class="<?php echo $icon ?>"></i>
+            				    		<?php echo $file ?>
+            				    	</li>
+            				    <?php 
+            				}
+            				?>
+            			</ul>
+        			</div>
         		</td>
         	</tr>
         <?php 
