@@ -18,6 +18,8 @@ Simply require the package via your composer.json:
 }
 ```
 
+See packagist page: https://packagist.org/packages/mistralys/application-localization
+
 ## Configuration
 
 ### 1) Adding locales
