@@ -17,7 +17,6 @@ namespace AppLocalize;
  * @package Application
  * @subpackage Localization
  * @author Sebastian Mordziol <s.mordziol@mistralys.com>
- * @link http://www.mistralys.com
  */
 class Localization
 {
@@ -31,6 +30,14 @@ class Localization
     
     const ERROR_NO_SOURCES_ADDED = 39005;
     
+    const ERROR_NO_LOCALE_SELECTED_IN_NS = 39006;
+    
+    const ERROR_NO_LOCALES_IN_NAMESPACE = 39007;
+    
+    const ERROR_UNKNOWN_NAMESPACE = 39008;
+    
+    const ERROR_UNKNOWN_LOCALE_IN_NS = 39009;
+    
     /**
      * The name of the default application locale, i.e. the
      * locale in which application textual content is written.
@@ -39,28 +46,17 @@ class Localization
      */
     const BUILTIN_LOCALE_NAME = 'en_UK';
 
-    /**
-     * Collection of all content locales, as an associative
-     * array with locale name => locale object value pairs.
-     *
-     * @var array
-     * @see getContentLocales()
-     * @see getContentLocale()
-     * @see getContentLocale()
-     * @see Localization_Locale
-     */
-    private static $contentLocales = array();
-
-    /**
-     * Collection of all content locales, as an associative
-     * array with locale name => locale object value pairs.
-     *
-     * @var array
-     * @see getAppLocales()
-     * @see getAppLocale()
-     * @see Localization_Locale
-     */
-    private static $applicationLocales = array();
+    const NAMESPACE_APPLICATION = '__application';
+    
+    const NAMESPACE_CONTENT = '__content';
+    
+   /**
+    * Collection of all locales by namespace (application, content, custom...). 
+    *
+    * @var array
+    * @see Localization::addLocale()
+    */
+    protected static $locales = array();
 
     /**
      * @var boolean
@@ -101,11 +97,7 @@ class Localization
             return;
         }
 
-        self::addAppLocale(self::BUILTIN_LOCALE_NAME);
-        self::addContentLocale(self::BUILTIN_LOCALE_NAME);
-        
-        self::selectAppLocale(self::BUILTIN_LOCALE_NAME);
-        self::selectContentLocale(self::BUILTIN_LOCALE_NAME);
+        self::reset();
         
         self::$initDone = true;
     }
@@ -119,13 +111,29 @@ class Localization
      */
     public static function getAppLocales()
     {
-        $locales = array_values(self::$applicationLocales);
-
-        usort($locales, function(Localization_Locale $a, Localization_Locale $b) {
-            return strnatcasecmp($a->getLabel(), $b->getLabel());
-        });
+        return self::getLocalesByNS(self::NAMESPACE_APPLICATION);
+    }
+    
+   /**
+    * Retrieves all locales in the specified namespace.
+    * 
+    * @param string $namespace
+    * @return Localization_Locale[]
+    */
+    public static function getLocalesByNS(string $namespace)
+    {
+        if(isset(self::$locales[$namespace])) {
+            return array_values(self::$locales[$namespace]);
+        }
         
-        return $locales;
+        throw new Localization_Exception(
+            'No locales available in namespace',
+            sprintf(
+                'The namespace [%s] does not exist.',
+                $namespace
+            ),
+            self::ERROR_NO_LOCALES_IN_NAMESPACE
+        );
     }
     
    /**
@@ -136,11 +144,7 @@ class Localization
     */
     public static function addAppLocale(string $localeName) : Localization_Locale
     {
-        if(!isset(self::$applicationLocales[$localeName])) {
-            self::$applicationLocales[$localeName] = self::createLocale($localeName);
-        }
-        
-        return self::$applicationLocales[$localeName];
+        return self::addLocaleByNS($localeName, self::NAMESPACE_APPLICATION);
     }
     
    /**
@@ -151,11 +155,34 @@ class Localization
     */
     public static function addContentLocale(string $localeName) : Localization_Locale
     {
-        if(!isset(self::$contentLocales[$localeName])) {
-            self::$contentLocales[$localeName] = self::createLocale($localeName);
+        return self::addLocaleByNS($localeName, self::NAMESPACE_CONTENT);
+    }
+    
+   /**
+    * Adds a locale to the specified namespace.
+    * 
+    * @param string $localeName
+    * @param string $namespace
+    * @return Localization_Locale
+    */
+    public static function addLocaleByNS(string $localeName, string $namespace) : Localization_Locale
+    {
+        if(!isset(self::$locales[$namespace])) {
+            self::$locales[$namespace] = array();
         }
         
-        return self::$contentLocales[$localeName];
+        if(!isset(self::$locales[$namespace][$localeName])) 
+        {
+            self::$locales[$namespace][$localeName] = self::createLocale($localeName);
+            
+            // sort the locales on add: less resource intensive
+            // than doing it on getting locales.
+            uasort(self::$locales[$namespace], function(Localization_Locale $a, Localization_Locale $b) {
+                return strnatcasecmp($a->getLabel(), $b->getLabel());
+            });
+        }
+        
+        return self::$locales[$namespace][$localeName];
     }
     
     /**
@@ -179,22 +206,108 @@ class Localization
         return new $className();
     }
 
-   /**
-    * @var Localization_Locale
-    */
-    protected static $applicationLocale;
-    
     /**
-     * Returns the current application locale. This is the builtin
-     * locale by default, or the locale as set in the user settings.
+     * Retrieves the selected application locale instance. 
      *
      * @return Localization_Locale
      */
     public static function getAppLocale() : Localization_Locale
     {
-        return self::$applicationLocale;
+        return self::getSelectedLocaleByNS(self::NAMESPACE_APPLICATION);
     }
+    
+   /**
+    * Retrieves the name of the selected application locale.
+    * 
+    * @return string
+    */
+    public static function getAppLocaleName() : string
+    {
+        return self::getLocaleNameByNS(self::NAMESPACE_APPLICATION);
+    }
+    
+   /**
+    * Retrieves the names of the available application locales.
+    * @return string[]
+    */
+    public static function getAppLocaleNames() : array
+    {
+        return self::getLocaleNamesByNS(self::NAMESPACE_APPLICATION);
+    }
+    
+   /**
+    * Retrieves the selected locale name in the specified namespace.
+    * 
+    * @param string $namespace
+    * @throws Localization_Exception
+    * @return string
+    */
+    public static function getLocaleNameByNS(string $namespace) : string
+    {
+        return self::getSelectedKeyByNS('name', $namespace);
+    }
+    
+   /**
+    * Retrieves the selected locale instance for the specified namespace.
+    * 
+    * @param string $namespace
+    * @return Localization_Locale
+    * @throws Localization_Exception
+    */
+    public static function getSelectedLocaleByNS(string $namespace) : Localization_Locale
+    {
+        return self::getSelectedKeyByNS('locale', $namespace);
+    }
+    
+    protected static function getSelectedKeyByNS(string $key, string $namespace)
+    {
+        self::requireNamespace($namespace);
+        
+        if(isset(self::$selected[$namespace])) {
+            return self::$selected[$namespace][$key];
+        }
+        
+        throw new Localization_Exception(
+            'No selected locale in namespace.',
+            sprintf(
+                'Cannot retrieve selected key [%s]: no locale has been selected in the namespace [%s].',
+                $key,
+                $namespace
+            ),
+            self::ERROR_NO_LOCALE_SELECTED_IN_NS
+        );
+    }
+    
+   /**
+    * Stores the selected locale names by namespace.
+    * @var string[]
+    */
+    protected static $selected = array();
 
+   /**
+    * Selects the active locale for the specified namespace.
+    * 
+    * @param string $localeName
+    * @param string $namespace
+    * @return Localization_Locale
+    * @throws Localization_Exception
+    */
+    public static function selectLocaleByNS(string $localeName, string $namespace) : Localization_Locale
+    {
+        self::requireNamespace($namespace);
+        
+        self::$translator = null;
+        
+        $locale = self::addLocaleByNS($localeName, $namespace);
+        
+        self::$selected[$namespace] = array(
+            'locale' => $locale,
+            'name' => $localeName
+        );
+        
+        return $locale;
+    }
+    
    /**
     * Selects the application locale to use.
     * 
@@ -203,10 +316,7 @@ class Localization
     */
     public static function selectAppLocale(string $localeName) : Localization_Locale
     {
-        self::$applicationLocale = self::addAppLocale($localeName);
-        self::$translator = null;
-        
-        return self::$applicationLocale;
+        return self::selectLocaleByNS($localeName, self::NAMESPACE_APPLICATION);
     }
 
    /**
@@ -220,19 +330,7 @@ class Localization
     */
     public static function getAppLocaleByName(string $localeName) : Localization_Locale
     {
-        if(isset(self::$applicationLocales[$localeName])) {
-            return self::$applicationLocales[$localeName];
-        }
-
-        throw new Localization_Exception(
-            'Unknown application locale',
-            sprintf(
-                'Tried getting locale [%1$s], but that does not exist. Available locales are: [%2$s].',
-                $localeName,
-                implode(', ', array_keys(self::$applicationLocales))
-            ),
-            self::ERROR_UNKNOWN_APPLICATION_LOCALE
-        );
+        return self::getLocaleByNameNS($localeName, self::NAMESPACE_APPLICATION);
     }
 
     /**
@@ -244,7 +342,12 @@ class Localization
      */
     public static function appLocaleExists(string $localeName) : bool
     {
-        return isset(self::$applicationLocales[$localeName]);
+        return self::localeExistsInNS(self::NAMESPACE_APPLICATION, $localeName);
+    }
+   
+    public static function localeExistsInNS(string $namespace, string $localeName) : bool
+    {
+        return isset(self::$locales[$namespace]) && isset(self::$locales[$namespace][$localeName]);
     }
 
     /**
@@ -255,13 +358,7 @@ class Localization
      */
     public static function getContentLocales()
     {
-        $locales = array_values(self::$contentLocales);
-        
-        usort($locales, function(Localization_Locale $a, Localization_Locale $b) {
-            return strnatcasecmp($a->getLabel(), $b->getLabel());
-        });
-        
-        return $locales;
+        return self::getLocalesByNS(self::NAMESPACE_CONTENT);
     }
     
    /**
@@ -270,9 +367,27 @@ class Localization
     */
     public static function getContentLocaleNames()
     {
-        return array_keys(self::$contentLocales);
+        return self::getLocaleNamesByNS(self::NAMESPACE_CONTENT);
     }
-
+    
+   /**
+    * Retrieves all locale names available in the specified namespace.
+    * The names are sorted alphabetically.
+    * 
+    * @param string $namespace
+    * @return array|array
+    */
+    public static function getLocaleNamesByNS(string $namespace)
+    {
+        self::requireNamespace($namespace);
+        
+        $names = array_keys(self::$locales[$namespace]);
+        
+        sort($names);
+        
+        return $names;
+     }
+    
     /**
      * Checks by the locale name if the specified locale is
      * available as a locale for the user data.
@@ -282,7 +397,7 @@ class Localization
      */
     public static function contentLocaleExists($localeName)
     {
-        return isset(self::$contentLocales[$localeName]);
+        return self::localeExistsInNS(self::NAMESPACE_CONTENT, $localeName);
     }
 
     /**
@@ -297,23 +412,36 @@ class Localization
      */
     public static function getContentLocaleByName($localeName) : Localization_Locale
     {
-        if(isset(self::$contentLocales[$localeName])) {
-            return self::$contentLocales[$localeName];
+        return self::getLocaleByNameNS($localeName, self::NAMESPACE_CONTENT);
+    }
+    
+   /**
+    * Retrieves a locale by its name in the specified namespace.
+    * 
+    * @param string $localeName
+    * @param string $namespace
+    * @throws Localization_Exception
+    * @return Localization_Locale
+    */
+    public static function getLocaleByNameNS(string $localeName, string $namespace) : Localization_Locale
+    {
+        self::requireNamespace($namespace);
+        
+        if(isset(self::$locales[$namespace]) && isset(self::$locales[$namespace][$localeName])) {
+            return self::$locales[$namespace][$localeName];
         }
         
         throw new Localization_Exception(
-            'Unknown locale',
+            'Unknown locale in namespace',
             sprintf(
-                'Cannot get locale [%s], it does not exist. Valid locale names are: [%s].',
+                'The locale [%s] has not been added to the namespace [%s].',
                 $localeName,
-                implode(', ', array_keys(self::$contentLocales))
+                $namespace
             ),
-            self::ERROR_UNKNOWN_CONTENT_LOCALE
+            self::ERROR_UNKNOWN_LOCALE_IN_NS
         );
     }
 
-    private static $contentLocale;
-    
     /**
      * Retrieves the currently selected content locale.
      *
@@ -321,17 +449,17 @@ class Localization
      */
     public static function getContentLocale() : Localization_Locale
     {
-        return self::$contentLocale;
+        return self::getSelectedKeyByNS('locale', self::NAMESPACE_CONTENT);
     }
 
     public static function getContentLocaleName() : string
     {
-        return self::getContentLocale()->getName();
+        return self::getSelectedKeyByNS('name', self::NAMESPACE_CONTENT);
     }
 
     public static function isActiveAppLocale(Localization_Locale $locale)
     {
-        return $locale->getName() === self::getAppLocale()->getName();
+        return $locale->getName() === self::getAppLocaleName();
     }
 
     /**
@@ -341,7 +469,7 @@ class Localization
      */
     public static function isActiveContentLocale(Localization_Locale $locale)
     {
-        return $locale->getName() === self::$contentLocaleName;
+        return $locale->getName() === self::getContentLocaleName();
     }
 
     /**
@@ -351,10 +479,7 @@ class Localization
      */
     public static function selectContentLocale(string $localeName) : Localization_Locale
     {
-        self::$contentLocale = self::addContentLocale($localeName);
-        self::$contentLocaleName = $localeName;
-        
-        return self::$contentLocale;
+        return self::selectLocaleByNS($localeName, self::NAMESPACE_CONTENT);
     }
 
     protected static $translator;
@@ -385,14 +510,39 @@ class Localization
         return self::$translator;
     }
 
-    public static function countContentLocales()
+    public static function countContentLocales() : int
     {
-        return count(self::$contentLocales);
+        return self::countLocalesByNS(self::NAMESPACE_CONTENT);
     }
 
-    public static function countLocales()
+    public static function countAppLocales() : int
     {
-        return count(self::$applicationLocales);
+        return self::countLocalesByNS(self::NAMESPACE_APPLICATION);
+    }
+    
+    public static function countLocalesByNS(string $namespace) : int
+    {
+        self::requireNamespace($namespace);
+        
+        if(isset(self::$locales[$namespace])) {
+            return count(self::$locales[$namespace]);
+        }
+    }
+    
+    protected static function requireNamespace(string $namespace)
+    {
+        if(isset(self::$locales[$namespace])) {
+            return;
+        }
+        
+        throw new Localization_Exception(
+            'Cannot count locales in unknown namespace',
+            sprintf(
+                'The namespace [%s] does not exist.',
+                $namespace
+            ),
+            self::ERROR_UNKNOWN_NAMESPACE
+        );
     }
 
     /**
@@ -420,15 +570,6 @@ class Localization
         }
 
         return $select;
-    }
-
-   /**
-    * Retrieves the current application currency instance.
-    * @return Localization_Currency
-    */
-    public static function getCurrentCurrency()
-    {
-        return self::getAppLocale()->getCurrency();
     }
 
    /**
@@ -637,7 +778,20 @@ class Localization
         return $ids;
     }
     
-
+   /**
+    * Resets all locales to the built-in locale.
+    */
+    public static function reset()
+    {
+        self::$locales = array();
+        self::$selected = array();
+        
+        self::addAppLocale(self::BUILTIN_LOCALE_NAME);
+        self::addContentLocale(self::BUILTIN_LOCALE_NAME);
+        
+        self::selectAppLocale(self::BUILTIN_LOCALE_NAME);
+        self::selectContentLocale(self::BUILTIN_LOCALE_NAME);
+    }
 }
 
 Localization::init();
