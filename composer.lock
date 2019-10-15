@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "742ab4762dc04eeaa152797befbe0ef4",
+    "content-hash": "6202cddf7383662f7362f4c86b2e8e21",
     "packages": [
         {
             "name": "geshi/geshi",
@@ -52,19 +52,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils.git",
-                "reference": "1ecc631a161215d2a51e579a2c92b149b4ebce1c"
+                "reference": "edf1de6bc126edd2ff4af98653b707a6d726e2d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/1ecc631a161215d2a51e579a2c92b149b4ebce1c",
-                "reference": "1ecc631a161215d2a51e579a2c92b149b4ebce1c",
+                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/edf1de6bc126edd2ff4af98653b707a6d726e2d1",
+                "reference": "edf1de6bc126edd2ff4af98653b707a6d726e2d1",
                 "shasum": ""
             },
             "require": {
                 "geshi/geshi": "1.0.9",
+                "mistralys/html_quickform2": "dev-trunk",
                 "neitanod/forceutf8": "2.0.1",
-                "parsecsv/php-parsecsv": "0.4.5",
-                "pear/html_quickform2": "dev-trunk"
+                "parsecsv/php-parsecsv": "0.4.5"
             },
             "require-dev": {
                 "phpunit/phpunit": "8.2.5"
@@ -81,19 +81,79 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
             "authors": [
                 {
-                    "email": "s.mordziol@mistralys.eu",
                     "name": "Sebastian Mordziol",
+                    "email": "s.mordziol@mistralys.eu",
                     "role": "Lead"
                 }
             ],
-            "description": "Drop-in utilities for applications.",
-            "support": {
-                "source": "https://github.com/Mistralys/application-utils/tree/master",
-                "issues": "https://github.com/Mistralys/application-utils/issues"
+            "description": "Drop-in utilities for PHP applications.",
+            "time": "2019-10-15T11:03:27+00:00"
+        },
+        {
+            "name": "mistralys/html_quickform2",
+            "version": "dev-trunk",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mistralys/HTML_QuickForm2.git",
+                "reference": "2b7d254646fe9e170b00e666660b0e2906221d82"
             },
-            "time": "2019-10-03T13:26:25+00:00"
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mistralys/HTML_QuickForm2/zipball/2b7d254646fe9e170b00e666660b0e2906221d82",
+                "reference": "2b7d254646fe9e170b00e666660b0e2906221d82",
+                "shasum": ""
+            },
+            "require": {
+                "pear/html_common2": "^2.1",
+                "pear/pear_exception": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "8.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTML_QuickForm2": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Borzov",
+                    "email": "avb@php.net",
+                    "role": "Lead"
+                },
+                {
+                    "name": "Bertrand Mansion",
+                    "email": "golgote@mamasam.com",
+                    "role": "Lead"
+                },
+                {
+                    "name": "Sebastian Mordziol",
+                    "email": "s.mordziol@mistralys.eu",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "Provides methods to create, validate and render HTML forms in PHP.",
+            "homepage": "https://pear.php.net/package/HTML_QuickForm2/",
+            "keywords": [
+                "Forms",
+                "PEAR",
+                "javascript",
+                "quickform",
+                "validation",
+                "wizard"
+            ],
+            "time": "2019-10-09T08:13:47+00:00"
         },
         {
             "name": "neitanod/forceutf8",
@@ -213,65 +273,6 @@
                 "html"
             ],
             "time": "2019-04-07T10:59:56+00:00"
-        },
-        {
-            "name": "pear/html_quickform2",
-            "version": "dev-trunk",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Mistralys/HTML_QuickForm2.git",
-                "reference": "0c521c4a937c72541b015d2c065d688256e15a2d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/HTML_QuickForm2/zipball/0c521c4a937c72541b015d2c065d688256e15a2d",
-                "reference": "0c521c4a937c72541b015d2c065d688256e15a2d",
-                "shasum": ""
-            },
-            "require": {
-                "pear/html_common2": "^2.1",
-                "pear/pear_exception": "^1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^3.7|^4.8|^5.7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "HTML_QuickForm2": ""
-                }
-            },
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "email": "avb@php.net",
-                    "name": "Alexey Borzov",
-                    "role": "Lead"
-                },
-                {
-                    "email": "golgote@mamasam.com",
-                    "name": "Bertrand Mansion",
-                    "role": "Lead"
-                }
-            ],
-            "description": "Provides methods to create, validate and render HTML forms in PHP.",
-            "homepage": "https://pear.php.net/package/HTML_QuickForm2/",
-            "keywords": [
-                "forms",
-                "javascript",
-                "pear",
-                "quickform",
-                "validation",
-                "wizard"
-            ],
-            "support": {
-                "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=HTML_QuickForm2",
-                "source": "https://github.com/pear/HTML_QuickForm2",
-                "docs": "https://pear.php.net/manual/en/package.html.html-quickform2.php"
-            },
-            "time": "2019-09-29T09:24:01+00:00"
         },
         {
             "name": "pear/pear_exception",
@@ -1852,7 +1853,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "mistralys/application-utils": 20,
-        "pear/html_quickform2": 20
+        "mistralys/html_quickform2": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
