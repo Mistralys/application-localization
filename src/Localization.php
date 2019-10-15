@@ -184,11 +184,6 @@ class Localization
     */
     protected static $applicationLocale;
     
-   /**
-    * @var string
-    */
-    protected static $applicationLocaleName;
-
     /**
      * Returns the current application locale. This is the builtin
      * locale by default, or the locale as set in the user settings.
@@ -209,7 +204,6 @@ class Localization
     public static function selectAppLocale(string $localeName) : Localization_Locale
     {
         self::$applicationLocale = self::addAppLocale($localeName);
-        self::$applicationLocaleName = $localeName;
         self::$translator = null;
         
         return self::$applicationLocale;
@@ -320,8 +314,6 @@ class Localization
 
     private static $contentLocale;
     
-    private static $contentLocaleName;
-
     /**
      * Retrieves the currently selected content locale.
      *
@@ -334,12 +326,12 @@ class Localization
 
     public static function getContentLocaleName() : string
     {
-        return self::$currentContentLocaleName = self::getContentLocale()->getName();
+        return self::getContentLocale()->getName();
     }
 
     public static function isActiveAppLocale(Localization_Locale $locale)
     {
-        return $locale->getName() === self::$applicationLocaleName;
+        return $locale->getName() === self::getAppLocale()->getName();
     }
 
     /**
