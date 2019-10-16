@@ -73,6 +73,13 @@ final class LocalizationTest extends TestCase
         $this->assertEquals('de_DE', Localization::getLocaleByNameNS('de_DE', 'custom')->getName());
     }
     
+    public function test_addLocale_invalidLocale()
+    {
+        $this->expectException(Localization_Exception::class);
+        
+        Localization::addAppLocale('invalid_locale');
+    }
+    
     public function test_selectLocale_content()
     {
         Localization::addContentLocale('de_DE');
@@ -169,6 +176,7 @@ final class LocalizationTest extends TestCase
     {
         Localization::addLocaleByNS('de_DE', 'custom');
         
+        // no default locale for custom namespaces
         $list = array(
             'de_DE'
         );
@@ -178,5 +186,32 @@ final class LocalizationTest extends TestCase
             Localization::getLocaleNamesByNS('custom'),
             'The list of custom locales should match.'
         );
+    }
+    
+    public function test_localeExists_app()
+    {
+        $this->assertFalse(Localization::appLocaleExists('de_DE'));
+        
+        Localization::addAppLocale('de_DE');
+        
+        $this->assertTrue(Localization::appLocaleExists('de_DE'));
+    }
+
+    public function test_localeExists_content()
+    {
+        $this->assertFalse(Localization::contentLocaleExists('de_DE'));
+        
+        Localization::addContentLocale('de_DE');
+        
+        $this->assertTrue(Localization::contentLocaleExists('de_DE'));
+    }
+
+    public function test_localeExists_custom()
+    {
+        $this->assertFalse(Localization::localeExistsInNS('de_DE', 'custom'));
+        
+        Localization::addLocaleByNS('de_DE', 'custom');
+        
+        $this->assertTrue(Localization::localeExistsInNS('de_DE', 'custom'));
     }
 }
