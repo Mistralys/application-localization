@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/Mistralys/application-localization.svg?branch=master)](https://travis-ci.com/Mistralys/application-localization)
+
 # Application Localization
 
 PHP and Javascript localization library, written in PHP. It is a simple localization layer that stores translated strings in ini files.
