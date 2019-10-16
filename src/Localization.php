@@ -572,7 +572,9 @@ class Localization
         $select->setId('f-' . $name);
         $select->addClass('input-xlarge');
 
-        foreach (self::$applicationLocales as $locale) {
+        $locales = self::getAppLocales();
+        
+        foreach($locales as $locale) {
             $select->addOption($locale->getLabel(), $locale->getName());
         }
 
