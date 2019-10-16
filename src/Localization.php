@@ -551,28 +551,56 @@ class Localization
             self::ERROR_UNKNOWN_NAMESPACE
         );
     }
+    
+   /**
+    * Injects a content locales selector element into the specified
+    * HTML QuickForm2 container.
+    * 
+    * @param string $elementName
+    * @param \HTML_QuickForm2_Container $container
+    * @param string $label
+    * @return \HTML_QuickForm2_Element_Select
+    */
+    public static function injectContentLocalesSelector(string $elementName, \HTML_QuickForm2_Container $container, string $label='') : \HTML_QuickForm2_Element_Select
+    {
+        return self::injectLocalesSelectorNS($elementName, self::NAMESPACE_CONTENT, $container, $label);
+    }
+    
+   /**
+    * Injects an app locales selector element into the specified
+     * HTML QuickForm2 container.
+     * 
+    * @param string $elementName
+    * @param \HTML_QuickForm2_Container $container
+    * @param string|NULL $label
+    * @return \HTML_QuickForm2_Element_Select
+    */
+    public static function injectAppLocalesSelector(string $elementName, \HTML_QuickForm2_Container $container, string $label='') : \HTML_QuickForm2_Element_Select
+    {
+        return self::injectLocalesSelectorNS($elementName, self::NAMESPACE_APPLICATION, $container, $label);
+    }
 
     /**
-     * Injects an application locales selector element to the specified
-     * form container.
+     * Injects a locales selector element into the specified
+     * HTML QuickForm2 container, for the specified locales
+     * namespace.
      *
-     * @param string $name
+     * @param string $elementName
+     * @param string $namespace
      * @param \HTML_QuickForm2_Container $container
      * @return \HTML_QuickForm2_Element_Select
      */
-    public static function injectLocalesSelector($name, \HTML_QuickForm2_Container $container, $label = null)
+    public static function injectLocalesSelectorNS(string $elementName, string $namespace, \HTML_QuickForm2_Container $container, string $label='') : \HTML_QuickForm2_Element_Select
     {
-        if (is_null($label)) {
+        if(empty($label)) {
             $label = t('Language');
         }
 
         /* @var $select \HTML_QuickForm2_Element_Select */
-        $select = $container->addElement('select', $name);
+        $select = $container->addSelect($elementName);
         $select->setLabel($label);
-        $select->setId('f-' . $name);
-        $select->addClass('input-xlarge');
 
-        $locales = self::getAppLocales();
+        $locales = self::getLocalesByNS($namespace);
         
         foreach($locales as $locale) {
             $select->addOption($locale->getLabel(), $locale->getName());

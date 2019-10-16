@@ -214,4 +214,30 @@ final class LocalizationTest extends TestCase
         
         $this->assertTrue(Localization::localeExistsInNS('de_DE', 'custom'));
     }
+    
+    public function test_injectLocalesSelector_app()
+    {
+        $form = new HTML_QuickForm2('dummy');
+        
+        Localization::addAppLocale('de_DE');
+        
+        $select = Localization::injectAppLocalesSelector('select-app-locale', $form);
+        
+        $this->assertEquals('select-app-locale', $select->getName());
+        $this->assertEquals(\AppLocalize\t('Language'), $select->getLabel());
+        $this->assertEquals(2, $select->countOptions());
+    }
+    
+    public function test_injectLocalesSelector_content()
+    {
+        $form = new HTML_QuickForm2('dummy');
+        
+        Localization::addContentLocale('fr_FR');
+        
+        $select = Localization::injectContentLocalesSelector('select-content-locale', $form);
+        
+        $this->assertEquals('select-content-locale', $select->getName());
+        $this->assertEquals(\AppLocalize\t('Language'), $select->getLabel());
+        $this->assertEquals(2, $select->countOptions());
+    }
 }
