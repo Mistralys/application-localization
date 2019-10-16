@@ -481,6 +481,15 @@ class Localization
     {
         return self::selectLocaleByNS($localeName, self::NAMESPACE_CONTENT);
     }
+    
+   /**
+    * Checks whether the localization has been configured entirely.
+    * @return bool
+    */
+    public static function isConfigured() : bool
+    {
+        return self::$configured;
+    }
 
     protected static $translator;
     
@@ -489,8 +498,6 @@ class Localization
      */
     public static function getTranslator(Localization_Locale $locale=null) : Localization_Translator
     {
-        self::requireConfiguration();
-        
         if($locale !== null)
         {
             $obj = new Localization_Translator();
@@ -737,8 +744,19 @@ class Localization
     */
     public static function writeClientFiles(bool $force=false) : void
     {
-        $generator = new Localization_ClientGenerator();
-        $generator->writeFiles($force);
+        self::createGenerator()->writeFiles($force);
+    }
+    
+   /**
+    * Creates a new instance of the client generator class
+    * that is used to write the localization files into the
+    * target folder on disk.
+    * 
+    * @return Localization_ClientGenerator
+    */
+    public static function createGenerator() : Localization_ClientGenerator
+    {
+        return new Localization_ClientGenerator();
     }
     
     public static function getClientFolder()
