@@ -43,38 +43,3 @@ function pt()
         $arguments
     );
 }
-
-/**
- * Translates the result of a dynamic string, e.g.
- *
- * td($stringName);
- *
- * This is required to avoid these calls showing up
- * as regular translateable strings when using the
- * translation scanner that searches for t() calls.
- *
- * @return mixed
- */
-function td()
-{
-    $arguments = func_get_args();
-    
-    return call_user_func_array(
-        array(Localization::getTranslator(), 'translate'),
-        $arguments
-    );
-}
-
-/**
- * Same as the {@link td()} function, but echos the translated string.
- *
- * @see td()
- */
-function ptd()
-{
-    $arguments = func_get_args();
-    echo call_user_func_array(
-        array(Localization::getTranslator(), 'translate'),
-        $arguments
-    );
-}
