@@ -1,14 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 class Localization_ClientGenerator
 {
-    const ERROR_CANNOT_WRITE_LOCALE_FILE = 39301;
-    
     const ERROR_JS_FOLDER_NOT_FOUND = 39302;
-    
-    const ERROR_CANNOT_COPY_LIBRARY_FILE = 39303;
     
    /**
     * @var bool
@@ -20,6 +18,9 @@ class Localization_ClientGenerator
     */
     protected $translator;
     
+   /**
+    * @var string
+    */
     protected $targetFolder;
     
     public function __construct()
@@ -28,12 +29,43 @@ class Localization_ClientGenerator
         $this->targetFolder = Localization::getClientFolder();
     }
     
-    public function writeFiles(bool $force=false)
+    public function writeFiles(bool $force=false) : void
     {
         $this->force = $force;
         
         $this->writeLocaleFiles();
         $this->writeLibraryFiles();
+    }
+    
+   /**
+    * Retrieves a list of all localization client 
+    * files that are written to disk. This includes
+    * the locale files and the libraries required
+    * to make it work clientside.
+    * 
+    * @return string[]
+    */
+    public function getFilesList() : array
+    {
+        $files = array();
+        
+        foreach($this->libraries as $fileName)
+        {
+            $files[] = $this->getLibraryFilePath($fileName);
+        }
+        
+        $locales = Localization::getAppLocales();
+        
+        foreach($locales as $locale)
+        {
+            if($locale->isNative()) {
+                continue;
+            }
+            
+            $files[] = $this->getLocaleFilePath($locale);
+        }
+        
+        return $files;
     }
     
     protected function writeLocaleFiles()
@@ -50,13 +82,13 @@ class Localization_ClientGenerator
         }
     }
     
+    protected $libraries = array(
+        'translator.js',
+        'md5.min.js'
+    );
+    
     protected function writeLibraryFiles()
     {
-        $libraries = array(
-            'translator.js',
-            'md5.min.js'
-        );
-        
         $sourceFolder = realpath(__DIR__.'/../js');
         
         if($sourceFolder === false) 
@@ -71,9 +103,9 @@ class Localization_ClientGenerator
             );
         }
         
-        foreach($libraries as $fileName)
+        foreach($this->libraries as $fileName)
         {
-            $targetFile = $this->targetFolder.'/'.$fileName;
+            $targetFile = $this->getLibraryFilePath($fileName);
             
             if(file_exists($targetFile) && !$this->force) {
                 continue;
@@ -81,19 +113,22 @@ class Localization_ClientGenerator
             
             $sourceFile = $sourceFolder.'/'.$fileName;
             
-            if(!copy($sourceFile, $targetFile)) 
-            {
-                throw new Localization_Exception(
-                    'Cannot copy localization client library file.',
-                    sprintf(
-                        'Tried copying the file [%s] to the target location at [%s].',
-                        $fileName,
-                        $targetFile
-                    ),
-                    self::ERROR_CANNOT_COPY_LIBRARY_FILE
-                );    
-            }
+            \AppUtils\FileHelper::copyFile($sourceFile, $targetFile);
         }
+    }
+    
+    protected function getLibraryFilePath(string $fileName) : string
+    {
+        return $this->targetFolder.'/'.$fileName;
+    }
+    
+    protected function getLocaleFilePath(Localization_Locale $locale) : string
+    {
+        return sprintf(
+            '%s/locale-%s.js',
+            $this->targetFolder,
+            $locale->getLanguageCode()
+        );
     }
     
     /**
@@ -115,11 +150,7 @@ class Localization_ClientGenerator
      */
     protected function writeLocaleFile(Localization_Locale $locale)
     {
-        $path = sprintf(
-            '%s/locale-%s.js',
-            $this->targetFolder,
-            $locale->getShortName()
-        );
+        $path = $this->getLocaleFilePath($locale);
         
         if(file_exists($path) && !$this->force) {
             return;
@@ -154,18 +185,6 @@ class Localization_ClientGenerator
             'AppLocalize_Translator.'.implode('.', $tokens).';';
         }
         
-        if(file_put_contents($path, $content)) {
-            return; 
-        }
-        
-        throw new Localization_Exception(
-            'Cannot write localization client library file.',
-            sprintf(
-                'Tried writing the file for locale [%s] with path [%s].',
-                $locale->getName(),
-                $path
-            ),
-            self::ERROR_CANNOT_WRITE_LOCALE_FILE
-        );
+        \AppUtils\FileHelper::saveFile($path, $content);
     }
 }
