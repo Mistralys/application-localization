@@ -342,10 +342,10 @@ class Localization
      */
     public static function appLocaleExists(string $localeName) : bool
     {
-        return self::localeExistsInNS(self::NAMESPACE_APPLICATION, $localeName);
+        return self::localeExistsInNS($localeName, self::NAMESPACE_APPLICATION);
     }
    
-    public static function localeExistsInNS(string $namespace, string $localeName) : bool
+    public static function localeExistsInNS(string $localeName, string $namespace) : bool
     {
         return isset(self::$locales[$namespace]) && isset(self::$locales[$namespace][$localeName]);
     }
@@ -397,7 +397,7 @@ class Localization
      */
     public static function contentLocaleExists($localeName)
     {
-        return self::localeExistsInNS(self::NAMESPACE_CONTENT, $localeName);
+        return self::localeExistsInNS($localeName, self::NAMESPACE_CONTENT);
     }
 
     /**
@@ -577,30 +577,41 @@ class Localization
     */
     protected static $sources = array();
     
+   /**
+    * @var string[]
+    */
     protected static $excludeFolders = array();
     
+   /**
+    * @var string[]
+    */
     protected static $excludeFiles = array();
     
+   /**
+    * Retrieves all currently available sources.
+    * 
+    * @return \AppLocalize\Localization_Source[]
+    */
     public static function getSources()
     {
         return self::$sources;
     }
     
-    public static function addExcludeFolder(string $folderName)
+    public static function addExcludeFolder(string $folderName) : void
     { 
         if(!in_array($folderName, self::$excludeFolders)) {
             self::$excludeFolders[] = $folderName;
         }
     }
     
-    public static function addExcludeFile(string $fileName)
+    public static function addExcludeFile(string $fileName) : void
     {
         if(!in_array($fileName, self::$excludeFiles)) {
             self::$excludeFiles[] = $fileName;
         }
     }
     
-    public static function addSourceFolder($alias, $label, $group, $storageFolder, $path)
+    public static function addSourceFolder($alias, $label, $group, $storageFolder, $path) : Localization_Source
     {
         $source = new Localization_Source_Folder($alias, $label, $group, $storageFolder, $path);
         self::$sources[] = $source;
@@ -637,7 +648,7 @@ class Localization
     * @param string $sourceID
     * @return boolean
     */
-    public static function sourceExists($sourceID)
+    public static function sourceExists(string $sourceID) : bool
     {
         $sources = self::getSources();
         foreach($sources as $source) {
@@ -649,7 +660,14 @@ class Localization
         return false;
     }
 
-    public static function getSourceByID($sourceID)
+   /**
+    * Retrieves a localization source by its ID.
+    * 
+    * @param string $sourceID
+    * @throws Localization_Exception
+    * @return Localization_Source
+    */
+    public static function getSourceByID(string $sourceID) : Localization_Source
     {
         $sources = self::getSources();
         foreach($sources as $source) {
@@ -658,7 +676,14 @@ class Localization
             }
         }
         
-        return null;
+        throw new Localization_Exception(
+            'Unknown localization source',
+            sprintf(
+                'The source [%s] has not been added. Available soources are: [%s].',
+                $sourceID,
+                implode(', ', self::getSourceIDs())
+            )
+        );
     }
     
    /**
@@ -668,7 +693,7 @@ class Localization
     * @param string $storageFile Path to the file in which to store string information.
     * @return Localization_Scanner
     */
-    public static function createScanner()
+    public static function createScanner() : Localization_Scanner
     {
         self::requireConfiguration();
         
@@ -695,6 +720,10 @@ class Localization
         self::$storageFile = $storageFile;
         self::$clientFolder = $clientLibrariesFolder;
 
+        if(!is_writable($clientLibrariesFolder)) {
+            
+        }
+        
         self::writeClientFiles();
     }
     
@@ -706,7 +735,7 @@ class Localization
     * @see Localization_ClientGenerator
     * @param bool $force Whether to refresh the files, even if they exist.
     */
-    public static function writeClientFiles($force=false)
+    public static function writeClientFiles(bool $force=false) : void
     {
         $generator = new Localization_ClientGenerator();
         $generator->writeFiles($force);
@@ -791,6 +820,44 @@ class Localization
         
         self::selectAppLocale(self::BUILTIN_LOCALE_NAME);
         self::selectContentLocale(self::BUILTIN_LOCALE_NAME);
+    }
+    
+    /**
+     * Indxed array with locale names supported by the application
+     * @var array
+     */
+    protected static $supportedLocales = array(
+        'de_DE',
+        'en_US',
+        'en_CA',
+        'en_UK',
+        'es_ES',
+        'fr_FR',
+        'pl_PL',
+        'it_IT',
+        'de_AT',
+        'de_CH'
+    );
+    
+   /**
+    * Retrieves a list of all supported locales.
+    * 
+    * @return array
+    */
+    public static function getSupportedLocaleNames() : array
+    {
+        return self::$supportedLocales;
+    }
+    
+   /**
+    * Checks whether the specified locale is supported.
+    * 
+    * @param string $localeName
+    * @return bool
+    */
+    public static function isLocaleSupported(string $localeName) : bool
+    {
+        return in_array($localeName, self::$supportedLocales);
     }
 }
 
