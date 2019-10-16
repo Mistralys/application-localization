@@ -29,31 +29,25 @@ class Localization_Locale
     private $localeName;
 
     /**
-     * Indxed array with locale names supported by the application
-     * @var array
-     */
-    protected static $knownLocales = array(
-        'de_DE',
-        'en_US',
-        'en_UK',
-        'es_ES',
-        'fr_FR',
-        'pl_PL',
-        'it_IT',
-        'de_AT',
-        'de_CH'
-    );
-
-    /**
      * @var Localization_Country
      */
     protected $country;
+    
+   /**
+    * @var string
+    */
+    protected $countryCode;
+    
+   /**
+    * @var string
+    */
+    protected $languageCode;
 
     /**
      * @param string $localeName
      * @throws Localization_Exception
      */
-    public function __construct($localeName)
+    public function __construct(string $localeName)
     {
         if(!self::isLocaleKnown($localeName)) 
         {
@@ -62,17 +56,27 @@ class Localization_Locale
                 sprintf(
                     'The locale [%s] is not known. Valid locales are: [%s].',
                     $localeName,
-                    implode(', ', self::$knownLocales)
+                    implode(', ', Localization::getSupportedLocaleNames())
                 ),
                 self::ERROR_UNKNOWN_LOCALE_NAME
             );
         }
 
-        $this->localeName = $localeName;
-
         $tokens = explode('_', $localeName);
-        $country = strtolower(array_pop($tokens));
-        $this->country = Localization::createCountry($country);
+        
+        $this->localeName = $localeName;
+        $this->countryCode = strtolower($tokens[1]);
+        $this->languageCode = $tokens[0];
+    }
+    
+   /**
+    * Retrieves the two-letter language code of the locale.
+    * 
+    * @return string Language code, e.g. "en", "de"
+    */
+    public function getLanguageCode() : string
+    {
+        return $this->languageCode;
     }
 
     /**
@@ -82,16 +86,16 @@ class Localization_Locale
      * @param string $localeName
      * @return boolean
      */
-    public static function isLocaleKnown($localeName)
+    public static function isLocaleKnown(string $localeName) : bool
     {
-        return in_array($localeName, self::$knownLocales);
+        return Localization::isLocaleSupported($localeName);
     }
 
     /**
      * Returns the locale name, e.g. "en_US"
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->localeName;
     }
@@ -101,10 +105,23 @@ class Localization_Locale
     * e.g. "en" or "de".
     *
     * @return string
+    * @deprecated
+    * @see Localization_Locale::getLanguageCode()
     */
-    public function getShortName()
+    public function getShortName() : string
     {
-        return substr($this->localeName, 0, 2);
+        return $this->getLanguageCode();
+    }
+    
+   /**
+    * Retrieves the two-letter country code of
+    * the locale.
+    * 
+    * @return string Lowercase code, e.g. "uk"
+    */
+    public function getCountryCode() : string
+    {
+        return $this->countryCode;
     }
 
     /**
@@ -114,22 +131,21 @@ class Localization_Locale
      * @return boolean
      * @see Localization::BUILTIN_LOCALE_NAME
      */
-    public function isNative()
+    public function isNative() : bool
     {
-        if ($this->getName() == Localization::BUILTIN_LOCALE_NAME) {
-            return true;
-        }
-
-        return false;
+        return $this->getName() == Localization::BUILTIN_LOCALE_NAME;
     }
 
     /**
      * Returns the localized label for the locale, e.g. "German"
+     * 
      * @return string
+     * @throws Localization_Exception
      */
-    public function getLabel()
+    public function getLabel() : string
     {
-        switch ($this->localeName) {
+        switch($this->localeName) 
+        {
             case 'de_DE':
                 return t('German');
 
@@ -138,6 +154,9 @@ class Localization_Locale
 
             case 'en_UK':
                 return t('English (UK)');
+                
+            case 'en_CA':
+                return t('English (CA)');
 
             case 'es_ES':
                 return t('Spanish');
@@ -160,8 +179,12 @@ class Localization_Locale
      * Retrieves the country object for this locale
      * @return Localization_Country
      */
-    public function getCountry()
+    public function getCountry() : Localization_Country
     {
+        if(!isset($this->country)) {
+            $this->country = Localization::createCountry($this->countryCode);
+        }
+        
         return $this->country;
     }
 
@@ -169,8 +192,8 @@ class Localization_Locale
      * Retrieves the currency object for this locale
      * @return Localization_Currency
      */
-    public function getCurrency()
+    public function getCurrency() : Localization_Currency
     {
-        return $this->country->getCurrency();
+        return $this->getCountry()->getCurrency();
     }
 }
