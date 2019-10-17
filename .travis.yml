@@ -6,6 +6,4 @@ matrix:
     - php: "7.2"
     - php: "7.3"
     
-before_script:
-  - COMPOSER_ROOT_VERSION=dev-master 
-  - composer install
+before_script: COMPOSER_ROOT_VERSION=dev-master composer install
