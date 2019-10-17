@@ -70,7 +70,7 @@ class Localization_Editor_Filters
                 $this->request
                 ->registerParam($this->vars['location'])
                 ->setEnum('client', 'server')
-                ->get('')
+                ->get('server')
             );
         }
         else
