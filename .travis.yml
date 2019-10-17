@@ -6,4 +6,6 @@ matrix:
     - php: "7.2"
     - php: "7.3"
     
-before_script: COMPOSER_ROOT_VERSION=dev-master composer install
+before_script: 
+  # so composer knows which version of the package to use, since it is a cyclic dependency of the application-utils package.
+  - COMPOSER_ROOT_VERSION=dev-master composer install
