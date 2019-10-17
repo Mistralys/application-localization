@@ -61,7 +61,7 @@ class Localization_Editor_Filters
                 $this->vars['status'], 
                 $this->request
                 ->registerParam($this->vars['status'])
-                ->setEnum('translated', 'untranslated')
+                ->setEnum('', 'translated', 'untranslated')
                 ->get('')
             );
             
@@ -69,8 +69,8 @@ class Localization_Editor_Filters
                 $this->vars['location'],
                 $this->request
                 ->registerParam($this->vars['location'])
-                ->setEnum('client', 'server')
-                ->get('server')
+                ->setEnum('', 'client', 'server')
+                ->get('')
             );
         }
         else
