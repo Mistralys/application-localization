@@ -648,7 +648,7 @@ class Localization
         }
     }
     
-    public static function addSourceFolder($alias, $label, $group, $storageFolder, $path) : Localization_Source
+    public static function addSourceFolder($alias, $label, $group, $storageFolder, $path) : Localization_Source_Folder
     {
         $source = new Localization_Source_Folder($alias, $label, $group, $storageFolder, $path);
         self::$sources[] = $source;
@@ -859,6 +859,21 @@ class Localization
     public static function createEditor()
     {
         self::requireConfiguration();
+        
+        $installFolder = realpath(__DIR__.'/../');
+        
+        // add the localization package's own sources, 
+        // so the editor interface can be translated
+        // as well as all the other sources.
+        \AppLocalize\Localization::addSourceFolder(
+            'application-localization',
+            'Application Localization Package',
+            'Composer packages',
+            $installFolder.'/localization',
+            $installFolder.'/src'
+        )
+        ->excludeFiles(array('jtokenizer'))
+        ->excludeFolder('css');
         
         return new Localization_Editor();
     }
