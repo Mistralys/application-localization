@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
-class Localization_Editor
+use AppUtils\Traits_Optionable;
+use AppUtils\Interface_Optionable;
+
+class Localization_Editor implements Interface_Optionable
 {
+    use Traits_Optionable;
+    
     const MESSAGE_INFO = 'info';
     
     const MESSAGE_ERROR = 'danger';
@@ -13,6 +18,8 @@ class Localization_Editor
     const MESSAGE_WARNING = 'warning';
     
     const MESSAGE_SUCCESS = 'success';
+    
+    const ERROR_NO_SOURCES_AVAILABLE = 40001;
     
    /**
     * @var string
@@ -65,12 +72,6 @@ class Localization_Editor
 
         $this->initSession();
         $this->initAppLocales();
-        $this->initSources();
-
-        $this->scanner = Localization::createScanner();
-        $this->scanner->load();
-        
-        $this->filters = new Localization_Editor_Filters($this);
     }
     
     public function getRequest()
@@ -123,12 +124,31 @@ class Localization_Editor
     {
         $this->sources = Localization::getSources();
         
+        if(empty($this->sources)) 
+        {
+            throw new Localization_Exception(
+                'Cannot start editor: no sources defined.',
+                null,
+                self::ERROR_NO_SOURCES_AVAILABLE
+            );
+        }
+        
         $activeID = $this->request->registerParam($this->getVarName('source'))->setEnum(Localization::getSourceIDs())->get();
         if(empty($activeID)) {
-            $activeID = $this->sources[0]->getID();
+            $activeID = $this->getDefaultSourceID();
         }
         
         $this->activeSource = Localization::getSourceByID($activeID);
+    }
+    
+    protected function getDefaultSourceID()
+    {
+        $default = $this->getOption('default-source');
+        if(!empty($default) && Localization::sourceAliasExists($default)) {
+            return Localization::getSourceByAlias($default)->getID();
+        }
+        
+        return $this->sources[0]->getID();
     }
     
     protected function initAppLocales()
@@ -155,6 +175,13 @@ class Localization_Editor
     
     protected function handleActions()
     {
+        $this->initSources();
+        
+        $this->scanner = Localization::createScanner();
+        $this->scanner->load();
+        
+        $this->filters = new Localization_Editor_Filters($this);
+        
         if($this->request->getBool($this->getVarName('scan'))) 
         {
             $this->executeScan();
@@ -169,6 +196,8 @@ class Localization_Editor
     {
         $this->handleActions();
         
+        $appName = $this->getAppName();
+        
         ob_start();
         
 ?><!doctype html>
@@ -177,7 +206,7 @@ class Localization_Editor
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
-        <title><?php pt('Localization editor') ?></title>
+        <title><?php echo $appName ?></title>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -188,7 +217,7 @@ class Localization_Editor
 	</head>
 	<body>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-            <a class="navbar-brand" href="<?php echo $this->getURL() ?>"><?php pt('Localization editor') ?></a>
+            <a class="navbar-brand" href="<?php echo $this->getURL() ?>"><?php echo $appName ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -205,7 +234,18 @@ class Localization_Editor
                         	    {
                         	       ?>
                             			<a class="dropdown-item" href="<?php echo $this->getSourceURL($source) ?>">
-                            				<?php echo $source->getLabel() ?>
+                            				<?php 
+                                				if($source->getID() === $this->activeSource->getID()) 
+                                				{
+                                				    ?>
+                                				    	<b><?php echo $source->getLabel() ?></b>
+                            				    	<?php 
+                                				}
+                                				else
+                                				{
+                                				    echo $source->getLabel();
+                                				}
+                            				?>
                             				<?php
                             				    $untranslated = $source->countUntranslated($this->scanner);
                             				    if($untranslated > 0) {
@@ -244,6 +284,18 @@ class Localization_Editor
                         </a>
         			</li>
                 </ul>
+                <?php 
+                    $backURL = $this->getOption('back-url');
+                    if(!empty($backURL)) 
+                    {
+                        ?>
+                            <a href="<?php echo $backURL ?>" class="btn btn-light btn-sm">
+                            	<i class="fas fa-arrow-circle-left"></i>
+                            	<?php echo $this->getOption('back-label'); ?>
+                        	</a>
+                    	<?php 
+                    }
+            	?>
     		</div>
 		</nav>
 		<main role="main" class="container">
@@ -720,5 +772,66 @@ class Localization_Editor
             'text' => $message,
             'type' => $type
         );
+    }
+    
+    public function getDefaultOptions() : array
+    {
+        return array(
+            'appname' => '',
+            'default-source' => '',
+            'back-url' => '',
+            'back-label' => ''
+        );
+    }
+    
+   /**
+    * Sets the application name shown in the main navigation
+    * in the user interface.
+    * 
+    * @param string $name
+    * @return Localization_Editor
+    */
+    public function setAppName(string $name) : Localization_Editor
+    {
+        $this->setOption('appname', $name);
+        return $this;
+    }
+    
+    public function getAppName() : string
+    {
+        $name = $this->getOption('appname');
+        if(!empty($name)) {
+            return $name;
+        }
+        
+        return t('Localization editor');
+    }
+
+   /**
+    * Selects the default source to use if none has been 
+    * explicitly selected.
+    * 
+    * @param string $sourceID
+    */
+    public function selectDefaultSource(string $sourceID) : Localization_Editor
+    {
+        $this->setOption('default-source', $sourceID);
+        return $this;
+    }
+    
+   /**
+    * Sets an URL that the translators can use to go back to
+    * the main application, for example if it is integrated into
+    * an existing application.
+    * 
+    * @param string $url The URL to use for the link
+    * @param string $label Label of the link
+    * @return Localization_Editor
+    */
+    public function setBackURL(string $url, string $label) : Localization_Editor
+    {
+        $this->setOption('back-url', $url);
+        $this->setOption('back-label', $label);
+        return $this;
     }
 }
