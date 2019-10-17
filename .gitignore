@@ -11,3 +11,4 @@ example/data/fr_FR-main-client.ini
 example/data/fr_FR-main-server.ini
 .phpunit.result.cache
 tests/storage/*.js
+localization/storage.json
