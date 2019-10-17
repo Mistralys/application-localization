@@ -652,6 +652,10 @@ class Localization
     {
         $source = new Localization_Source_Folder($alias, $label, $group, $storageFolder, $path);
         self::$sources[] = $source;
+
+        usort(self::$sources, function(Localization_Source $a, Localization_Source $b) {
+            return strnatcasecmp($a->getLabel(), $b->getLabel());
+        });
         
         return $source;
     }
@@ -696,6 +700,23 @@ class Localization
         
         return false;
     }
+    
+   /**
+    * Checks whether a specific source exists by its alias.
+    * @param string $sourceAlias
+    * @return boolean
+    */
+    public static function sourceAliasExists(string $sourceAlias) : bool
+    {
+        $sources = self::getSources();
+        foreach($sources as $source) {
+            if($source->getAlias() == $sourceAlias) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
    /**
     * Retrieves a localization source by its ID.
@@ -719,6 +740,32 @@ class Localization
                 'The source [%s] has not been added. Available soources are: [%s].',
                 $sourceID,
                 implode(', ', self::getSourceIDs())
+            )
+        );
+    }
+    
+    /**
+     * Retrieves a localization source by its ID.
+     *
+     * @param string $sourceAlias
+     * @throws Localization_Exception
+     * @return Localization_Source
+     */
+    public static function getSourceByAlias(string $sourceAlias) : Localization_Source
+    {
+        $sources = self::getSources();
+        foreach($sources as $source) {
+            if($source->getAlias() == $sourceAlias) {
+                return $source;
+            }
+        }
+        
+        throw new Localization_Exception(
+            'Unknown localization source',
+            sprintf(
+                'The source [%s] has not been added. Available soources are: [%s].',
+                $sourceAlias,
+                implode(', ', self::getSourceAliases())
             )
         );
     }
@@ -891,6 +938,21 @@ class Localization
         }
         
         return $ids;
+    }
+    
+    /**
+     * Retrieves a list of all available source aliases.
+     * @return string[]
+     */
+    public static function getSourceAliases()
+    {
+        $aliases = array();
+        
+        foreach(self::$sources as $source) {
+            $aliases[] = $source->getAlias();
+        }
+        
+        return $aliases;
     }
     
    /**
