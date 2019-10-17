@@ -22,37 +22,54 @@
     require_once $autoload;
 
     // the folder in which the localization .ini files are stored
-    $storageFolder = $root.'/data';
+    $storageFolder = $root.'/localization';
     
     // where the source files analysis cache should be stored
     $storageFile = $storageFolder.'/storage.json';
     
-    // the folder in which to search for files to extract texts from
-    $sourcesPath = $root.'/sources';
-    
     // where the javascript includes should be written
-    $librariesFolder = $root.'/data/client-libraries';
+    $librariesFolder = $root.'/client-libraries';
     
     // add the locales we wish to manage (en_UK is always present)
     \AppLocalize\Localization::addAppLocale('de_DE');
     \AppLocalize\Localization::addAppLocale('fr_FR');
     
-    // register the sources folder.
+    define('LOCALIZATION_EXAMPLES_SOURCE_ID', 'localization-examples');
+    
+    // register the sources folder: this file's folder
+    // so even this file is included in the search.
     $source = \AppLocalize\Localization::addSourceFolder(
-        'main', 
-        'Main translation texts', 
-        'Core files', 
+        LOCALIZATION_EXAMPLES_SOURCE_ID, 
+        'Example texts', 
+        'Examples', 
         $storageFolder, 
-        $sourcesPath
+        $root
     );
     
-    // this folder will be ignored when searching for source files to analyze
-    $source->excludeFolder('excludeme'); 
+    // these folders will be ignored when searching for source files to analyze
+    $source->excludeFolders(array(
+        'localization',
+        'client-libraries',
+        'excludeme'
+    )); 
 
     // has to be called last after all sources and locales have been configured
     \AppLocalize\Localization::configure($storageFile, $librariesFolder);
     
     // create the editor UI and start it
     $editor = \AppLocalize\Localization::createEditor();
-    $editor->display();
+
+    // selects the default texts source we wish to edit
+    $editor->selectDefaultSource(LOCALIZATION_EXAMPLES_SOURCE_ID);
     
+    // customize the name shown in the UI (and translateable
+    // too, using the t() function)
+    $editor->setAppName(\AppLocalize\t('Example translator'));
+    
+    $editor->setBackURL(
+        'https://github.com/Mistralys/application-localization', 
+        \AppLocalize\t('Project Github page')
+    );
+    
+    // display the editor UI
+    $editor->display();
