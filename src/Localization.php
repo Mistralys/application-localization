@@ -69,14 +69,14 @@ class Localization
     * @var string
     * @see Localization::configure()
     */
-    protected static $storageFile;
+    protected static $storageFile = '';
     
    /**
     * Path to the folder into which the client libraries are written.
     * @var string
     * @see Localization::configure()
     */
-    protected static $clientFolder;
+    protected static $clientFolder = '';
     
    /**
     * Whether the configuration has been made.
@@ -748,20 +748,43 @@ class Localization
     * Also updated the client library files as needed.
     * 
     * @param string $storageFile Where to store the file analysis storage file.
-    * @param string $clientLibrariesFolder Where to put the client libraries and translation files. Will be created if it does not exist.
+    * @param string $clientLibrariesFolder Where to put the client libraries and translation files. Will be created if it does not exist. Optional: if not set, client libraries will not be created.
     */
-    public static function configure(string $storageFile, string $clientLibrariesFolder)
+    public static function configure(string $storageFile, string $clientLibrariesFolder='')
     {
         self::$configured = true;
         
         self::$storageFile = $storageFile;
         self::$clientFolder = $clientLibrariesFolder;
 
-        if(!is_writable($clientLibrariesFolder)) {
-            
+        // only write the client libraries to disk if the folder
+        // has been specified.
+        if(!empty($clientLibrariesFolder)) 
+        {
+            self::writeClientFiles();
         }
-        
-        self::writeClientFiles();
+    }
+    
+   /**
+    * Sets the folder where client libraries are to be stored.
+    * @param string $folder
+    */
+    public static function setClientLibrariesFolder(string $folder)
+    {
+        self::$clientFolder = $folder;
+    }
+    
+   /**
+    * Retrieves the path to the folder in which the client
+    * libraries should be stored.
+    * 
+    * NOTE: Can return an empty string, when this is disabled.
+    * 
+    * @return string
+    */
+    public static function getClientLibrariesFolder() : string
+    {
+        return self::$clientFolder;
     }
     
    /**

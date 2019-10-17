@@ -52,12 +52,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils.git",
-                "reference": "edf1de6bc126edd2ff4af98653b707a6d726e2d1"
+                "reference": "0ad791039c3455f251c7e7569b4232ce9e9b68c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/edf1de6bc126edd2ff4af98653b707a6d726e2d1",
-                "reference": "edf1de6bc126edd2ff4af98653b707a6d726e2d1",
+                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/0ad791039c3455f251c7e7569b4232ce9e9b68c2",
+                "reference": "0ad791039c3455f251c7e7569b4232ce9e9b68c2",
                 "shasum": ""
             },
             "require": {
@@ -93,7 +93,7 @@
                 }
             ],
             "description": "Drop-in utilities for PHP applications.",
-            "time": "2019-10-15T11:03:27+00:00"
+            "time": "2019-10-16T10:48:48+00:00"
         },
         {
             "name": "mistralys/html_quickform2",

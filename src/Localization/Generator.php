@@ -8,6 +8,8 @@ class Localization_ClientGenerator
 {
     const ERROR_JS_FOLDER_NOT_FOUND = 39302;
     
+    const ERROR_TARGET_FOLDER_NOT_WRITABLE = 39303;  
+    
    /**
     * @var bool
     */
@@ -31,6 +33,28 @@ class Localization_ClientGenerator
     
     public function writeFiles(bool $force=false) : void
     {
+        // no client libraries folder set: ignore.
+        if(empty($this->targetFolder)) {
+            return;
+        }
+        
+        \AppUtils\FileHelper::createFolder($this->targetFolder);
+        
+        if(!is_writable($this->targetFolder)) 
+        {
+            throw new Localization_Exception(
+                sprintf(
+                    'Cannot write client libraries: folder [%s] is not writable.', 
+                    basename($this->targetFolder)
+                ),
+                sprintf(
+                    'Tried accessing folder at [%s].',
+                    $this->targetFolder
+                ),
+                self::ERROR_TARGET_FOLDER_NOT_WRITABLE
+            );
+        }
+        
         $this->force = $force;
         
         $this->writeLocaleFiles();
