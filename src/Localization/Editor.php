@@ -162,6 +162,12 @@ class Localization_Editor implements Interface_Optionable
                 $names[] = $locale->getName();
             }
         }
+        
+        // use the default locale if no other is available.
+        if(empty($names)) {
+            $this->activeAppLocale = Localization::getAppLocale();
+            return;
+        }
        
         $activeID = $this->request->registerParam($this->getVarName('locale'))->setEnum($names)->get();
         if(empty($activeID)) {
@@ -223,67 +229,74 @@ class Localization_Editor implements Interface_Optionable
             </button>
 			
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav mr-auto">
-            		<li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        	<?php pt('Text sources') ?>
-                    	</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        	<?php 
-                        	    foreach($this->sources as $source)
-                        	    {
-                        	       ?>
-                            			<a class="dropdown-item" href="<?php echo $this->getSourceURL($source) ?>">
-                            				<?php 
-                                				if($source->getID() === $this->activeSource->getID()) 
-                                				{
-                                				    ?>
-                                				    	<b><?php echo $source->getLabel() ?></b>
-                            				    	<?php 
-                                				}
-                                				else
-                                				{
-                                				    echo $source->getLabel();
-                                				}
-                            				?>
-                            				<?php
-                            				    $untranslated = $source->countUntranslated($this->scanner);
-                            				    if($untranslated > 0) {
-                            				        ?>
-                            				        	(<span class="text-danger" title="<?php pt('%1$s texts have not been translated in this text source.', $untranslated) ?>"><?php echo $untranslated ?></span>)
-                    				            	<?php 
-                            				    }
-                        				    ?>
-                        				</a>
-                        			<?php 
-                        	    }
-                    	    ?>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        	<?php echo $this->activeAppLocale->getLabel() ?>
-                    	</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        	<?php 
-                        	    foreach($this->appLocales as $locale)
-                        	    {
-                        	       ?>
-                            			<a class="dropdown-item" href="<?php echo $this->getLocaleURL($locale) ?>">
-                            				<?php echo $locale->getLabel() ?>
-                        				</a>
-                        			<?php 
-                        	    }
-                    	    ?>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-        				<a href="<?php echo $this->getScanURL() ?>" class="btn btn-light btn-sm" title="<?php pt('Scan all source files to find translateable texts.') ?>">
-                        	<i class="fa fa-refresh"></i>
-                        	<?php pt('Scan') ?>
-                        </a>
-        			</li>
-                </ul>
+                <?php 
+                    if(!empty($this->appLocales))
+                    {
+                        ?>
+                            <ul class="navbar-nav mr-auto">
+                        		<li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    	<?php pt('Text sources') ?>
+                                	</a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                                    	<?php 
+                                    	    foreach($this->sources as $source)
+                                    	    {
+                                    	       ?>
+                                        			<a class="dropdown-item" href="<?php echo $this->getSourceURL($source) ?>">
+                                        				<?php 
+                                            				if($source->getID() === $this->activeSource->getID()) 
+                                            				{
+                                            				    ?>
+                                            				    	<b><?php echo $source->getLabel() ?></b>
+                                        				    	<?php 
+                                            				}
+                                            				else
+                                            				{
+                                            				    echo $source->getLabel();
+                                            				}
+                                        				?>
+                                        				<?php
+                                        				    $untranslated = $source->countUntranslated($this->scanner);
+                                        				    if($untranslated > 0) {
+                                        				        ?>
+                                        				        	(<span class="text-danger" title="<?php pt('%1$s texts have not been translated in this text source.', $untranslated) ?>"><?php echo $untranslated ?></span>)
+                                				            	<?php 
+                                        				    }
+                                    				    ?>
+                                    				</a>
+                                    			<?php 
+                                    	    }
+                                	    ?>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    	<?php echo $this->activeAppLocale->getLabel() ?>
+                                	</a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                                    	<?php 
+                                    	    foreach($this->appLocales as $locale)
+                                    	    {
+                                    	       ?>
+                                        			<a class="dropdown-item" href="<?php echo $this->getLocaleURL($locale) ?>">
+                                        				<?php echo $locale->getLabel() ?>
+                                    				</a>
+                                    			<?php 
+                                    	    }
+                                	    ?>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                    				<a href="<?php echo $this->getScanURL() ?>" class="btn btn-light btn-sm" title="<?php pt('Scan all source files to find translateable texts.') ?>">
+                                    	<i class="fa fa-refresh"></i>
+                                    	<?php pt('Scan') ?>
+                                    </a>
+                    			</li>
+                            </ul>
+                        <?php 
+                    }
+                ?>
                 <?php 
                     $backURL = $this->getOption('back-url');
                     if(!empty($backURL)) 
@@ -300,60 +313,76 @@ class Localization_Editor implements Interface_Optionable
 		</nav>
 		<main role="main" class="container">
 			<div>
-				<h1><?php echo $this->activeSource->getLabel() ?></h1>
-				<?php 
-    				if(!empty($_SESSION['localization_messages'])) 
-    				{
-    				    foreach($_SESSION['localization_messages'] as $def)
-    				    {
-    				        ?>
-    				        	<div class="alert alert-<?php echo $def['type'] ?>" role="alert">
-                            		<?php echo $def['text'] ?>
-                            		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    									<span aria-hidden="true">&times;</span>
-									</button>
-                            	</div>
-				        	<?php 
-    				    }
-    				    
-    				    // reset the messages after having displayed them
-    				    $_SESSION['localization_messages'] = array();
-    				}
-				?>
-				<p>
-					<?php 
-				        pt(
-    					    'You are translating to %1$s', 
-    					    '<span class="badge badge-info">'.
-    					       $this->activeAppLocale->getLabel().
-    				        '</span>'
-                        );
-				    ?><br>
-					<?php pt('Found %1$s texts to translate.', $this->activeSource->countUntranslated($this->scanner)) ?>
-				</p>
-				<br>
-				<?php 
-    				if(!$this->scanner->isScanAvailable()) 
-    				{
-    				    ?>
-    				    	<div class="alert alert-primary" role="alert">
-                            	<b><?php pt('No texts found:') ?></b> 
-                            	<?php pt('The source folders have not been scanned yet.') ?>
-                            </div>
-                            <p>
-                                <a href="<?php echo $this->getScanURL() ?>" class="btn btn-primary">
-                                	<i class="fa fa-refresh"></i>
-                                	<?php pt('Scan files now') ?>
-                                </a>
-                            </p>
-    				    <?php 
-    				}
-    				else
-    				{
-    				    echo $this->filters->renderForm();
-    				    echo $this->renderList();
-    				}
-				?>
+    			<?php 
+    			    if(empty($this->appLocales))
+    			    {
+    			        ?>
+    			        	<div class="alert alert-danger">
+    			        		<i class="fa fa-exclamation-triangle"></i>
+    			        		<b><?php pt('Nothing to translate:') ?></b>
+    			        		<?php pt('No application locales were added to translate to.') ?>
+    			        	</div>
+    			        <?php 
+    			    }
+    			    else
+    			    {
+    			        ?>
+            				<h1><?php echo $this->activeSource->getLabel() ?></h1>
+            				<?php 
+                				if(!empty($_SESSION['localization_messages'])) 
+                				{
+                				    foreach($_SESSION['localization_messages'] as $def)
+                				    {
+                				        ?>
+                				        	<div class="alert alert-<?php echo $def['type'] ?>" role="alert">
+                                        		<?php echo $def['text'] ?>
+                                        		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                									<span aria-hidden="true">&times;</span>
+            									</button>
+                                        	</div>
+            				        	<?php 
+                				    }
+                				    
+                				    // reset the messages after having displayed them
+                				    $_SESSION['localization_messages'] = array();
+                				}
+            				?>
+            				<p>
+            					<?php 
+            				        pt(
+                					    'You are translating to %1$s', 
+                					    '<span class="badge badge-info">'.
+                					       $this->activeAppLocale->getLabel().
+                				        '</span>'
+                                    );
+            				    ?><br>
+            					<?php pt('Found %1$s texts to translate.', $this->activeSource->countUntranslated($this->scanner)) ?>
+            				</p>
+            				<br>
+            				<?php 
+                				if(!$this->scanner->isScanAvailable()) 
+                				{
+                				    ?>
+                				    	<div class="alert alert-primary" role="alert">
+                                        	<b><?php pt('No texts found:') ?></b> 
+                                        	<?php pt('The source folders have not been scanned yet.') ?>
+                                        </div>
+                                        <p>
+                                            <a href="<?php echo $this->getScanURL() ?>" class="btn btn-primary">
+                                            	<i class="fa fa-refresh"></i>
+                                            	<?php pt('Scan files now') ?>
+                                            </a>
+                                        </p>
+                				    <?php 
+                				}
+                				else
+                				{
+                				    echo $this->filters->renderForm();
+                				    echo $this->renderList();
+                				}
+            				
+        				}
+    				?>
 			</div>
 		</main>
 	</body>
