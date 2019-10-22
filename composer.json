@@ -30,8 +30,7 @@
 	"prefer-stable" : true,
 	"require" : 
 	{
-		"mistralys/application-utils" : "dev-master",
-		"mistralys/html_quickform2" : "dev-trunk"
+		"mistralys/application-utils" : ">=1.0"
 	},
 	"require-dev" : 
 	{
