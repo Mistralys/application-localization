@@ -205,7 +205,38 @@ class Localization
         $className = '\AppLocalize\Localization_Country_' . strtoupper($id);
         return new $className();
     }
+    
+   /**
+    * Retrieves the currency of the selected app locale.
+    * 
+    * @return Localization_Currency
+    */
+    public static function getAppCurrency() : Localization_Currency
+    {
+        return self::getCurrencyNS(self::NAMESPACE_APPLICATION);
+    }
 
+    /**
+     * Retrieves the currency of the selected content locale.
+     *
+     * @return Localization_Currency
+     */
+    public static function getContentCurrency() : Localization_Currency
+    {
+        return self::getCurrencyNS(self::NAMESPACE_CONTENT);
+    }
+    
+    /**
+     * Retrieves the currency of the selected locale in the specified namespace.
+     *
+     * @param string $namespace
+     * @return Localization_Currency
+     */
+    public static function getCurrencyNS(string $namespace) : Localization_Currency
+    {
+        return self::getSelectedLocaleByNS($namespace)->getCurrency();
+    }
+    
     /**
      * Retrieves the selected application locale instance. 
      *

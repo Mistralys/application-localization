@@ -240,4 +240,37 @@ final class LocalizationTest extends TestCase
         $this->assertEquals(\AppLocalize\t('Language'), $select->getLabel());
         $this->assertEquals(2, $select->countOptions());
     }
+    
+    public function test_getSelectedCurrency_app()
+    {
+        Localization::addAppLocale('de_DE');
+        Localization::selectAppLocale('de_DE');
+        
+        $currency = Localization::getAppCurrency();
+        
+        $this->assertEquals('€', $currency->getSymbol());
+        $this->assertEquals('EUR', $currency->getISO());
+    }
+    
+    public function test_getSelectedCurrency_content()
+    {
+        Localization::addContentLocale('de_DE');
+        Localization::selectContentLocale('de_DE');
+        
+        $currency = Localization::getContentCurrency();
+        
+        $this->assertEquals('€', $currency->getSymbol());
+        $this->assertEquals('EUR', $currency->getISO());
+    }
+    
+    public function test_getSelectedCurrency_custom()
+    {
+        Localization::addLocaleByNS('de_DE', 'custom');
+        Localization::selectLocaleByNS('de_DE', 'custom');
+        
+        $currency = Localization::getCurrencyNS('custom');
+        
+        $this->assertEquals('€', $currency->getSymbol());
+        $this->assertEquals('EUR', $currency->getISO());
+    }
 }
