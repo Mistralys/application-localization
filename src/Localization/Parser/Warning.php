@@ -43,4 +43,14 @@ class Localization_Parser_Warning
     {
         return $this->message;
     }
+    
+    public function toArray()
+    {
+        return array(
+            'languageID' => $this->language->getID(),
+            'file' => $this->getFile(),
+            'line' => $this->getLine(),
+            'message' => $this->getMessage()
+        );
+    }
 }

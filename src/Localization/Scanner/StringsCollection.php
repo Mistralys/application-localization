@@ -8,6 +8,8 @@ class Localization_Scanner_StringsCollection
     
     const SOURCE_FILE = 'file';
     
+    const STORAGE_FORMAT_VERSION = 1;
+    
    /**
     * @var Localization_Scanner
     */
@@ -17,6 +19,11 @@ class Localization_Scanner_StringsCollection
     * @var Localization_Scanner_StringHash[]
     */
     protected $hashes = array();
+    
+   /**
+    * @var array
+    */
+    protected $warnings = array();
     
     public function __construct(Localization_Scanner $scanner)
     {
@@ -31,6 +38,11 @@ class Localization_Scanner_StringsCollection
         $string->setProperty('relativePath', $relativePath);
         
         $this->add($string);
+    }
+    
+    public function addWarning(Localization_Parser_Warning $warning)
+    {
+        $this->warnings[] = $warning->toArray();
     }
     
     protected function createString($sourceID, $sourceType, $text, $line)
@@ -88,22 +100,45 @@ class Localization_Scanner_StringsCollection
     
     public function toArray()
     {
-        $data = array();
+        $data = array(
+            'formatVersion' => self::STORAGE_FORMAT_VERSION,
+            'hashes' => array(),
+            'warnings' => array()
+        );
         
         foreach($this->hashes as $hash)
         {
-            $data = array_merge($data, $hash->toArray());
+            $data['hashes'] = array_merge($data['hashes'], $hash->toArray());
+        }
+        
+        foreach($this->warnings as $warning)
+        {
+            $data['warnings'][] = $warning->toArray();
         }
         
         return $data;
     }
     
-    public function fromArray($array)
+    public function fromArray($array) : bool
     {
-        foreach($array as $entry) {
+        if(!isset($array['formatVersion']) || $array['formatVersion'] != self::STORAGE_FORMAT_VERSION) {
+            return false;
+        }
+        
+        foreach($array['hashes'] as $entry) 
+        {
             $string = Localization_Scanner_StringInfo::fromArray($this, $entry);
             $this->add($string);
         }
+        
+        $this->warnings = $array['warnings'];
+        
+        return true;
+    }
+    
+    public function getWarnings() : array
+    {
+        return $this->warnings;
     }
     
     public function countHashes()

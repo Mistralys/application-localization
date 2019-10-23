@@ -75,6 +75,9 @@ abstract class Localization_Source
         
         $this->collection = null;
     }
+    
+    
+    abstract protected function _scan();
 
     protected $extensions = array(
         'js' => 'Javascript',
@@ -95,24 +98,24 @@ abstract class Localization_Source
         
         $language = $this->parser->parseFile($file);
         
-        $relative = $this->relativizePath($file);
-        
         $texts = $language->getTexts();
+        
         foreach($texts as $def) 
         {
             $this->collection->addFromFile(
                 $this->getID(),
-                $relative,
+                $file,
                 $language->getID(), 
                 $def['text'],
                 $def['line']
             );
-        } 
-    }
-    
-    protected function relativizePath($filePath)
-    {
-        return $filePath;
+        }
+        
+        $warnings = $language->getWarnings();
+        
+        foreach($warnings as $warning) {
+            $this->collection->addWarning($warning);
+        }
     }
     
     protected function log($message)

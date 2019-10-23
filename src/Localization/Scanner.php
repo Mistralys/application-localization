@@ -57,7 +57,13 @@ class Localization_Scanner
         
         $data = \AppUtils\FileHelper::parseJSONFile($this->storageFile);
         
-        $this->getCollection()->fromArray($data);
+        if($this->getCollection()->fromArray($data) === true) {
+            return;
+        }
+        
+        \AppUtils\FileHelper::deleteFile($this->storageFile);
+        $this->loaded = false;
+        $this->collection = null;
     }
     
     protected function save()
