@@ -6,6 +6,7 @@ namespace AppLocalize;
 
 use AppUtils\Traits_Optionable;
 use AppUtils\Interface_Optionable;
+use AppUtils\FileHelper;
 
 class Localization_Editor implements Interface_Optionable
 {
@@ -288,11 +289,25 @@ class Localization_Editor implements Interface_Optionable
                                     </div>
                                 </li>
                                 <li class="nav-item">
-                    				<a href="<?php echo $this->getScanURL() ?>" class="btn btn-light btn-sm" title="<?php pt('Scan all source files to find translateable texts.') ?>">
+                    				<a href="<?php echo $this->getScanURL() ?>" class="btn btn-light btn-sm" title="<?php pt('Scan all source files to find translateable texts.') ?>" data-toggle="tooltip">
                                     	<i class="fa fa-refresh"></i>
                                     	<?php pt('Scan') ?>
                                     </a>
                     			</li>
+                    			<?php 
+                        			if($this->scanner->hasWarnings()) {
+                        			    ?>
+                        			    	<li class="nav-item">
+                        			    		<a href="<?php echo $this->getWarningsURL() ?>">
+                            			    		<span class="badge badge-warning" title="<?php pts('The last scan for translateable texts reported warnings.'); pts('Click for details.'); ?>" data-toggle="tooltip">
+                            			    			<i class="fa fa-exclamation-triangle"></i>
+                            			    			<?php echo $this->scanner->countWarnings() ?>
+                            			    		</span>
+                        			    		</a>
+                        			    	</li>
+                        			    <?php 
+                        			}
+                    			?>
                             </ul>
                         <?php 
                     }
@@ -324,6 +339,10 @@ class Localization_Editor implements Interface_Optionable
     			        	</div>
     			        <?php 
     			    }
+    			    else if($this->request->getBool($this->getVarName('warnings')))
+    			    {
+    			        echo $this->renderWarnings();
+    			    }
     			    else
     			    {
     			        ?>
@@ -336,7 +355,7 @@ class Localization_Editor implements Interface_Optionable
                 				        ?>
                 				        	<div class="alert alert-<?php echo $def['type'] ?>" role="alert">
                                         		<?php echo $def['text'] ?>
-                                        		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        		<button type="button" class="close" data-dismiss="alert" aria-label="<?php pt('Close') ?>" title="<?php pt('Dismiss this message.') ?>" data-toggle="tooltip">
                 									<span aria-hidden="true">&times;</span>
             									</button>
                                         	</div>
@@ -359,7 +378,7 @@ class Localization_Editor implements Interface_Optionable
             					<?php pt('Found %1$s texts to translate.', $this->activeSource->countUntranslated($this->scanner)) ?>
             				</p>
             				<br>
-            				<?php 
+            				<?php
                 				if(!$this->scanner->isScanAvailable()) 
                 				{
                 				    ?>
@@ -392,6 +411,36 @@ class Localization_Editor implements Interface_Optionable
         return ob_get_clean();
     }
 
+    protected function renderWarnings()
+    {
+        ob_start();
+        
+        ?>
+        	<h1><?php pt('Warnings') ?></h1>
+        	<p class="abstract">
+        		<?php 
+        		    pts('The following shows all texts where the system decided that they cannot be translated.');
+       		    ?>
+        	</p>
+        	<dl>
+        		<?php 
+        		    $warnings = $this->scanner->getWarnings();
+        		    
+        		    foreach($warnings as $warning)
+        		    {
+        		        ?>
+        		        	<dt><?php echo FileHelper::relativizePathByDepth($warning->getFile(), 3) ?>:<?php echo $warning->getLine() ?></dt>
+        		        	<dd><?php echo $warning->getMessage() ?></dd>
+        		        <?php 
+        		    }
+        		        
+        		?>
+        	</dl>
+    	<?php 
+    	
+        return ob_get_clean();
+    }
+    
     protected function getFilteredStrings()
     {
         $strings = $this->activeSource->getHashes($this->scanner);
@@ -707,6 +756,11 @@ class Localization_Editor implements Interface_Optionable
     public function getScanURL()
     {
         return $this->getSourceURL($this->activeSource, array($this->getVarName('scan') => 'yes'));
+    }
+    
+    public function getWarningsURL()
+    {
+        return $this->getSourceURL($this->activeSource, array($this->getVarName('warnings') => 'yes'));
     }
     
     public function getURL(array $params=array())

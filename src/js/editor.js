@@ -51,5 +51,18 @@ var Editor =
 		this.el = $("tr[data-hash='"+hash+"']");
 		this.form = this.el.next();
 		this.textarea = this.form.find('textarea');
+	},
+	
+	Start:function()
+	{
+		$('[data-toggle="tooltip"]').tooltip({
+			'delay':500,
+			'container':'body'
+		});
 	}
 };
+
+$('document').ready(function() 
+{
+	Editor.Start();
+});

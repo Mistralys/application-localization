@@ -67,3 +67,15 @@ margin:0 2px;
 .line-number{
 color:#939393;
 }
+
+
+.nav-item .badge{
+margin-left:10px;
+position:relative;
+top:6px;
+}
+
+P.abstract{
+font-style:italic;
+margin-bottom:1.6em;
+}
