@@ -40,11 +40,11 @@ Register each folder to look in like this:
 
 ```php
 $source = \AppLocalize\Localization::addSourceFolder(
-    'source-slug', 
-    'Source label', 
-    'Group label', 
-    '/path/to/ini/files/', 
-    '/path/to/source/files/'
+    'source-slug', // Must be unique: used in file names and to access the source programmatically
+    'Source label', // Human readable label
+    'Group label', // Group labels are used to group sources in the UI
+    '/path/to/ini/files/', // The localization files will be stored here
+    '/path/to/source/files/' // The PHP and JavaScript source files to search through are here
 );
 ```
 
@@ -66,11 +66,11 @@ Note: This must be done last, after the locales and sources have been defined.
 
 ```php
 \AppLocalize\Localization::configure(
-    '/path/to/analysis/cache.json', 
-    '/path/to/javascript/includes/'
+    '/path/to/analysis/cache.json', // Where the text information cache may be saved
+    '/path/to/javascript/includes/' // Where the clientside files should be stored (Optional)
 );
 ```
-This sets where the cache file for the file analysis may be stored, and where the javascript include files should be written.
+If no path is specified for the clientside includes, they will be disabled.
 
 ### 4) Select the target locale
 
@@ -116,6 +116,11 @@ function pt()
 {
     return call_user_func_array('\AppLocalize\pt', func_get_args());
 }
+
+function pts()
+{
+    return call_user_func_array('\AppLocalize\pts', func_get_args());
+}
 ```
 
 ### The t() function
@@ -132,19 +137,29 @@ JavaScript:
 var text = t('Text to translate here');
 ```
 
-### The pt() function
+### The pt() and pts() functions
 
-This is the same as `t()`, except that it echos the translated string. This is handy for templates for example:
+Note: This is only available serverside.
+
+These are the same as `t()`, except that they echo the translated string. This is handy for templates for example:
 
 ```php
 <title><?php pt('Page title') ?></title>
 ```
+The `pts()` function adds a space after the translated string, so that you do not have to manually add spaces when chaining several strings:
 
-Note: This is only available serverside.
+```php
+<div>
+    <?php
+        pts('First sentence here.');
+        pts('Second sentence here.');
+    ?>
+</div>   
+```
 
 ### Using placeholders
 
-The `t()` and `pt()` functions accept any number of additional parameters, which are injected into the translated string using the `sprintf` PHP function. This means you can use placeholders like this:
+The translation functions accept any number of additional parameters, which are injected into the translated string using the `sprintf` PHP function. This means you can use placeholders like this:
 
 ```php
 $amount = 50;
@@ -163,6 +178,12 @@ var text = t('We found %1$s entries.', amount);
 ### Split sentences
 
 The number of translateable texts in a typical application can grow very quickly. Whenever possible, try to split the texts into manageable chunks by splitting longer texts into smaller sentences. This has the added benefit of being able to reuse some of these text chunks in other places.
+
+### Use numbered placeholders
+
+Even if the syntax is more cumbersome than a simple `%s`, using numbered placeholders is critical to allow for different sentence structures depending on the language. A placeholder placed at the end of a sentence may have to be moved to the beginning of the text in another language. Using numbered placeholders makes this easy.
+
+Note: placeholders are highlighted in the localization UI, so that complex texts stay readable.
 
 ### Put HTML tags in placeholders
 
@@ -187,7 +208,7 @@ $textWithLink = t(
 
 ## Examples
 
-To run the example editor UI, simply run a `composer update` in the package folder, and open the `example` folder in your browser. 
+To run the example editor UI, simply run a `composer update` in the package folder, and open the `example` folder in your browser (provided the package is in your webserver's webroot). 
 
 ## Origins
 
