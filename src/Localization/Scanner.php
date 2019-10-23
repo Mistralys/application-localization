@@ -125,4 +125,25 @@ class Localization_Scanner
         
         return $this->getCollection()->countFiles();
     }
+    
+    public function hasWarnings() : bool
+    {
+        return $this->getCollection()->hasWarnings();
+    }
+    
+    public function countWarnings() : int
+    {
+        return $this->getCollection()->countWarnings();
+    }
+    
+   /**
+    * Retrieves all warnings that have been registered
+    * during the last search for translateable texts.
+    * 
+    * @return \AppLocalize\Localization_Scanner_StringsCollection_Warning[]
+    */
+    public function getWarnings()
+    {
+        return $this->getCollection()->getWarnings();
+    }
 }

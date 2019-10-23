@@ -111,10 +111,7 @@ class Localization_Scanner_StringsCollection
             $data['hashes'] = array_merge($data['hashes'], $hash->toArray());
         }
         
-        foreach($this->warnings as $warning)
-        {
-            $data['warnings'][] = $warning->toArray();
-        }
+        $data['warnings'] = $this->warnings;
         
         return $data;
     }
@@ -136,17 +133,49 @@ class Localization_Scanner_StringsCollection
         return true;
     }
     
-    public function getWarnings() : array
+   /**
+    * Whether the parser reported warnings during the
+    * search for translateable texts.
+    * 
+    * @return bool
+    */
+    public function hasWarnings() : bool
     {
-        return $this->warnings;
+        return !empty($this->warnings);
     }
     
-    public function countHashes()
+   /**
+    * Retrieves the amount of warnings.
+    * @return int
+    */
+    public function countWarnings() : int
+    {
+        return count($this->warnings);
+    }
+    
+   /**
+    * Retrieves all warning messages that were added
+    * during the search for translateable texts, if any.
+    * 
+    * @return Localization_Scanner_StringsCollection_Warning[]
+    */
+    public function getWarnings() : array
+    {
+        $result = array();
+        
+        foreach($this->warnings as $def) {
+            $result[] = new Localization_Scanner_StringsCollection_Warning($def);
+        }
+        
+        return $result;
+    }
+    
+    public function countHashes() : int
     {
         return count($this->hashes);
     }
     
-    public function countFiles()
+    public function countFiles() : int
     {
         $amount = 0;
         foreach($this->hashes as $hash) {
@@ -156,7 +185,13 @@ class Localization_Scanner_StringsCollection
         return $amount;
     }
     
-    public function getHashesBySourceID($id)
+   /**
+    * Retrieves all string hashed for the specified source.
+    * 
+    * @param string $id
+    * @return \AppLocalize\Localization_Scanner_StringHash[]
+    */
+    public function getHashesBySourceID(string $id) 
     {
         $hashes = array();
         
@@ -169,12 +204,18 @@ class Localization_Scanner_StringsCollection
         return $hashes;
     }
     
-    public function getHashesByLanguageType($type)
+   /**
+    * Retrieves all hashes for the specified language ID.
+    * 
+    * @param string $languageID The language ID, e.g. "PHP"
+    * @return \AppLocalize\Localization_Scanner_StringHash[]
+    */
+    public function getHashesByLanguageID(string $languageID)
     {
         $hashes = array();
         
         foreach($this->hashes as $hash) {
-            if($hash->hasLanguageType($type)) {
+            if($hash->hasLanguageType($languageID)) {
                 $hashes[] = $hash;
             }
         }
