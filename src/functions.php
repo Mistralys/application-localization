@@ -38,8 +38,28 @@ function t()
 function pt()
 {
     $arguments = func_get_args();
+    
     echo call_user_func_array(
         array(Localization::getTranslator(), 'translate'),
         $arguments
     );
+}
+
+/**
+ * Same as the {@link pt()} function, but adds a space after
+ * the string, so several texts can be chained in an HTML 
+ * document, without having to manually add spaces inbetween.
+ * 
+ * @see pt()
+ */
+function pts()
+{
+    $arguments = func_get_args();
+    
+    echo call_user_func_array(
+        array(Localization::getTranslator(), 'translate'),
+        $arguments
+    );
+    
+    echo ' ';
 }
