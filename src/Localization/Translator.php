@@ -167,7 +167,7 @@ class Localization_Translator
         $this->renderStringsFile(
             'Clientside',
             $source,
-            $collection->getHashesByLanguageType('Javascript'),
+            $collection->getHashesByLanguageID('Javascript'),
             $this->getClientStorageFile($this->targetLocale, $source),
             $this->targetLocale,
             false
