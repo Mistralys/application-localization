@@ -6,6 +6,8 @@
  * @see Localization_Parser
  */
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 /**
@@ -21,6 +23,10 @@ namespace AppLocalize;
  */
 class Localization_Parser
 {
+    const ERROR_INVALID_LANGUAGE_ID = 40601;
+    
+    const ERROR_UNSUPPORTED_FILE_EXTENSION = 40602;
+    
    /**
     * @var Localization_Scanner
     */
@@ -43,48 +49,129 @@ class Localization_Parser
     }
     
    /**
-    * Parses a source file.
+    * Parses a source file. Must have a valid supported file extension.
     * 
     * @param string $path
-    * @return null|Localization_Parser_Language
+    * @return Localization_Parser_Language
+    * @throws Localization_Exception
+    * 
+    * @see Localization_Parser::ERROR_UNSUPPORTED_FILE_EXTENSION
     */
-    public function parseFile($path)
+    public function parseFile(string $path) : Localization_Parser_Language
     {
-        $ext = strtolower(\AppUtils\FileHelper::getExtension($path));
-        if(!isset($this->languageMappings[$ext])) {
-            return null;
-        }
+        $this->requireValidFile($path);
+         
+        $ext = \AppUtils\FileHelper::getExtension($path);
         
         $language = $this->createLanguage($this->languageMappings[$ext]);
         
-        $language->parse(file_get_contents($path));
+        $language->parseFile($path);
         
         return $language;
     }
+    
+   /**
+    * Parses the string for the specified language.
+    * 
+    * @param string $languageID
+    * @param string $code
+    * @return Localization_Parser_Language
+    * @throws Localization_Exception
+    * 
+    * @see Localization_Parser::ERROR_INVALID_LANGUAGE_ID
+    */
+    public function parseString(string $languageID, string $code) : Localization_Parser_Language
+    {
+        $this->requireValidLanguageID($languageID);
         
+        $language = $this->createLanguage($languageID);
+        
+        $language->parseString($code);
+        
+        return $language;
+    }
+    
+    protected function requireValidFile(string $path)
+    {
+        $ext = \AppUtils\FileHelper::getExtension($path);
+        
+        if($this->isExtensionSupported($ext)) {
+            return;
+        }
+        
+        throw new Localization_Exception(
+            sprintf('Unsupported file extension [%s].', $ext),
+            sprintf(
+                'Tried parsing the file [%s].',
+                $path
+            ),
+            self::ERROR_UNSUPPORTED_FILE_EXTENSION
+        );
+    }
+    
+    protected function requireValidLanguageID(string $languageID)
+    {
+        $values = $this->getLanguageIDs();
+        
+        if(in_array($languageID, $values)) {
+            return;
+        }
+
+        throw new Localization_Exception(
+            'Unknown language ID',
+            sprintf(
+                'The language ID [%s] is not a known ID. Valid IDs are: [%s].',
+                $languageID,
+                implode(', ', $values)
+            ),
+            self::ERROR_INVALID_LANGUAGE_ID
+        );
+    }
+    
+   /**
+    * Retrieves a list of all language IDs that are supported.
+    * @return string[] IDs list like "PHP", "Javascript"
+    */
+    public function getLanguageIDs() : array
+    {
+        return array_values($this->languageMappings);
+    }
+    
    /**
     * @var Localization_Parser_Language[]
     */
-    protected $parsers = array();
+    protected $languageParsers = array();
     
    /**
     * Creates a parser for the specified language, e.g. "PHP".
-    * @param string $language
+    * NOTE: Existing parser instances are re-used.
+    * 
+    * @param string $languageID
     * @return Localization_Parser_Language
+    * 
+    * @see  Localization_Parser::ERROR_INVALID_LANGUAGE_ID
     */
-    protected function createLanguage($language)
+    public function createLanguage(string $languageID)
     {
-        if(!isset($this->parsers[$language])) 
-        {
-            $class = '\AppLocalize\Localization_Parser_Language_'.$language;
+        $this->requireValidLanguageID($languageID);
         
-            $this->parsers[$language] = new $class($this);
+        if(!isset($this->languageParsers[$languageID])) 
+        {
+            $class = '\AppLocalize\Localization_Parser_Language_'.$languageID;
+        
+            $this->languageParsers[$languageID] = new $class($this);
         }
         
-        return $this->parsers[$language];
+        return $this->languageParsers[$languageID];
     }
     
-    public function isExtensionSupported($ext)
+   /**
+    * Whether the specified file extension is supported.
+    * 
+    * @param string $ext
+    * @return bool
+    */
+    public function isExtensionSupported(string $ext) : bool
     {
         $ext = strtolower($ext);
         
@@ -93,8 +180,8 @@ class Localization_Parser
 
     /**
      * Checks if the target file is a file that can be
-     * parsed, which means that is must not be in the
-     * exclude list and have a supported file extension.
+     * parsed, which means that it must have a supported 
+     * file extension.
      *
      * @param string $file
      * @return boolean

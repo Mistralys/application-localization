@@ -1,68 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 class Localization_Parser_Language_Javascript extends Localization_Parser_Language
 {
-    public function getFunctionNames()
+    protected function getTokens() : array
     {
-        return array('t');
-    }
-
-    protected $totalTokens = 0;
-
-    protected $debug = false;
-
-    protected $tokens;
-    
-    protected function _parse()
-    {
-        $this->tokens = \JTokenizer\JTokenizer::getTokens($this->content);
-
-        $this->totalTokens = count($this->tokens);
-        for ($i = 0; $i < $this->totalTokens; $i++) {
-            $this->parseToken($i, $this->tokens[$i]);
-        }
-    }
-
-    protected function parseToken($number, $def)
-    {
-        if (!is_array($def)) {
-            return;
-        }
-
-        $token = \JTokenizer\JTokenizer::getTokenName($def[0]);
-        $value = $def[1];
-        $line = $def[2];
-
-        if ($token != 'J_IDENTIFIER' || !in_array($value, $this->functionNames)) {
-            return;
-        }
-
-        // we have found a function we seek - now we have
-        // to iterate over the next tokens to find the text
-        $max = $number + 20;
-        $text = null;
-        for ($i = $number; $i < $max; $i++) 
-        {
-            if(!isset($this->tokens[$i])) {
-                continue;
-            }
-            
-            $subdef = $this->tokens[$i];
-            $subtoken = \JTokenizer\JTokenizer::getTokenName($subdef[0]);
-            $subvalue = $subdef[1];
-            if ($subtoken == 'J_STRING_LITERAL') {
-                $text = $this->trimText($subvalue);
-                break;
-            }
-        }
-
-        $this->debug('Found text [' . htmlspecialchars($text) . ']');
-
-        if ($text) {
-            $this->addResult($text, $line);
-        }
+        return \JTokenizer\JTokenizer::getTokens($this->content);
     }
 
     /**
@@ -74,13 +20,6 @@ class Localization_Parser_Language_Javascript extends Localization_Parser_Langua
      */
     public function trimText($text)
     {
-        return stripslashes(trim($text, "'"));
-    }
-    
-    protected function debug($text)
-    {
-        if ($this->debug) {
-            echo $text;
-        }
+        return stripslashes(trim($text, "'\""));
     }
 }
