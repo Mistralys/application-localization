@@ -222,12 +222,12 @@ class Localization_Editor_Filters
             	       );
                 	?>
                 </div>
-				<button type="submit" name="<?php echo $this->vars['filter'] ?>" value="yes" class="btn btn-primary mb-2">
+				<button type="submit" name="<?php echo $this->vars['filter'] ?>" value="yes" class="btn btn-primary mb-2" title="<?php pt('Filter the list with the selected criteria.') ?>" data-toggle="tooltip">
 					<i class="fa fa-filter"></i>
 					<?php pt('Filter') ?>
 				</button> 
 				&#160;
-				<button type="submit" name="<?php echo $this->vars['resetfilter']?>" value="yes" class="btn btn-secondary mb-2" title="<?php pt('Reset the filters') ?>">
+				<button type="submit" name="<?php echo $this->vars['resetfilter']?>" value="yes" class="btn btn-secondary mb-2" title="<?php pt('Reset the filters to their defaults.') ?>" data-toggle="tooltip">
 					<i class="fa fa-times"></i>
 				</button>
             </form>
