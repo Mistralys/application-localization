@@ -173,7 +173,7 @@ var amount = 50;
 var text = t('We found %1$s entries.', amount);
 ```
 
-## Best practices
+## Tips & best practices
 
 ### Split sentences
 
@@ -204,6 +204,31 @@ $textWithLink = t(
     '<a href="http://...">',
     '</a>'
 );
+```
+
+### Template texts
+
+To use a translated text as a template to re-use multiple times, simply replace the placeholders with placeholders.
+
+Sound strange? Look at this example:
+
+```php
+$template = t('Entry number %1$s', '%1$s');
+```
+
+Translated to german, the text in the variable `$template` would look like this:
+
+```
+Eintrag Nummer %1$s
+```
+
+This means you can now use the template multiple times without calling the translation function each time, with the `sprintf` PHP function:
+
+```php
+for($i=1; $i <= 10; $i++)
+{
+    echo sprintf($template, $i);
+}
 ```
 
 ## Examples
