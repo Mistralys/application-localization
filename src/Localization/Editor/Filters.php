@@ -182,54 +182,59 @@ class Localization_Editor_Filters
     					}
 					?>
             	</div>
-		        <input name="<?php echo $this->vars['search'] ?>" type="text" class="form-control mb-2 mr-sm-2" placeholder="<?php pt('Search...') ?>" value="<?php echo $this->searchString ?>">
-                <div class="input-group mb-2 mr-sm-2">
-                	<?php
-                	    echo $this->renderSelect(
-                	       $this->vars['status'],
-                	       array(
+            	<div class="form-row">
+            		<div class="col-auto">
+    		        	<input name="<?php echo $this->vars['search'] ?>" type="text" class="form-control mb-2 mr-sm-2" placeholder="<?php pt('Search...') ?>" value="<?php echo $this->searchString ?>">
+    		        </div>
+                    <div class="col-auto">
+                    	<?php
+                    	    echo $this->renderSelect(
+                    	       $this->vars['status'],
                     	       array(
-                    	            'value' => '',
-                    	            'label' => t('Status...')
-                    	       ),
-                    	       array(
-                    	           'value' => 'untranslated',
-                    	           'label' => t('Not translated')
-                    	       ),
-                    	       array(
-                    	           'value' => 'translated',
-                    	           'label' => t('Translated')
+                        	       array(
+                        	            'value' => '',
+                        	            'label' => t('Status...')
+                        	       ),
+                        	       array(
+                        	           'value' => 'untranslated',
+                        	           'label' => t('Not translated')
+                        	       ),
+                        	       array(
+                        	           'value' => 'translated',
+                        	           'label' => t('Translated')
+                        	       )
                     	       )
-                	       )
-                	   );
-                	
-                	   echo $this->renderSelect(
-                	       $this->vars['location'],
-                	       array(
-                	           array(
-                	               'value' => '',
-                	               'label' => t('Location...')
-                	           ),
-                	           array(
-                	               'value' => 'client',
-                	               'label' => t('Clientside')
-                	           ),
-                	           array(
-                	               'value' => 'server',
-                	               'label' => t('Serverside')
-                	           )
-                	       )
-            	       );
-                	?>
-                </div>
-				<button type="submit" name="<?php echo $this->vars['filter'] ?>" value="yes" class="btn btn-primary mb-2" title="<?php pt('Filter the list with the selected criteria.') ?>" data-toggle="tooltip">
-					<i class="fa fa-filter"></i>
-					<?php pt('Filter') ?>
-				</button> 
-				&#160;
-				<button type="submit" name="<?php echo $this->vars['resetfilter']?>" value="yes" class="btn btn-secondary mb-2" title="<?php pt('Reset the filters to their defaults.') ?>" data-toggle="tooltip">
-					<i class="fa fa-times"></i>
-				</button>
+                    	   );
+                    	
+                    	   echo $this->renderSelect(
+                    	       $this->vars['location'],
+                    	       array(
+                    	           array(
+                    	               'value' => '',
+                    	               'label' => t('Location...')
+                    	           ),
+                    	           array(
+                    	               'value' => 'client',
+                    	               'label' => t('Clientside')
+                    	           ),
+                    	           array(
+                    	               'value' => 'server',
+                    	               'label' => t('Serverside')
+                    	           )
+                    	       )
+                	       );
+                    	?>
+                    </div>
+                    <div class="col-auto">
+	    				<button type="submit" name="<?php echo $this->vars['filter'] ?>" value="yes" class="btn btn-primary mb-2" title="<?php pt('Filter the list with the selected criteria.') ?>" data-toggle="tooltip">
+        					<i class="fa fa-filter"></i>
+        					<?php pt('Filter') ?>
+        				</button> 
+        				<button type="submit" name="<?php echo $this->vars['resetfilter']?>" value="yes" class="btn btn-secondary mb-2" title="<?php pt('Reset the filters to their defaults.') ?>" data-toggle="tooltip">
+        					<i class="fa fa-times"></i>
+        				</button>
+    				</div>
+				</div>
             </form>
 			<br>
         <?php
