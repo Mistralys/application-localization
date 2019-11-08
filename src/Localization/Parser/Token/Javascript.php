@@ -26,7 +26,7 @@ class Localization_Parser_Token_Javascript extends Localization_Parser_Token
         }
     }
     
-    public function getFunctionNames()
+    public function getFunctionNames() : array
     {
         return array(
             't'

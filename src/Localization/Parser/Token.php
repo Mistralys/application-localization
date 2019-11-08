@@ -44,7 +44,7 @@ abstract class Localization_Parser_Token
     
     abstract public function isClosingFuncParams() : bool;
     
-    abstract public function getFunctionNames();
+    abstract public function getFunctionNames() : array;
     
     abstract public function isEncapsedString();
     
