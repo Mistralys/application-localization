@@ -26,11 +26,12 @@ class Localization_Parser_Token_PHP extends Localization_Parser_Token
         }
     }
     
-    public function getFunctionNames()
+    public function getFunctionNames() : array
     {
         return array(
             't',
-            'pt'
+            'pt',
+            'pts'
         );
     }
     
