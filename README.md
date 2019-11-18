@@ -92,6 +92,20 @@ The localization library automatically creates the necessary javascript include 
 
 Where `xx` is the two-letter ISO code of the target language. There is one for each of the locales you added.
 
+NOTE: Once the javascript include files have been written, they are only refreshed whenever texts are updated in the localization editor UI.  
+
+#### Using a cache key to update libraries 
+
+The libraries cache key is an arbitrary string that can be set. Whenever this changes, the javascript include files are refreshed automatically. Thus, a good way to keep them up  to date is to use your application's version number as cache key.
+
+```php
+$myAppVersion = 'v1.5.1';
+
+Localization::setClientLibrariesCacheKey($myAppVersion);
+```
+
+Refreshing the libraries is then done automatically with each release of your application.
+
 ## Using the translation functions
 
 ### Serverside setup
