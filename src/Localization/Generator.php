@@ -9,6 +9,14 @@ class Localization_ClientGenerator
     const ERROR_JS_FOLDER_NOT_FOUND = 39302;
     
     const ERROR_TARGET_FOLDER_NOT_WRITABLE = 39303;  
+
+    const ERROR_INVALID_FILES_IDENTIFIER = 39304;
+    
+    const FILES_LIBRARIES = 'libs';
+    
+    const FILES_LOCALES = 'locales';
+    
+    const FILES_CACHE_KEY = 'cachekey';
     
    /**
     * @var bool
@@ -25,14 +33,58 @@ class Localization_ClientGenerator
     */
     protected $targetFolder;
     
+   /**
+    * @var string
+    */
+    protected $cacheKeyFile;
+    
+    protected $cacheKey = '';
+    
+    protected $written = array(
+        self::FILES_CACHE_KEY => false,
+        self::FILES_LIBRARIES => false,
+        self::FILES_LOCALES => false
+    );
+    
     public function __construct()
     {
         $this->translator = Localization::getTranslator();
         $this->targetFolder = Localization::getClientFolder();
+        $this->cacheKeyFile = $this->targetFolder.'/cachekey.txt';
+        
+        $this->initCache();
+    }
+    
+    protected function initCache()
+    {
+        // ignore it if it does not exist.
+        if(!file_exists($this->cacheKeyFile)) {
+            return;
+        }
+        
+        $this->cacheKey = file_get_contents($this->cacheKeyFile);
+        
+        if($this->cacheKey !== false) {
+            return;
+        }
+        
+        throw new Localization_Exception(
+            'Cannot open client libraries cache key file.',
+            sprintf(
+                'Tried reading contents of existing file [%s].',
+                $this->cacheKeyFile
+            )
+        );
     }
     
     public function writeFiles(bool $force=false) : void
     {
+        // reset the write states for all files
+        $fileIDs = array_keys($this->written);
+        foreach($fileIDs as $fileID) {
+            $this->written[$fileID] = false;
+        }
+        
         // no client libraries folder set: ignore.
         if(empty($this->targetFolder)) {
             return;
@@ -55,10 +107,15 @@ class Localization_ClientGenerator
             );
         }
         
+        if($this->cacheKey !== Localization::getClientLibrariesCacheKey()) {
+            $force = true;
+        }
+        
         $this->force = $force;
         
         $this->writeLocaleFiles();
         $this->writeLibraryFiles();
+        $this->writeCacheKey();
     }
     
    /**
@@ -138,6 +195,8 @@ class Localization_ClientGenerator
             $sourceFile = $sourceFolder.'/'.$fileName;
             
             \AppUtils\FileHelper::copyFile($sourceFile, $targetFile);
+            
+            $this->written[self::FILES_LIBRARIES] = true;
         }
     }
     
@@ -210,5 +269,52 @@ class Localization_ClientGenerator
         }
         
         \AppUtils\FileHelper::saveFile($path, $content);
+        
+        $this->written[self::FILES_LOCALES] = true;
+    }
+    
+   /**
+    * Generates the cache key file, which is used to determine
+    * automatically whether the client libraries need to be 
+    * refreshed.
+    */
+    protected function writeCacheKey()
+    {
+        if(file_exists($this->cacheKeyFile) && !$this->force) {
+            return;
+        }
+        
+        \AppUtils\FileHelper::saveFile($this->cacheKeyFile, Localization::getClientLibrariesCacheKey());
+        
+        $this->written[self::FILES_CACHE_KEY] = true;
+    }
+
+   /**
+    * Whether the specified files have been written to 
+    * disk this session. 
+    * 
+    * NOTE: only useful when called after <code>writeFiles</code>.
+    * 
+    * @param string $filesID
+    * 
+    * @see Localization_ClientGenerator::FILES_CACHE_KEY
+    * @see Localization_ClientGenerator::FILES_LOCALES
+    * @see Localization_ClientGenerator::FILES_LIBRARIES
+    */
+    public function areFilesWritten(string $filesID)
+    {
+        if(isset($this->written[$filesID])) {
+            return $this->written[$filesID];
+        }
+        
+        throw new Localization_Exception(
+            'Invalid written files identifier.',
+            sprintf(
+                'Unknown identifier [%s]. Valid identifiers are: [%s] (use class constants).',
+                $filesID,
+                implode(', ', array_keys($this->written))
+            ),
+            self::ERROR_INVALID_FILES_IDENTIFIER
+        );
     }
 }
