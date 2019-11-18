@@ -1,9 +1,9 @@
 <?php
-
 use PHPUnit\Framework\TestCase;
 
 use AppLocalize\Localization;
 use AppUtils\FileHelper;
+use AppLocalize\Localization_ClientGenerator;
 
 final class GeneratorTest extends TestCase
 {
@@ -89,5 +89,50 @@ final class GeneratorTest extends TestCase
         
         // restore the original folder for the other tests
         Localization::setClientLibrariesFolder($previous);
+    }
+    
+   /**
+    * Test that forcing files to be written works, as well as
+    * not writing them again otherwise.
+    */
+    public function test_writeFiles_force()
+    {
+        Localization::addAppLocale('de_DE');
+        
+        $generator = Localization::createGenerator();
+        
+        $generator->writeFiles();
+        
+        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_LOCALES), 'The locale files should initially have been written.');
+        
+        $generator->writeFiles();
+        
+        $this->assertFalse($generator->areFilesWritten(Localization_ClientGenerator::FILES_LOCALES), 'The locale files exist, and should not be overwritten.');
+        
+        // force writing the files
+        $generator->writeFiles(true);
+        
+        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_LOCALES), 'When forcing, files should be overwritten.');
+    }
+    
+   /**
+    * Test that changing the cache key triggers a rewrite
+    * of all locale files.
+    */
+    public function test_writeFiles_cacheKey()
+    {
+        Localization::addAppLocale('de_DE');
+        
+        $generator = Localization::createGenerator();
+        
+        $generator->writeFiles();
+        
+        Localization::setClientLibrariesCacheKey('modified_key');
+        
+        $generator->writeFiles();
+        
+        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_LOCALES), 'The locale files should have been rewritten.');
+        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_CACHE_KEY), 'The cache key should have been rewritten.');
+        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_LIBRARIES), 'The library files should have been rewritten.');
     }
 }
