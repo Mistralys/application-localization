@@ -74,9 +74,16 @@ class Localization
    /**
     * Path to the folder into which the client libraries are written.
     * @var string
-    * @see Localization::configure()
+    * @see Localization::setClientLibrariesFolder()
     */
     protected static $clientFolder = '';
+    
+   /**
+    * If this key changes, client libraries are refreshed.
+    * @var string
+    * @see Localization::setClientLibrariesCacheKey()
+    */
+    protected static $clientCacheKey = '';
     
    /**
     * Whether the configuration has been made.
@@ -841,6 +848,27 @@ class Localization
         {
             self::writeClientFiles();
         }
+    }
+    
+   /**
+    * Sets a key that is used to verify whether the client
+    * libraries have to be refreshed. A common use is to set
+    * this to the application's version number to guarantee
+    * new texts are automatically used with each release.
+    * 
+    * NOTE: Otherwise files are refreshed only when saving 
+    * them in the editor UI.
+    *  
+    * @param string $key
+    */
+    public static function setClientLibrariesCacheKey(string $key)
+    {
+        self::$clientCacheKey = $key;
+    }
+    
+    public static function getClientLibrariesCacheKey() : string
+    {
+        return self::$clientCacheKey;
     }
     
    /**
