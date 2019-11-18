@@ -13,3 +13,4 @@ example/localization/fr_FR-main-server.ini
 tests/storage/*.js
 localization/storage.json
 example/localization/*.ini
+tests/storage/cachekey.txt
