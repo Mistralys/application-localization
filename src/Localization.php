@@ -120,6 +120,21 @@ class Localization
 
         self::reset();
         
+        $installFolder = realpath(__DIR__.'/../');
+        
+        // add the localization package's own sources,
+        // so the bundled localized strings can
+        // always be translated.
+        \AppLocalize\Localization::addSourceFolder(
+            'application-localization',
+            'Application Localization Package',
+            'Composer packages',
+            $installFolder.'/localization',
+            $installFolder.'/src'
+        )
+        ->excludeFiles(array('jtokenizer'))
+        ->excludeFolder('css');
+        
         self::$initDone = true;
     }
 
@@ -1079,21 +1094,6 @@ class Localization
     public static function createEditor()
     {
         self::requireConfiguration();
-        
-        $installFolder = realpath(__DIR__.'/../');
-        
-        // add the localization package's own sources, 
-        // so the editor interface can be translated
-        // as well as all the other sources.
-        \AppLocalize\Localization::addSourceFolder(
-            'application-localization',
-            'Application Localization Package',
-            'Composer packages',
-            $installFolder.'/localization',
-            $installFolder.'/src'
-        )
-        ->excludeFiles(array('jtokenizer'))
-        ->excludeFolder('css');
         
         return new Localization_Editor();
     }
