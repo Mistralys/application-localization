@@ -38,6 +38,8 @@ class Localization
     
     const ERROR_UNKNOWN_LOCALE_IN_NS = 39009;
     
+    const ERROR_UNKNOWN_EVENT_NAME = 39010;
+    
     /**
      * The name of the default application locale, i.e. the
      * locale in which application textual content is written.
@@ -91,6 +93,18 @@ class Localization
     * @see Localization::configure()
     */
     protected static $configured = false;
+    
+   /**
+    * Stores event listener instances.
+    * @var array
+    */
+    protected static $listeners = array();
+    
+   /**
+    * @var integer
+    * @see Localization::addEventListener()
+    */
+    protected static $listenersCounter = 0;
     
     /**
      * Initializes the localization layer. This is done
@@ -334,16 +348,116 @@ class Localization
     {
         self::requireNamespace($namespace);
         
-        self::$translator = null;
-        
         $locale = self::addLocaleByNS($localeName, $namespace);
+        $previous = null;
+        
+        if(isset(self::$selected[$namespace])) 
+        {
+            if(self::$selected[$namespace]['name'] === $localeName) {
+                return $locale;
+            }
+            
+            $previous = self::$selected[$namespace];
+        }
+        
+        self::$translator = null;
         
         self::$selected[$namespace] = array(
             'locale' => $locale,
             'name' => $localeName
         );
         
+        self::triggerEvent(
+            'LocaleChanged', 
+            array(
+                $namespace,
+                $previous, 
+                self::$selected[$namespace]
+            )
+        );
+        
         return $locale;
+    }
+    
+   /**
+    * Triggers the specified event, with the provided arguments.
+    * 
+    * @param string $name The event name.
+    * @param array $argsList
+    * @see Localization_Event
+    */
+    protected static function triggerEvent(string $name, array $argsList) : Localization_Event
+    {
+        $class = '\AppLocalize\Localization_Event_'.$name;
+        $event = new $class($argsList);
+        
+        if(!isset(self::$listeners[$name])) {
+            return $event;
+        }
+        
+        foreach(self::$listeners[$name] as $listener) 
+        {
+            $callArgs = $listener['args'];
+            array_unshift($callArgs, $event);
+            
+            call_user_func_array($listener['callback'], $callArgs);
+        }
+        
+        return $event;
+    }
+    
+   /**
+    * Adds a listener to the specified event name.
+    * 
+    * @param string $eventName
+    * @param callable $callback
+    * @param array $args Additional arguments to add to the event
+    * @return int The listener number.
+    */
+    public static function addEventListener(string $eventName, $callback, array $args=array()) : int
+    {
+        if(!isset(self::$listeners[$eventName])) {
+            self::$listeners[$eventName] = array();
+        }
+        
+        $className = '\AppLocalize\Localization_Event_'.$eventName;
+        
+        if(!class_exists($className)) 
+        {
+            throw new Localization_Exception(
+                sprintf('Unknown localization event [%s].', $eventName),
+                sprintf('The required event class [%s] is not present.', $className),
+                self::ERROR_UNKNOWN_EVENT_NAME
+            );
+        }
+        
+        self::$listenersCounter++;
+        
+        self::$listeners[$eventName][] = array(
+            'class' => $className,
+            'callback' => $callback,
+            'args' => $args,
+            'id' => self::$listenersCounter
+        );
+        
+        return self::$listenersCounter;
+    }
+    
+   /**
+    * Adds an event listener for the <code>LocaleChanged</code> event,
+    * which is triggered every time a locale is changed in any of the
+    * available namespaces.
+    * 
+    * The first parameter of the callback is always the event instance.
+    * 
+    * @param callable $callback The listener function to call.
+    * @param array $args Optional indexed array with additional arguments to pass on to the callback function.
+    * @return int
+    * @see Localization_Event_LocaleChanged
+    */
+    public static function onLocaleChanged($callback, array $args=array()) : int
+    {
+        return self::addEventListener('LocaleChanged', $callback, $args);
     }
     
    /**
@@ -1021,6 +1135,8 @@ class Localization
     {
         self::$locales = array();
         self::$selected = array();
+        self::$listeners = array();
+        self::$listenersCounter = 0;
         
         self::addAppLocale(self::BUILTIN_LOCALE_NAME);
         self::addContentLocale(self::BUILTIN_LOCALE_NAME);
