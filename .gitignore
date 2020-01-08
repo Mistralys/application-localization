@@ -14,3 +14,4 @@ tests/storage/*.js
 localization/storage.json
 example/localization/*.ini
 tests/storage/cachekey.txt
+docs/phpstan/output.txt
