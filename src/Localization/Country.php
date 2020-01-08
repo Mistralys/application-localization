@@ -73,9 +73,9 @@ abstract class Localization_Country implements Localization_Country_Interface
  */
 interface Localization_Country_Interface
 {
-    public function getNumberThousandsSeparator();
+    public function getNumberThousandsSeparator() : string;
 
-    public function getNumberDecimalsSeparator();
+    public function getNumberDecimalsSeparator() : string;
 
     /**
      * Retrieves the ID of the currency used by this country, e.g. "euro" or "dollar".

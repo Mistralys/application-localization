@@ -116,7 +116,9 @@ class Localization_Translator
             }
             
             $data = parse_ini_file($file, false);
-            if ($data === false) {
+            
+            if($data === false) 
+            {
                 throw new Localization_Exception(
                     'Malformatted localization file',
                     sprintf(
@@ -125,7 +127,6 @@ class Localization_Translator
                     ),
                     self::ERROR_CANNOT_PARSE_LOCALE_FILE
                 );
-                continue;
             }
     
             $this->strings[$localeName] = array_merge(
@@ -148,10 +149,10 @@ class Localization_Translator
      * but new strings can only be added via the UI because
      * the hashes have to be created.
      *
-     * @param Localization_Scanner $scanner
-     * @return boolean
+     * @param Localization_Source $source
+     * @param Localization_Scanner_StringsCollection $collection
      */
-    public function save(Localization_Source $source, Localization_Scanner_StringsCollection $collection)
+    public function save(Localization_Source $source, Localization_Scanner_StringsCollection $collection) : void
     {
         // the serverside strings file gets all available hashes,
         // which are filtered by source.

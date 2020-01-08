@@ -228,10 +228,8 @@ class Localization_ClientGenerator
      *
      * NOTE: Caching has to be handled on the application
      * side. This method creates a fresh collection each time.
-     *
-     * @return string
      */
-    protected function writeLocaleFile(Localization_Locale $locale)
+    protected function writeLocaleFile(Localization_Locale $locale) : void
     {
         $path = $this->getLocaleFilePath($locale);
         

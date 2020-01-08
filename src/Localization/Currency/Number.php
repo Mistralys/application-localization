@@ -40,7 +40,7 @@ class Localization_Currency_Number
     public function getFloat()
     {
         if ($this->decimals) {
-            return ($this->number . '.' . $this->decimals) * 1;
+            return floatval($this->number . '.' . $this->decimals);
         }
 
         return $this->number;

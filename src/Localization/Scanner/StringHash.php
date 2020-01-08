@@ -120,7 +120,7 @@ class Localization_Scanner_StringHash
     
    /**
     * Retrieves the translated text, if any.
-    * @return string|NULL
+    * @return string
     */
     public function getTranslatedText() : string
     {

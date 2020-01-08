@@ -6,6 +6,11 @@ namespace AppLocalize;
 
 class Localization_Scanner_StringsCollection_Warning
 {
+   /**
+    * @var array
+    */
+    protected $data;
+    
     public function __construct(array $data)
     {
         $this->data = $data;

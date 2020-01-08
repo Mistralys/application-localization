@@ -92,7 +92,7 @@ abstract class Localization_Currency
      */
     public static function isCurrencyKnown($currencyName)
     {
-        return file_exists(APP_ROOT . '/assets/classes/Localization/Currency/' . $currencyName . '.php');
+        return file_exists(__DIR__ . '/Currency/' . $currencyName . '.php');
     }
 
     /**
@@ -132,7 +132,7 @@ abstract class Localization_Currency
     /**
      * Checks if the specified number string is a valid
      * numeric notation for this currency.
-     * @param $number
+     * @param string|number $number
      * @return bool
      */
     public abstract function isNumberValid($number);
@@ -167,7 +167,7 @@ abstract class Localization_Currency
      * object which can be used to access the number and its parts
      * independently of the human readable notation used.
      *
-     * @param string $number
+     * @param string|number $number
      * @return Localization_Currency_Number|FALSE
      */
     public function parseNumber($number)
@@ -190,15 +190,18 @@ abstract class Localization_Currency
 
         $parts = explode('.', $normalized);
 
-        if (count($parts) > 1) {
+        if (count($parts) > 1) 
+        {
             $decimals = array_pop($parts);
-            $thousands = implode('', $parts) * 1;
+            $thousands = floatval(implode('', $parts));
             if ($decimals == '-') {
                 $decimals = 0;
             }
-        } else {
+        } 
+        else 
+        {
             $decimals = null;
-            $thousands = implode('', $parts) * 1;
+            $thousands = floatval(implode('', $parts));
         }
 
         require_once 'Localization/Currency/Number.php';

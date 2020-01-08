@@ -106,13 +106,18 @@ class Localization
     */
     protected static $listenersCounter = 0;
     
-    /**
-     * Initializes the localization layer. This is done
-     * automatically, and only once per request.
-     * 
-     * (Called at the end of this file)
-     */
-    public static function init()
+   /**
+    * @var Localization_Translator|NULL
+    */
+    protected static $translator;
+    
+   /**
+    * Initializes the localization layer. This is done
+    * automatically, and only once per request.
+    * 
+    * (Called at the end of this file)
+    */
+    public static function init() : void
     {
         if(self::$initDone) {
             return;
@@ -347,7 +352,7 @@ class Localization
     
    /**
     * Stores the selected locale names by namespace.
-    * @var string[]
+    * @var array
     */
     protected static $selected = array();
 
@@ -658,8 +663,6 @@ class Localization
         return self::$configured;
     }
 
-    protected static $translator;
-    
     /**
      * @return Localization_Translator
      */
@@ -701,6 +704,8 @@ class Localization
         if(isset(self::$locales[$namespace])) {
             return count(self::$locales[$namespace]);
         }
+        
+        return 0;
     }
     
     protected static function requireNamespace(string $namespace)
@@ -739,7 +744,7 @@ class Localization
      * 
     * @param string $elementName
     * @param \HTML_QuickForm2_Container $container
-    * @param string|NULL $label
+    * @param string $label
     * @return \HTML_QuickForm2_Element_Select
     */
     public static function injectAppLocalesSelector(string $elementName, \HTML_QuickForm2_Container $container, string $label='') : \HTML_QuickForm2_Element_Select
@@ -829,7 +834,7 @@ class Localization
     
    /**
     * Retrieves all sources grouped by their group name.
-    * @return Localization_Source[]
+    * @return array
     */
     public static function getSourcesGrouped()
     {
@@ -941,7 +946,6 @@ class Localization
     * Creates the scanner instance that is used to find
     * all translateable strings in the application.
     * 
-    * @param string $storageFile Path to the file in which to store string information.
     * @return Localization_Scanner
     */
     public static function createScanner() : Localization_Scanner
@@ -951,7 +955,7 @@ class Localization
         return new Localization_Scanner(self::$storageFile);
     }
     
-    public static function log($message)
+    public static function log(string $message) : void
     {
         // FIXME: TODO: Add this
     }
@@ -1091,7 +1095,7 @@ class Localization
     * 
     * @return \AppLocalize\Localization_Editor
     */
-    public static function createEditor()
+    public static function createEditor() : Localization_Editor
     {
         self::requireConfiguration();
         
@@ -1131,7 +1135,7 @@ class Localization
    /**
     * Resets all locales to the built-in locale.
     */
-    public static function reset()
+    public static function reset() : void
     {
         self::$locales = array();
         self::$selected = array();

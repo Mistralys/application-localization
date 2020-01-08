@@ -84,7 +84,7 @@ abstract class Lex
     {
         if (is_int($i)) {
             if (!isset($this->names[$i])) {
-                trigger_error("symbol " . var_export($i, 1) . " is unknown in " . get_class($this), E_USER_NOTICE);
+                trigger_error("symbol " . var_export($i, true) . " is unknown in " . get_class($this), E_USER_NOTICE);
 
                 return 'UNKNOWN';
             } else {
@@ -92,7 +92,7 @@ abstract class Lex
             }
         } else {
             if (!isset($this->literals[$i])) {
-                trigger_error("literal symbol " . var_export($i, 1) . " is unknown in " . get_class($this), E_USER_NOTICE);
+                trigger_error("literal symbol " . var_export($i, true) . " is unknown in " . get_class($this), E_USER_NOTICE);
             }
         }
 

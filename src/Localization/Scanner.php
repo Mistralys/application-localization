@@ -4,13 +4,31 @@ namespace AppLocalize;
 
 class Localization_Scanner
 {
+   /**
+    * @var float
+    */
     protected $timeStart;
     
+   /**
+    * @var float
+    */
     protected $timeEnd;
     
+   /**
+    * @var array
+    */
     protected $stringInfos = array();
     
+   /**
+    * @var string
+    */
     protected $storageFile;
+    
+    /**
+     * @var Localization_Scanner_StringsCollection|NULL
+     * @see Localization_Scanner::getCollection()
+     */
+    protected $collection;
     
     public function __construct(string $storageFile)
     {
@@ -86,11 +104,6 @@ class Localization_Scanner
         
         return $this->parser;
     }
-    
-   /**
-    * @var Localization_Scanner_StringsCollection
-    */
-    protected $collection;
     
     public function getCollection() : Localization_Scanner_StringsCollection
     {

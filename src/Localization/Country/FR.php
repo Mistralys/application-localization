@@ -18,12 +18,12 @@ namespace AppLocalize;
  */
 class Localization_Country_FR extends Localization_Country
 {
-    public function getNumberThousandsSeparator()
+    public function getNumberThousandsSeparator() : string
     {
         return '.';
     }
 
-    public function getNumberDecimalsSeparator()
+    public function getNumberDecimalsSeparator() : string
     {
         return ',';
     }

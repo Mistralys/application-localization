@@ -24,6 +24,23 @@ abstract class Localization_Source
     */
     protected $storageFolder;
     
+   /**
+    * @var string
+    */
+    protected $alias;
+    
+   /**
+    * Available during scanning.
+    * @var Localization_Scanner_StringsCollection|NULL
+    */
+    protected $collection;
+    
+   /**
+    * Available during scanning.
+    * @var Localization_Parser|NULL
+    */
+    protected $parser;
+    
     public function __construct(string $alias, string $label, string $group, string $storageFolder)
     {
         $this->alias = $alias;
@@ -53,18 +70,6 @@ abstract class Localization_Source
     {
         return $this->storageFolder;
     }
-    
-   /**
-    * Available during scanning.
-    * @var Localization_Scanner_StringsCollection
-    */
-    protected $collection;
-    
-   /**
-    * Available during scanning.
-    * @var Localization_Parser
-    */
-    protected $parser;
     
     public function scan(Localization_Scanner $scanner)
     {
