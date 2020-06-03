@@ -253,6 +253,12 @@ class Localization_Editor_Filters
     				</div>
 				</div>
             </form>
+            <p>
+            	<small class="text-muted"><?php 
+            	   pts('Hint:'); 
+            	   pt('Search works in translated and untranslated text, as well as the file name.') 
+        	   ?></small>
+            </p>
 			<br>
         <?php
         
