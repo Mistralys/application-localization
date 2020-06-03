@@ -10,6 +10,8 @@ echo.
 
 call ../vendor/bin/phpstan analyse -c ./config/phpstan.neon -l 5 > phpstan/output.txt
 
+call "phpstan/output.txt"
+
 echo.
 echo Saved to phpstan/output.txt.
 echo.
