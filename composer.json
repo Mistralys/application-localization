@@ -30,11 +30,11 @@
 	"prefer-stable" : true,
 	"require" : 
 	{
-		"mistralys/application-utils" : ">=1.1"
+		"mistralys/application-utils" : ">=1.2"
 	},
 	"require-dev" : 
 	{
 		"phpunit/phpunit" : "8.2.5",
-        "phpstan/phpstan" : "0.12.4"
+        "phpstan/phpstan" : "^0.12"
 	}
 }
