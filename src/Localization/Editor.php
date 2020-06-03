@@ -88,6 +88,8 @@ class Localization_Editor implements Interface_Optionable
     {
         $this->installPath = realpath(__DIR__.'/../');
         $this->request = new Request();
+        $this->scanner = Localization::createScanner();
+        $this->scanner->load();
 
         $this->initSession();
         $this->initAppLocales();
@@ -202,9 +204,6 @@ class Localization_Editor implements Interface_Optionable
     {
         $this->initSources();
         
-        $this->scanner = Localization::createScanner();
-        $this->scanner->load();
-        
         $this->filters = new Localization_Editor_Filters($this);
         
         if($this->request->getBool($this->getVarName('scan'))) 
@@ -215,6 +214,11 @@ class Localization_Editor implements Interface_Optionable
         {
             $this->executeSave();
         }
+    }
+    
+    public function getScanner() : Localization_Scanner
+    {
+        return $this->scanner;
     }
     
     public function render()
