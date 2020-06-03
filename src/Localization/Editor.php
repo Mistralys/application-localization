@@ -1,4 +1,11 @@
 <?php
+/**
+ * File containing the {@link Localization_Editor} class.
+ * 
+ * @package Localization
+ * @subpackage Editor
+ * @see Localization_Translator
+ */
 
 declare(strict_types=1);
 
@@ -7,17 +14,22 @@ namespace AppLocalize;
 use AppUtils\Traits_Optionable;
 use AppUtils\Interface_Optionable;
 use AppUtils\FileHelper;
+use AppUtils\Request;
 
+/**
+ * User Inteface handler for editing localization files.
+ *
+ * @package Localization
+ * @subpackage Editor
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class Localization_Editor implements Interface_Optionable
 {
     use Traits_Optionable;
     
     const MESSAGE_INFO = 'info';
-    
     const MESSAGE_ERROR = 'danger';
-    
     const MESSAGE_WARNING = 'warning';
-    
     const MESSAGE_SUCCESS = 'success';
     
     const ERROR_NO_SOURCES_AVAILABLE = 40001;
@@ -62,20 +74,26 @@ class Localization_Editor implements Interface_Optionable
     */
     protected $filters;
 
+   /**
+    * @var string[]string
+    */
     protected $requestParams = array();
     
+   /**
+    * @var string
+    */
     protected $varPrefix = 'applocalize_';
     
     public function __construct()
     {
         $this->installPath = realpath(__DIR__.'/../');
-        $this->request = new \AppUtils\Request();
+        $this->request = new Request();
 
         $this->initSession();
         $this->initAppLocales();
     }
     
-    public function getRequest()
+    public function getRequest() : Request
     {
         return $this->request;
     }
@@ -462,8 +480,18 @@ class Localization_Editor implements Interface_Optionable
         $params = $this->requestParams;
         $params[$this->getVarName('locale')] = $this->activeAppLocale->getName();
         $params[$this->getVarName('source')] = $this->activeSource->getID();
+        $params[$this->getVarName('page')] = $this->getPage();
 
         return $params;
+    }
+    
+    protected function getPage() : int
+    {
+        return intval($this->request
+            ->registerParam($this->getVarName('page'))
+            ->setInteger()
+            ->get(0)
+        );
     }
     
     protected $perPage = 20;
@@ -484,7 +512,7 @@ class Localization_Editor implements Interface_Optionable
         }
         
         $total = count($strings);
-        $page = intval($this->request->registerParam($this->getVarName('page'))->setInteger()->get(0));
+        $page = $this->getPage();
         $pager = new \AppUtils\PaginationHelper($total, $this->perPage, $page);
         
         $keep = array_slice($strings, $pager->getOffsetStart(), $this->perPage);
