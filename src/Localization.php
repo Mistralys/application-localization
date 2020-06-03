@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Core
  * @see Localization
  */
 
@@ -14,9 +14,9 @@ namespace AppLocalize;
  * Localization handling collection for both the
  * application itself as well as its user contents.
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
+ * @package Localization
+ * @subpackage Core
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Localization
 {

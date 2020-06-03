@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization_Country_FR} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Countries
  * @see Localization_Country_FR
  */
 
@@ -11,9 +11,9 @@ namespace AppLocalize;
 /**
  * Country class with the definitions for France.
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
+ * @package Localization
+ * @subpackage Countries
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
 class Localization_Country_FR extends Localization_Country

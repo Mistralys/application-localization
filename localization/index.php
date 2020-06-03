@@ -2,7 +2,7 @@
 /**
  * Translation UI for the localizable strings in the package.
  *
- * @package Application Utils
+ * @package Localization Utils
  * @subpackage Examples
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */

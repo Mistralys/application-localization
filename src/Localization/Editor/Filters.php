@@ -1,9 +1,23 @@
 <?php
+/**
+ * File containing the {@link Localization_Editor_Filters} class.
+ *
+ * @package Localization
+ * @subpackage Editor
+ * @see Localization_Editor_Filters
+ */
 
 declare(strict_types=1);
 
 namespace AppLocalize;
 
+/**
+ * Handles the list filters in the editor UI.
+ *
+ * @package Localization
+ * @subpackage Editor
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class Localization_Editor_Filters
 {
    /**
@@ -22,12 +36,15 @@ class Localization_Editor_Filters
     */
     protected $sessionName = 'localize_filters';
     
+   /**
+    * @var string[]string
+    */
     protected $vars = array(
-        'resetfilter' => null,
-        'filter' => null,
-        'search' => null,
-        'status' => null,
-        'location' => null
+        'resetfilter' => '',
+        'filter' => '',
+        'search' => '',
+        'status' => '',
+        'location' => ''
     );
     
     public function __construct(Localization_Editor $editor)

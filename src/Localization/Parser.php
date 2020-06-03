@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization_Parser} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Parser
  * @see Localization_Parser
  */
 
@@ -17,9 +17,9 @@ namespace AppLocalize;
  * Uses the built-in PHP tokenizer and Tim Whitlock's
  * jtokenizer for parsing javascript files. 
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
+ * @package Localization
+ * @subpackage Parser
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Localization_Parser
 {

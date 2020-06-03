@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization_Currency_Number} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Currencies
  * @see Localization_Currency_Number
  */
 
@@ -13,9 +13,9 @@ namespace AppLocalize;
  * provide a simple API to work with currency-specific
  * price notations.
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
+ * @package Localization
+ * @subpackage Currencies
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  * @see Localization_Currency::parseNumber()
  */

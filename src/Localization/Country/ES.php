@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization_Country_ES} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Countries
  * @see Localization_Country_ES
  */
 
@@ -11,9 +11,9 @@ namespace AppLocalize;
 /**
  * Country class with the definitions for Spain.
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
+ * @package Localization
+ * @subpackage Countries
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
 class Localization_Country_ES extends Localization_Country

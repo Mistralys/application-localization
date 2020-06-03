@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization_Currency} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Currencies
  * @see Localization_Currency
  */
 
@@ -11,10 +11,9 @@ namespace AppLocalize;
 /**
  * Individual currency representation.
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
- * @link http://www.mistralys.com
+ * @package Localization
+ * @subpackage Currencies
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 abstract class Localization_Currency
 {

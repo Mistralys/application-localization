@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization_Translator} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Translator
  * @see Localization_Translator
  */
 
@@ -17,9 +17,9 @@ namespace AppLocalize;
  * and loaded as needed. The API allows adding new translations
  * and saving them to disk.
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
+ * @package Localization
+ * @subpackage Translator
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
 class Localization_Translator

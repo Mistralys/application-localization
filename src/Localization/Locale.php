@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization_Locale} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Core
  * @see Localization_Locale
  */
 
@@ -12,10 +12,9 @@ namespace AppLocalize;
  * Individual locale representation with information about
  * the country and currency.
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
- * @link http://www.mistralys.com
+ * @package Localization
+ * @subpackage Core
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Localization_Locale
 {

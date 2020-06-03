@@ -7,8 +7,8 @@ namespace AppLocalize;
  * of the same string hash accross all places where the same
  * string has been found.
  * 
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Scanner
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Localization_Scanner_StringHash

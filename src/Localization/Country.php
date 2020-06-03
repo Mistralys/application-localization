@@ -1,8 +1,8 @@
 <?php
 /**
  * File containing the {@link Localization_Country} class.
- * @package Application
- * @subpackage Localization
+ * @package Localization
+ * @subpackage Countries
  * @see Localization_Country
  */
 
@@ -12,12 +12,11 @@ namespace AppLocalize;
  * Individual country representation for handling country-
  * related data like currencies and locales.
  *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
- * @link http://www.mistralys.com
+ * @package Localization
+ * @subpackage Countries
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class Localization_Country implements Localization_Country_Interface
+abstract class Localization_Country implements Localization_CountryInterface
 {
     /**
      * Two-letter ISO country code
@@ -61,47 +60,4 @@ abstract class Localization_Country implements Localization_Country_Interface
     {
         return $this->getLabel();
     }
-}
-
-/**
- * Interface for application country classes.
- *
- * @package Application
- * @subpackage Localization
- * @author Sebastian Mordziol <s.mordziol@mistralys.com>
- * @link http://www.mistralys.com
- */
-interface Localization_Country_Interface
-{
-    public function getNumberThousandsSeparator() : string;
-
-    public function getNumberDecimalsSeparator() : string;
-
-    /**
-     * Retrieves the ID of the currency used by this country, e.g. "euro" or "dollar".
-     * Always lowercase.
-     *
-     * @return string
-     */
-    public function getCurrencyID();
-
-    /**
-     * Retrieves the country's currency object.
-     * @return Localization_Currency
-     */
-    public function getCurrency();
-
-    /**
-     * Human readable label for the locale, e.g. "United States"
-     * @return string
-     */
-    public function getLabel();
-
-    /**
-     * Returns the country's two-letter ISO code, e.g. "uk", "en", "de".
-     * Always lowercase.
-     *
-     * @return string
-     */
-    public function getCode();
 }
