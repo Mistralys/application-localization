@@ -243,7 +243,7 @@ class Localization_Translator
                 continue;
             }
             
-            $writer->addHash($hash, $text);
+            $writer->addHash($hash->getHash(), $text);
         }
         
         $writer->writeFile();
