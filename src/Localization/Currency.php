@@ -168,8 +168,10 @@ abstract class Localization_Currency
      *
      * @param string|number $number
      * @return Localization_Currency_Number|FALSE
+     *
+     * @see Localization_Currency::parseNumber()
      */
-    public function parseNumber($number)
+    public function tryParseNumber($number)
     {
         if (!is_integer($number)) {
             if (!is_string($number) || strlen($number) < 1) {
@@ -203,9 +205,31 @@ abstract class Localization_Currency
             $thousands = floatval(implode('', $parts));
         }
 
-        require_once 'Localization/Currency/Number.php';
-
         return new Localization_Currency_Number($thousands, $decimals);
+    }
+
+    /**
+     * @param string|number $number
+     * @return Localization_Currency_Number
+     * @throws Localization_Exception
+     *
+     * @see Localization_Currency::tryParseNumber()
+     */
+    public function parseNumber($number) : Localization_Currency_Number
+    {
+        $parsed = $this->tryParseNumber($number);
+
+        if ($parsed instanceof Localization_Currency_Number) {
+            return $parsed;
+        }
+
+        throw new Localization_Exception(
+            'Could not parse number',
+            sprintf(
+                'The number [%1$s] did not yield a currency number object.',
+                $number
+            )
+        );
     }
 
     public abstract function isSymbolOnFront();
@@ -269,21 +293,12 @@ abstract class Localization_Currency
 
     public function makeReadable($number, $decimalPositions = 2, $addSymbol=true)
     {
-        if ($number == null || $number == '') {
+        if ($number === null || $number === '') {
             return null;
         }
 
         $parsed = $this->parseNumber($number);
-        if (!$parsed instanceof Localization_Currency_Number) {
-            throw new Localization_Exception(
-                'Could not parse number',
-                sprintf(
-                    'The number [%1$s] did not yield a currency number object.',
-                    $number
-                )
-            );
-        }
-        
+
         $number = $this->formatNumber($parsed->getFloat(), $decimalPositions);
 
         if(!$addSymbol) {
