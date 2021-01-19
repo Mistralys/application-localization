@@ -17,7 +17,7 @@ namespace AppLocalize;
  * @subpackage Currencies
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
- * @see Localization_Currency::parseNumber()
+ * @see Localization_Currency::tryParseNumber()
  */
 class Localization_Currency_Number
 {
