@@ -31,7 +31,7 @@
 	"require" : 
 	{
 		"mistralys/application-utils" : ">=1.2.0",
-		"mistralys/jtokenizer" : ">=1.0.0",
+		"mistralys/jtokenizer" : ">=1.0.1",
 		"ext-json": "*",
       	"ext-mbstring": "*"
     },
