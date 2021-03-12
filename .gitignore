@@ -16,3 +16,8 @@ example/localization/*.ini
 tests/storage/cachekey.txt
 docs/phpstan/output.txt
 tests/storage/trywrite.ini
+.idea/deployment.xml
+.idea/modules.xml
+.idea/php.xml
+.idea/phpunit.xml
+.idea/vcs.xml
