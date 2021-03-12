@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d34495df71b6e41330b5a0c6c6a57f3",
+    "content-hash": "59d23c7603da41679e9599972b5a3c33",
     "packages": [
         {
             "name": "geshi/geshi",
@@ -2251,6 +2251,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
+        "php": ">=7.3",
         "ext-json": "*",
         "ext-mbstring": "*"
     },
