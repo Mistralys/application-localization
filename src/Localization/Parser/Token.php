@@ -2,6 +2,8 @@
 
 namespace AppLocalize;
 
+use AppUtils\ConvertHelper;
+
 abstract class Localization_Parser_Token
 {
    /**
@@ -15,20 +17,36 @@ abstract class Localization_Parser_Token
     protected $parentToken;
     
     protected $token;
-    
-    protected $value;
-    
+
+    /**
+     * @var string|NULL
+     */
+    protected $value = null;
+
+    /**
+     * @var int
+     */
     protected $line = 0;
-    
+
+    /**
+     * @var array<string,bool>
+     */
+    protected $nameLookup = array();
+
     public function __construct($definition, Localization_Parser_Token $parentToken=null)
     {
         $this->definition = $definition;
         $this->parentToken = $parentToken;
-        
+
+        $names = $this->getFunctionNames();
+        foreach($names as $name) {
+            $this->nameLookup[$name] = true;
+        }
+
         $this->parseDefinition();
     }
     
-    public function getValue()
+    public function getValue() : ?string
     {
         return $this->value;
     }
@@ -46,18 +64,20 @@ abstract class Localization_Parser_Token
     
     abstract public function getFunctionNames() : array;
     
-    abstract public function isEncapsedString();
+    abstract public function isEncapsedString() : bool;
     
-    abstract public function isTranslationFunction();
+    abstract public function isTranslationFunction() : bool;
     
-    abstract public function isVariableOrFunction();
-    
+    abstract public function isVariableOrFunction() : bool;
+
+    abstract public function isExplanationFunction() : bool;
+
     public function getLine() : int
     {
         return $this->line;
     }
     
-    abstract public function isArgumentSeparator();
+    abstract public function isArgumentSeparator() : bool;
     
     public function toArray()
     {
@@ -65,7 +85,7 @@ abstract class Localization_Parser_Token
             'token' => $this->getToken(),
             'value' => $this->getValue(),
             'line' => $this->getLine(),
-            'isEncapsedString' => \AppUtils\ConvertHelper::bool2string($this->isEncapsedString())
+            'isEncapsedString' => ConvertHelper::bool2string($this->isEncapsedString())
          );
     }
 }
