@@ -6,9 +6,15 @@ namespace AppLocalize;
 
 class Localization_Parser_Token_PHP extends Localization_Parser_Token
 {
+    private static $explanationFunctions = array(
+        'tex' => true,
+        'ptex' => true,
+        'ptexs' => true
+    );
+
     protected function parseDefinition() : void
     {
-        // some entries are strings, like parenthesises, semicolons and the like.
+        // some entries are strings, like parentheses, semicolons and the like.
         if(is_string($this->definition))
         {
             $this->token = $this->definition;
@@ -25,13 +31,19 @@ class Localization_Parser_Token_PHP extends Localization_Parser_Token
             $this->line = $this->definition[2];
         }
     }
-    
+
+    /**
+     * @return string[]
+     */
     public function getFunctionNames() : array
     {
         return array(
             't',
             'pt',
-            'pts'
+            'pts',
+            'tex',
+            'ptex',
+            'ptexs'
         );
     }
     
@@ -57,15 +69,20 @@ class Localization_Parser_Token_PHP extends Localization_Parser_Token
     
     public function isTranslationFunction() : bool
     {
-        return $this->isString() && in_array($this->getValue(), $this->getFunctionNames());
+        return $this->isString() && isset($this->nameLookup[$this->getValue()]);
     }
     
     public function isVariableOrFunction() : bool
     {
         return $this->token === 'T_VARIABLE' || $this->token === 'T_FUNCTION';
     }
+
+    public function isExplanationFunction() : bool
+    {
+        return isset(self::$explanationFunctions[$this->getValue()]);
+    }
     
-    public function isArgumentSeparator()
+    public function isArgumentSeparator() : bool
     {
         return $this->getToken() === ',';
     }
