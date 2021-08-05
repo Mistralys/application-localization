@@ -11,13 +11,15 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppUtils\ConvertHelper;
+use AppUtils\PaginationHelper;
 use AppUtils\Traits_Optionable;
 use AppUtils\Interface_Optionable;
 use AppUtils\FileHelper;
 use AppUtils\Request;
 
 /**
- * User Inteface handler for editing localization files.
+ * User Interface handler for editing localization files.
  *
  * @package Localization
  * @subpackage Editor
@@ -250,7 +252,6 @@ class Localization_Editor implements Interface_Optionable
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-			
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <?php 
                     if(!empty($this->appLocales))
@@ -283,7 +284,7 @@ class Localization_Editor implements Interface_Optionable
                                         				    $untranslated = $source->countUntranslated($this->scanner);
                                         				    if($untranslated > 0) {
                                         				        ?>
-                                        				        	(<span class="text-danger" title="<?php pt('%1$s texts have not been translated in this text source.', $untranslated) ?>"><?php echo $untranslated ?></span>)
+                                        				        	(<span class="text-danger" title="<?php ptex('%1$s texts have not been translated in this text source.', 'Amount of texts', $untranslated) ?>"><?php echo $untranslated ?></span>)
                                 				            	<?php 
                                         				    }
                                     				    ?>
@@ -517,7 +518,7 @@ class Localization_Editor implements Interface_Optionable
         
         $total = count($strings);
         $page = $this->getPage();
-        $pager = new \AppUtils\PaginationHelper($total, $this->perPage, $page);
+        $pager = new PaginationHelper($total, $this->perPage, $page);
         
         $keep = array_slice($strings, $pager->getOffsetStart(), $this->perPage);
         
@@ -612,10 +613,11 @@ class Localization_Editor implements Interface_Optionable
     protected function renderListEntry(Localization_Scanner_StringHash $string)
     {
         $hash = $string->getHash();
+        $text = $string->getText();
         
         $previewText = $string->getTranslatedText();
         if(empty($previewText)) {
-            $previewText = $string->getText();
+            $previewText = $text->getText();
         }
         
         $shortText =  $this->renderText($previewText, 50);
@@ -631,17 +633,29 @@ class Localization_Editor implements Interface_Optionable
         	</tr>
         	<tr class="string-form">
         		<td colspan="4">
-        			<?php echo pt('Native text:') ?>
-        			<p class="native-text"><?php echo $this->renderText($string->getText()) ?></p>
+        			<?php pt('Native text:') ?>
+        			<p class="native-text"><?php echo $this->renderText($text->getText()) ?></p>
         			<p>
         				<textarea rows="4" class="form-control" name="<?php echo $this->getVarName('strings') ?>[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
         			</p>
+                    <?php
+                        $explanation = $text->getExplanation();
+                        if(!empty($explanation))
+                        {
+                            ?>
+                            <p>
+                                <?php pt('Context information:') ?><br>
+                                <span class="native-text"><?php echo $explanation ?></span>
+                            </p>
+                            <?php
+                        }
+                    ?>
         			<p>
 	        			<button type="button" class="btn btn-outline-primary btn-sm" onclick="Editor.Confirm('<?php echo $hash ?>')">
-	        				<?php pt('OK') ?>
+	        				<?php ptex('OK', 'Button') ?>
 	        			</button>
 	        			<button type="button" class="btn btn-outline-secondary btn-sm" onclick="Editor.Toggle('<?php echo $hash ?>')">
-	        				<?php pt('Cancel') ?>
+	        				<?php ptex('Cancel', 'Button') ?>
 	        			</button>
         			</p>
         			<div class="files-list">
@@ -695,19 +709,18 @@ class Localization_Editor implements Interface_Optionable
         		</td>
         	</tr>
         <?php 
-        
     }
     
     protected function renderText(string $text, int $cutAt=0) : string
     {
         if(empty($text)) {
-            return $text;
+            return '';
         }
-        
+
         if($cutAt > 0) {
-            $text = \AppUtils\ConvertHelper::text_cut($text, $cutAt);
+            $text = ConvertHelper::text_cut($text, $cutAt);
         }
-        
+
         $text = htmlspecialchars($text);
         
         $vars = $this->detectVariables($text);
@@ -716,7 +729,7 @@ class Localization_Editor implements Interface_Optionable
             $text = str_replace($var, '<span class="placeholder">'.$var.'</span>', $text);
         }
         
-        return $text; 
+        return $text;
     }
     
     protected function detectVariables(string $string) : array
