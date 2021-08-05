@@ -110,31 +110,12 @@ Refreshing the libraries is then done automatically with each release of your ap
 
 ### Serverside setup
 
-By default, to use the `t()` function, you have to add the namespace at the top of the PHP files in which you wish to use it:
+To use the translation functions, you have to add use statements for those you need: 
 
 ```php
-use AppLocalize;
-```
-
-Alternatively, you could use the explicit syntax, `\AppLocalize\t()`, which is not very practical.
-
-The optimal way is to add alias functions in your application:
-
-```php
-function t()
-{
-    return call_user_func_array('\AppLocalize\t', func_get_args());
-}
-
-function pt()
-{
-    return call_user_func_array('\AppLocalize\pt', func_get_args());
-}
-
-function pts()
-{
-    return call_user_func_array('\AppLocalize\pts', func_get_args());
-}
+use function AppLocalize\t;
+use function AppLocalize\pt;
+use function AppLocalize\pts;
 ```
 
 ### The t() function
@@ -186,6 +167,33 @@ Clientside, you may use the same syntax:
 var amount = 50;
 var text = t('We found %1$s entries.', amount);
 ```
+
+### Providing translation context information
+
+To add an explanation of the context in which a text is used to help translators decide how
+best to translate texts, use the flavored functions:
+
+- `tex()`
+- `ptex()`
+- `ptexs()`
+
+```php
+// Context information comes directly after the text.
+ptex(
+    'Text to translate', 
+    'Context explanation for translators.'
+);
+
+// Placeholder values come after the context information.
+ptex(
+    '%1$s records', 
+    'Placeholder contains the amount of records.', 
+    42
+);
+```
+
+> Note: The context text must be a string, just like the text to translate.
+> Linebreaks and string concatenation are allowed, but no variables or functions.
 
 ## Tips & best practices
 
