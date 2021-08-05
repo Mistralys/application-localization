@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppLocalize\Parser\Text;
+
 abstract class Localization_Parser_Language
 {
     const ERROR_SOURCE_FILE_NOT_FOUND = 40501;
-    
     const ERROR_FAILED_READING_SOURCE_FILE = 40502;
-    
+
+    /**
+     * @var bool
+     */
     protected $debug = false;
     
     /**
@@ -37,7 +41,7 @@ abstract class Localization_Parser_Language
     
    /**
     * All texts that have been collected.
-    * @var array
+    * @var Text[]
     */
     protected $texts = array();
     
@@ -47,12 +51,12 @@ abstract class Localization_Parser_Language
     protected $content = '';
 
    /**
-    * @var string
+    * @var string|NULL
     */
     protected $id;
     
    /**
-    * @var array
+    * @var Localization_Parser_Warning[]
     */
     protected $warnings = array();
     
@@ -77,7 +81,7 @@ abstract class Localization_Parser_Language
     public function getID() : string
     {
         if(!isset($this->id)) {
-            $this->id = str_replace('AppLocalize\Localization_Parser_Language_', '', get_class($this));
+            $this->id = str_replace(Localization_Parser_Language::class.'_', '', get_class($this));
         }
         
         return $this->id;
@@ -159,20 +163,20 @@ abstract class Localization_Parser_Language
             }
         }
     }
-    
-    public function getTexts()
+
+    /**
+     * @return Text[]
+     */
+    public function getTexts() : array
     {
         return $this->texts;
     }
     
-    protected function addResult($text, $line=null)
+    protected function addResult(string $text, int $line=0, string $explanation='')
     {
         $this->log(sprintf('Line [%1$s] | Found string [%2$s]', $line, $text));
-        
-        $this->texts[] = array(
-            'text' => $text, 
-            'line' => $line
-        );
+
+        $this->texts[] = new Text($text, $line, $explanation);
     }
 
    /**
@@ -221,7 +225,7 @@ abstract class Localization_Parser_Language
     * 
     * @return Localization_Parser_Warning[]
     */
-    public function getWarnings()
+    public function getWarnings() : array
     {
         return $this->warnings;
     }
@@ -231,12 +235,12 @@ abstract class Localization_Parser_Language
     * the language token being parsed.
     * 
     * @param array|string $definition The token definition.
-    * @param Localization_Parser_Token $parentToken
+    * @param Localization_Parser_Token|NULL $parentToken
     * @return Localization_Parser_Token
     */
     protected function createToken($definition, Localization_Parser_Token $parentToken=null) : Localization_Parser_Token
     {
-        $class = '\AppLocalize\Localization_Parser_Token_'.$this->getID();
+        $class = Localization_Parser_Token::class.'_'.$this->getID();
         
         return new $class($definition, $parentToken);
     }
@@ -247,11 +251,12 @@ abstract class Localization_Parser_Language
     * @param int $number
     * @param Localization_Parser_Token $token
     */
-    protected function parseToken(int $number, Localization_Parser_Token $token)
+    protected function parseToken(int $number, Localization_Parser_Token $token) : void
     {
         $textParts = array();
         $max = $number + 200;
         $open = false;
+        $explanation = '';
         
         for($i = $number; $i < $max; $i++)
         {
@@ -272,7 +277,12 @@ abstract class Localization_Parser_Language
             }
             
             // additional parameters in the translation function, we don't want to capture these now.
-            if($open && $subToken->isArgumentSeparator()) {
+            if($open && $subToken->isArgumentSeparator())
+            {
+                if($token->isExplanationFunction()) {
+                    $leftover = array_slice($this->tokens, $i+1);
+                    $explanation = $this->parseExplanation($token, $leftover);
+                }
                 break;
             }
             
@@ -295,9 +305,52 @@ abstract class Localization_Parser_Language
         
         $text = implode('', $textParts);
         
-        $this->addResult($text, $token->getLine());
+        $this->addResult($text, $token->getLine(), $explanation);
     }
-    
+
+    private function parseExplanation(Localization_Parser_Token $token, array $tokens) : string
+    {
+        $textParts = array();
+        $max = 200;
+
+        for($i = 0; $i < $max; $i++)
+        {
+            if(!isset($tokens[$i])) {
+                break;
+            }
+
+            $subToken = $this->createToken($tokens[$i], $token);
+
+            if($subToken->isClosingFuncParams()) {
+                break;
+            }
+
+            // additional parameters in the translation function, we don't want to capture these now.
+            if($subToken->isArgumentSeparator())
+            {
+                break;
+            }
+
+            if($subToken->isEncapsedString())
+            {
+                $textParts[] = $this->trimText($subToken->getValue());
+                continue;
+            }
+
+            if($subToken->isVariableOrFunction()) {
+                $textParts = null;
+                $this->addWarning($subToken, t('Variables or functions are not supported in translation functions.'));
+                break;
+            }
+        }
+
+        if(empty($textParts)) {
+            return '';
+        }
+
+        return implode('', $textParts);
+    }
+
     protected function debug($text)
     {
         if($this->debug) {
