@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use JTokenizer\JTokenizer;
+
 class Localization_Parser_Token_Javascript extends Localization_Parser_Token
 {
     protected function parseDefinition() : void
@@ -20,7 +22,7 @@ class Localization_Parser_Token_Javascript extends Localization_Parser_Token
         }
         else
         {
-            $this->token = \JTokenizer\JTokenizer::getTokenName($this->definition[0]);
+            $this->token = JTokenizer::getTokenName($this->definition[0]);
             $this->value = $this->definition[1];
             $this->line = $this->definition[2];
         }
@@ -47,18 +49,23 @@ class Localization_Parser_Token_Javascript extends Localization_Parser_Token
     {
         return $this->token === 'J_STRING_LITERAL';
     }
-    
+
     public function isTranslationFunction() : bool
     {
-        return $this->isVariableOrFunction() && in_array($this->getValue(), $this->getFunctionNames());
+        return $this->isVariableOrFunction() && isset($this->nameLookup[$this->getValue()]);
     }
     
     public function isVariableOrFunction() : bool
     {
         return $this->token === 'J_IDENTIFIER' || $this->token === 'J_FUNCTION';
     }
-    
-    public function isArgumentSeparator()
+
+    public function isExplanationFunction() : bool
+    {
+        return false;
+    }
+
+    public function isArgumentSeparator() : bool
     {
         return $this->getToken() === ',';
     }
