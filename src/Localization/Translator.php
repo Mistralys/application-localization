@@ -308,13 +308,13 @@ class Localization_Translator
      * to translate, additional parameters are variables to insert
      * into the string.
      *
+     * @param string $text
+     * @param array $args
      * @return string|null
+     * @throws Localization_Exception
      */
-    public function translate()
+    public function translate(string $text, array $args) : string
     {
-        $args = func_get_args();
-        $text = $args[0];
-        
         // to avoid re-creating the hash for the same texts over and over,
         // we keep track of the hashes we created, and re-use them.
         if(isset($this->reverseStrings[$text])) {
@@ -327,21 +327,23 @@ class Localization_Translator
         // replace the text with the one we have on record, otherwise
         // simply leave the original unchanged.
         if (isset($this->strings[$this->targetLocaleName][$hash])) {
-            $args[0] = $this->strings[$this->targetLocaleName][$hash];
+            $text = $this->strings[$this->targetLocaleName][$hash];
         }
 
-        $result = call_user_func_array('sprintf', $args);
-        if ($result === false) {
-            throw new Localization_Exception(
-                'Incorrectly translated string or erroneous localized string',
-                sprintf(
-                    'The string %1$s seems to have too many or too few arguments.',
-                    $text
-                )
-            );
+        array_unshift($args, $text);
+
+        $result = call_user_func('sprintf', ...$args);
+        if (is_string($result)) {
+            return $result;
         }
 
-        return $result;
+        throw new Localization_Exception(
+            'Incorrectly translated string or erroneous localized string',
+            sprintf(
+                'The string %1$s seems to have too many or too few arguments.',
+                $text
+            )
+        );
     }
 
     /**
