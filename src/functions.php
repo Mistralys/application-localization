@@ -1,4 +1,14 @@
 <?php
+/**
+ * File containing the global translation functions.
+ *
+ * @package AppLocalize
+ * @see \AppLocalize\t()
+ * @see \AppLocalize\pt()
+ * @see \AppLocalize\pts()
+ */
+
+declare(strict_types=1);
 
 namespace AppLocalize;
 
@@ -16,16 +26,18 @@ namespace AppLocalize;
  * Use the sister function {@link pt()} to translate
  * and echo a string directly.
  *
+ * @package AppLocalize
+ * @param string $text
+ * @param mixed ...$args
  * @return string
- * @see pt()
+ * @see \AppLocalize\pt()
  */
-function t()
+function t(string $text, ...$args) : string
 {
-    $arguments = func_get_args();
-    
-    return call_user_func_array(
+    return call_user_func(
         array(Localization::getTranslator(), 'translate'),
-        $arguments
+        $text,
+        $args
     );
 }
 
@@ -33,33 +45,79 @@ function t()
  * Same as the {@link t()} function, but echos the
  * translated string.
  *
- * @see t()
+ * @see \AppLocalize\t()
  */
-function pt()
+function pt(string $text, ...$args) : void
 {
-    $arguments = func_get_args();
-    
-    echo call_user_func_array(
+    echo call_user_func(
         array(Localization::getTranslator(), 'translate'),
-        $arguments
+        $text,
+        $args
     );
 }
 
 /**
  * Same as the {@link pt()} function, but adds a space after
- * the string, so several texts can be chained in an HTML 
- * document, without having to manually add spaces inbetween.
- * 
- * @see pt()
+ * the string, so several texts can be chained in an HTML
+ * document, without having to manually add spaces in between.
+ *
+ * @param string $text
+ * @param mixed ...$args
+ * @see \AppLocalize\pt()
  */
-function pts()
+function pts(string $text, ...$args) : void
 {
-    $arguments = func_get_args();
-    
-    echo call_user_func_array(
+    echo call_user_func(
         array(Localization::getTranslator(), 'translate'),
-        $arguments
+        $text,
+        $args
     );
     
+    echo ' ';
+}
+
+/**
+ * Like {@see \AppLocalize\t()}, but the second parameter
+ * allows specifying context for translators, in cases
+ * where a text to translate can be ambiguous, or to
+ * explain the content of placeholders.
+ *
+ * @param string $text
+ * @param string $context
+ * @param ...$args
+ * @return string
+ */
+function tex(string $text, string $context, ...$args) : string
+{
+    unset($context); // Only used by the parser.
+
+    return call_user_func(
+        array(Localization::getTranslator(), 'translate'),
+        $text,
+        $args
+    );
+}
+
+function ptex(string $text, string $context, ...$args) : void
+{
+    unset($context); // Only used by the parser.
+
+    echo call_user_func(
+        array(Localization::getTranslator(), 'translate'),
+        $text,
+        $args
+    );
+}
+
+function ptexs(string $text, string $context, ...$args) : void
+{
+    unset($context); // Only used by the parser.
+
+    echo call_user_func(
+        array(Localization::getTranslator(), 'translate'),
+        $text,
+        $args
+    );
+
     echo ' ';
 }
