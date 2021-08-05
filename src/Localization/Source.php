@@ -88,7 +88,7 @@ abstract class Localization_Source
         'js' => 'Javascript',
         'php' => 'PHP'
     );
-    
+
     /**
      * Parses the code of the target file to find all
      * supported function calls and extract the native
@@ -96,23 +96,23 @@ abstract class Localization_Source
      * strings it finds to the results collection.
      *
      * @param string $file
+     * @throws Localization_Exception
      */
-    protected function parseFile($file)
+    protected function parseFile(string $file) : void
     {
-        $this->log(sprintf('Parsing file [' . $file . '].'));
+        $this->log(sprintf('Parsing file [%s].', $file));
         
         $language = $this->parser->parseFile($file);
         
         $texts = $language->getTexts();
         
-        foreach($texts as $def) 
+        foreach($texts as $text)
         {
             $this->collection->addFromFile(
                 $this->getID(),
                 $file,
                 $language->getID(), 
-                $def['text'],
-                $def['line']
+                $text
             );
         }
         

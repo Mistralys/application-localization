@@ -2,77 +2,90 @@
 
 namespace AppLocalize;
 
+use AppLocalize\Parser\Text;
+
 class Localization_Scanner_StringInfo
 {
-   /**
+    const SERIALIZED_SOURCE_TYPE = 'sourceType';
+    const SERIALIZED_SOURCE_ID = 'sourceID';
+    const SERIALIZED_TEXT = 'text';
+    const SERIALIZED_PROPERTIES = 'properties';
+
+    /**
     * @var Localization_Scanner_StringsCollection
     */
     protected $collection;
-    
+
+    /**
+     * @var array<string,mixed>
+     */
     protected $properties = array();
-    
+
+    /**
+     * @var string
+     */
     protected $sourceID;
-    
+
+    /**
+     * @var string
+     */
     protected $sourceType;
-    
+
+    /**
+     * @var Text
+     */
     protected $text;
     
-    protected $line;
-    
-    protected $hash;
-    
-    public function __construct(Localization_Scanner_StringsCollection $collection, $sourceID, $sourceType, $text, $line)
+    public function __construct(Localization_Scanner_StringsCollection $collection, string $sourceID, string $sourceType, Text $text)
     {
         $this->collection = $collection;
         $this->sourceID = $sourceID;
         $this->sourceType = $sourceType;
         $this->text = $text;
-        $this->line = $line;
-        $this->hash = md5($text);
     }
     
-    public function getHash()
+    public function getHash() : string
     {
-        return $this->hash;
+        return $this->text->getHash();
     }
     
-    public function getSourceID()
+    public function getSourceID() : string
     {
         return $this->sourceID;
     }
     
-    public function setProperty($name, $value)
+    public function setProperty(string $name, $value) : Localization_Scanner_StringInfo
     {
         $this->properties[$name] = $value;
         return $this;
     }
     
-    public function isFile()
+    public function isFile() : bool
     {
         return $this->sourceType == Localization_Scanner_StringsCollection::SOURCE_FILE;
     }
     
-    public function isJavascript()
+    public function isJavascript() : bool
     {
         return $this->getProperty('languageType') == 'Javascript';
     }
     
-    public function isPHP()
+    public function isPHP() : bool
     {
         return $this->getProperty('languageType') == 'PHP';
     }
     
-    public function getSourceFile()
+    public function getSourceFile() : string
     {
-        return $this->getProperty('relativePath');
+        return strval($this->getProperty('relativePath'));
     }
     
-    public function getLanguageType()
+    public function getLanguageType() : string
     {
-        return $this->getProperty('languageType');
+        return strval($this->getProperty('languageType'));
     }
     
-    public function getProperty($name)
+    public function getProperty(string $name) : ?string
     {
         if(isset($this->properties[$name])) {
             return $this->properties[$name];
@@ -81,49 +94,54 @@ class Localization_Scanner_StringInfo
         return null;
     }
     
-    public function getSourceType()
+    public function getSourceType() : string
     {
         return $this->sourceType;
     }
     
-    public function getText()
+    public function getText() : Text
     {
         return $this->text;
     }
     
-    public function getLine()
+    public function getLine() : int
     {
-        return $this->line;
+        return $this->text->getLine();
     }
-    
-    public function toArray()
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function toArray() : array
     {
         return array(
-            'sourceType' => $this->getSourceType(),
-            'sourceID' => $this->getSourceID(),            
-            'hash' => $this->getHash(),
-            'text' => $this->getText(),
-            'line' => $this->getLine(),
-            'properties' => $this->getProperties()
+            self::SERIALIZED_SOURCE_TYPE => $this->getSourceType(),
+            self::SERIALIZED_SOURCE_ID => $this->getSourceID(),
+            self::SERIALIZED_TEXT => $this->text->toArray(),
+            self::SERIALIZED_PROPERTIES => $this->getProperties()
         );
     }
     
-    public function getProperties()
+    public function getProperties() : array
     {
         return $this->properties;
     }
-    
-    public static function fromArray($collection, $array)
+
+    /**
+     * @param Localization_Scanner_StringsCollection $collection
+     * @param array<string,mixed> $array
+     * @return Localization_Scanner_StringInfo
+     */
+    public static function fromArray(Localization_Scanner_StringsCollection $collection, array $array) : Localization_Scanner_StringInfo
     {
         $string = new Localization_Scanner_StringInfo(
             $collection, 
-            $array['sourceID'],
-            $array['sourceType'],
-            $array['text'],
-            $array['line']
+            $array[self::SERIALIZED_SOURCE_ID],
+            $array[self::SERIALIZED_SOURCE_TYPE],
+            Text::fromArray($array[self::SERIALIZED_TEXT])
         );
         
-        foreach($array['properties'] as $name => $value) {
+        foreach($array[self::SERIALIZED_PROPERTIES] as $name => $value) {
             $string->setProperty($name, $value);
         }
         

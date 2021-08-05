@@ -2,6 +2,8 @@
 
 namespace AppLocalize;
 
+use AppLocalize\Parser\Text;
+
 /**
  * Container for a single string hash: collects all instances
  * of the same string hash accross all places where the same
@@ -93,13 +95,13 @@ class Localization_Scanner_StringHash
         return false;
     }
     
-    public function getText() : string
+    public function getText() : ?Text
     {
         if(isset($this->strings[0])) {
             return $this->strings[0]->getText();
         }
         
-        return '';
+        return null;
     }
     
     public function getHash() : string

@@ -2,13 +2,15 @@
 
 namespace AppLocalize;
 
+use AppLocalize\Parser\Text;
+
 class Localization_Scanner_StringsCollection
 {
     const ERROR_UNKNOWN_STRING_HASH = 39201;
     
     const SOURCE_FILE = 'file';
     
-    const STORAGE_FORMAT_VERSION = 1;
+    const STORAGE_FORMAT_VERSION = 2;
     
    /**
     * @var Localization_Scanner
@@ -30,9 +32,9 @@ class Localization_Scanner_StringsCollection
         $this->scanner = $scanner;
     }
     
-    public function addFromFile($sourceID, $relativePath, $languageType, $text, $line)
+    public function addFromFile(string $sourceID, string $relativePath, string $languageType, Text $text)
     {
-        $string = $this->createString($sourceID, self::SOURCE_FILE, $text, $line);
+        $string = $this->createString($sourceID, self::SOURCE_FILE, $text);
         
         $string->setProperty('languageType', $languageType);
         $string->setProperty('relativePath', $relativePath);
@@ -45,10 +47,9 @@ class Localization_Scanner_StringsCollection
         $this->warnings[] = $warning->toArray();
     }
     
-    protected function createString($sourceID, $sourceType, $text, $line)
+    protected function createString(string $sourceID, string $sourceType, Text $text) : Localization_Scanner_StringInfo
     {
-        $string = new Localization_Scanner_StringInfo($this, $sourceID, $sourceType, $text, $line);
-        return $string;
+        return new Localization_Scanner_StringInfo($this, $sourceID, $sourceType, $text);
     }
     
    /**
@@ -57,7 +58,7 @@ class Localization_Scanner_StringsCollection
     * @param Localization_Scanner_StringInfo $string
     * @return Localization_Scanner_StringsCollection
     */
-    protected function add(Localization_Scanner_StringInfo $string)
+    protected function add(Localization_Scanner_StringInfo $string) : Localization_Scanner_StringsCollection
     {
         $hash = $string->getHash();
         
@@ -75,17 +76,22 @@ class Localization_Scanner_StringsCollection
     * 
     * @return Localization_Scanner_StringHash[]
     */
-    public function getHashes()
+    public function getHashes() : array
     {
         return array_values($this->hashes);
     }
     
-    public function hashExists($hash)
+    public function hashExists(string $hash) : bool
     {
         return isset($this->hashes[$hash]);
     }
-    
-    public function getHash($hash)
+
+    /**
+     * @param string $hash
+     * @return Localization_Scanner_StringHash
+     * @throws Localization_Exception
+     */
+    public function getHash(string $hash) : Localization_Scanner_StringHash
     {
         if(isset($this->hashes[$hash])) {
             return $this->hashes[$hash];
