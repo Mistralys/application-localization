@@ -294,7 +294,7 @@ abstract class Localization_Parser_Language
             
             if($open && $subToken->isEncapsedString())
             {
-                $textParts[] = $this->trimText($subToken->getValue());
+                $textParts[] = $this->trimText(strval($subToken->getValue()));
                 continue;
             }
             
@@ -339,7 +339,7 @@ abstract class Localization_Parser_Language
 
             if($subToken->isEncapsedString())
             {
-                $textParts[] = $this->trimText($subToken->getValue());
+                $textParts[] = $this->trimText(strval($subToken->getValue()));
                 continue;
             }
 
