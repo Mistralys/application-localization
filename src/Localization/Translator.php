@@ -310,7 +310,7 @@ class Localization_Translator
      *
      * @param string $text
      * @param array $args
-     * @return string|null
+     * @return string
      * @throws Localization_Exception
      */
     public function translate(string $text, array $args) : string
