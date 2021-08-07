@@ -158,7 +158,7 @@ class Localization_Writer
     *
     * @param array $a
     * @param array $b
-    * @return number
+    * @return int
     */
     public function callback_sortStrings(array $a, array $b) : int
     {
