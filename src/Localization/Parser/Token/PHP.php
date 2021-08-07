@@ -6,6 +6,9 @@ namespace AppLocalize;
 
 class Localization_Parser_Token_PHP extends Localization_Parser_Token
 {
+    /**
+     * @var array<string,bool>
+     */
     private static $explanationFunctions = array(
         'tex' => true,
         'ptex' => true,

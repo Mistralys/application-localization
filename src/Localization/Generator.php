@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppUtils\FileHelper;
+use AppUtils\FileHelper_Exception;
+
 class Localization_ClientGenerator
 {
     const ERROR_JS_FOLDER_NOT_FOUND = 39302;
-    
-    const ERROR_TARGET_FOLDER_NOT_WRITABLE = 39303;  
-
+    const ERROR_TARGET_FOLDER_NOT_WRITABLE = 39303;
     const ERROR_INVALID_FILES_IDENTIFIER = 39304;
-    
+
     const FILES_LIBRARIES = 'libs';
-    
     const FILES_LOCALES = 'locales';
-    
     const FILES_CACHE_KEY = 'cachekey';
     
    /**
@@ -37,9 +36,15 @@ class Localization_ClientGenerator
     * @var string
     */
     protected $cacheKeyFile;
-    
+
+    /**
+     * @var string
+     */
     protected $cacheKey = '';
-    
+
+    /**
+     * @var array<string,bool>
+     */
     protected $written = array(
         self::FILES_CACHE_KEY => false,
         self::FILES_LIBRARIES => false,
@@ -54,29 +59,25 @@ class Localization_ClientGenerator
         
         $this->initCache();
     }
-    
-    protected function initCache()
+
+    /**
+     * @throws FileHelper_Exception
+     */
+    protected function initCache() : void
     {
         // ignore it if it does not exist.
         if(!file_exists($this->cacheKeyFile)) {
             return;
         }
         
-        $this->cacheKey = file_get_contents($this->cacheKeyFile);
-        
-        if($this->cacheKey !== false) {
-            return;
-        }
-        
-        throw new Localization_Exception(
-            'Cannot open client libraries cache key file.',
-            sprintf(
-                'Tried reading contents of existing file [%s].',
-                $this->cacheKeyFile
-            )
-        );
+        $this->cacheKey = FileHelper::readContents($this->cacheKeyFile);
     }
-    
+
+    /**
+     * @param bool $force
+     * @throws Localization_Exception
+     * @throws FileHelper_Exception
+     */
     public function writeFiles(bool $force=false) : void
     {
         // reset the write states for all files
@@ -90,7 +91,7 @@ class Localization_ClientGenerator
             return;
         }
         
-        \AppUtils\FileHelper::createFolder($this->targetFolder);
+        FileHelper::createFolder($this->targetFolder);
         
         if(!is_writable($this->targetFolder)) 
         {
@@ -149,7 +150,7 @@ class Localization_ClientGenerator
         return $files;
     }
     
-    protected function writeLocaleFiles()
+    protected function writeLocaleFiles() : void
     {
         $locales = Localization::getAppLocales();
         
@@ -162,13 +163,20 @@ class Localization_ClientGenerator
             $this->writeLocaleFile($locale);
         }
     }
-    
+
+    /**
+     * @var string[]
+     */
     protected $libraries = array(
         'translator.js',
         'md5.min.js'
     );
-    
-    protected function writeLibraryFiles()
+
+    /**
+     * @throws FileHelper_Exception
+     * @throws Localization_Exception
+     */
+    protected function writeLibraryFiles() : void
     {
         $sourceFolder = realpath(__DIR__.'/../js');
         
@@ -194,7 +202,7 @@ class Localization_ClientGenerator
             
             $sourceFile = $sourceFolder.'/'.$fileName;
             
-            \AppUtils\FileHelper::copyFile($sourceFile, $targetFile);
+            FileHelper::copyFile($sourceFile, $targetFile);
             
             $this->written[self::FILES_LIBRARIES] = true;
         }
@@ -266,7 +274,7 @@ class Localization_ClientGenerator
             'AppLocalize_Translator.'.implode('.', $tokens).';';
         }
         
-        \AppUtils\FileHelper::saveFile($path, $content);
+        FileHelper::saveFile($path, $content);
         
         $this->written[self::FILES_LOCALES] = true;
     }
@@ -276,30 +284,32 @@ class Localization_ClientGenerator
     * automatically whether the client libraries need to be 
     * refreshed.
     */
-    protected function writeCacheKey()
+    protected function writeCacheKey() : void
     {
         if(file_exists($this->cacheKeyFile) && !$this->force) {
             return;
         }
         
-        \AppUtils\FileHelper::saveFile($this->cacheKeyFile, Localization::getClientLibrariesCacheKey());
+        FileHelper::saveFile($this->cacheKeyFile, Localization::getClientLibrariesCacheKey());
         
         $this->written[self::FILES_CACHE_KEY] = true;
     }
 
-   /**
-    * Whether the specified files have been written to 
-    * disk this session. 
-    * 
-    * NOTE: only useful when called after <code>writeFiles</code>.
-    * 
-    * @param string $filesID
-    * 
-    * @see Localization_ClientGenerator::FILES_CACHE_KEY
-    * @see Localization_ClientGenerator::FILES_LOCALES
-    * @see Localization_ClientGenerator::FILES_LIBRARIES
-    */
-    public function areFilesWritten(string $filesID)
+    /**
+     * Whether the specified files have been written to
+     * disk this session.
+     *
+     * NOTE: only useful when called after <code>writeFiles</code>.
+     *
+     * @param string $filesID
+     *
+     * @return bool
+     * @throws Localization_Exception
+     * @see Localization_ClientGenerator::FILES_LOCALES
+     * @see Localization_ClientGenerator::FILES_LIBRARIES
+     * @see Localization_ClientGenerator::FILES_CACHE_KEY
+     */
+    public function areFilesWritten(string $filesID) : bool
     {
         if(isset($this->written[$filesID])) {
             return $this->written[$filesID];

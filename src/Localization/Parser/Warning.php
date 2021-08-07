@@ -6,10 +6,19 @@ namespace AppLocalize;
 
 class Localization_Parser_Warning
 {
+    /**
+     * @var Localization_Parser_Language
+     */
     protected $language;
-    
+
+    /**
+     * @var Localization_Parser_Token
+     */
     protected $token;
-    
+
+    /**
+     * @var string
+     */
     protected $message;
     
     public function __construct(Localization_Parser_Language $language, Localization_Parser_Token $token, string $message)
@@ -43,8 +52,11 @@ class Localization_Parser_Warning
     {
         return $this->message;
     }
-    
-    public function toArray()
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function toArray() : array
     {
         return array(
             'languageID' => $this->language->getID(),

@@ -12,36 +12,51 @@ namespace AppLocalize;
 
 /**
  * Event class: used for the "LocaleChanged" event. Provides
- * an easy to use API to work with the event details.
+ * an easy-to-use API to work with the event details.
  * 
  * @package Localization
  * @subpackage Events
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @see Localization::selectLocaleByNS()
  */
 class Localization_Event_LocaleChanged extends Localization_Event
 {
-   /**
+    const ERROR_NO_CURRENT_LOCALE_SPECIFIED = 91401;
+
+    /**
     * The locale that was used before the change, if any.
     * @return Localization_Locale|NULL
     */
     public function getPrevious() : ?Localization_Locale
     {
         $arg = $this->getArgument(1);
-        if(is_array($arg)) {
-            return $arg['locale'];
+        if($arg instanceof Localization_Locale) {
+            return $arg;
         }
         
         return null;
     }
-    
-   /**
-    * The locale that is used now after the change.
-    * @return Localization_Locale
-    */
+
+    /**
+     * The locale that is used now after the change.
+     *
+     * @return Localization_Locale
+     * @throws Localization_Exception
+     */
     public function getCurrent() : Localization_Locale
     {
         $arg = $this->getArgument(2);
-        return $arg['locale'];
+
+        if($arg instanceof Localization_Locale) {
+            return $arg;
+        }
+
+        throw new Localization_Exception(
+            'No current locale available in event',
+            'The current locale parameter was not a locale instance.',
+            self::ERROR_NO_CURRENT_LOCALE_SPECIFIED
+        );
     }
     
    /**
@@ -50,7 +65,7 @@ class Localization_Event_LocaleChanged extends Localization_Event
     */
     public function getNamespace() : string
     {
-        return $this->getArgument(0);
+        return strval($this->getArgument(0));
     }
 
    /**

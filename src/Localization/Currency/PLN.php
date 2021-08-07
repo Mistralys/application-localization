@@ -1,30 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 class Localization_Currency_PLN extends Localization_Currency
 {
-    public function getSingular()
+    public function getSingular() : string
     {
         return t('złoty');
     }
 
-    public function getSymbol()
+    public function getSymbol() : string
     {
         return 'zł';
     }
 
-    public function getPlural()
+    public function getPlural() : string
     {
         return t('złotys');
     }
     
-    public function getISO()
+    public function getISO() : string
     {
         return 'PLN';
     }
 
-    public function isSymbolOnFront()
+    public function isSymbolOnFront() : bool
     {
         return false;
     }
@@ -35,7 +37,7 @@ class Localization_Currency_PLN extends Localization_Currency
      *
      * @see Localization_Currency::isNumberValid()
      */
-    public function isNumberValid($number)
+    public function isNumberValid($number) : bool
     {
         if (empty($number)) {
             return true;
@@ -48,7 +50,7 @@ class Localization_Currency_PLN extends Localization_Currency
         return true;
     }
 
-    public function getExamples($decimalPositions = 0)
+    public function getExamples(int $decimalPositions = 0) : array
     {
         $decimals = '25874125486589953255847851252585';
         $examples = array();

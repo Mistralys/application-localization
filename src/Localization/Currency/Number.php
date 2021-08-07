@@ -6,6 +6,8 @@
  * @see Localization_Currency_Number
  */
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 /**
@@ -21,59 +23,68 @@ namespace AppLocalize;
  */
 class Localization_Currency_Number
 {
+    /**
+     * @var number|string
+     */
     protected $number;
 
-    protected $decimals = null;
+    /**
+     * @var int
+     */
+    protected $decimals = 0;
 
+    /**
+     * @var float
+     */
     protected $float;
 
-    public function __construct($number, $decimals = null)
+    /**
+     * @param string|number $number
+     * @param int $decimals
+     */
+    public function __construct($number, int $decimals = 0)
     {
-        $this->number = $number;
+        $this->number = floatval($number);
         $this->decimals = $decimals;
     }
 
     /**
      * Gets the number as a float, e.g. 100.25
-     * @return number
+     * @return float
      */
-    public function getFloat()
+    public function getFloat() : float
     {
-        if ($this->decimals) {
-            return floatval($this->number . '.' . $this->decimals);
-        }
-
-        return $this->number;
+        return floatval($this->number . '.' . $this->decimals);
     }
 
     /**
      * Returns the number without decimals (positive integer). e.g. 100
-     * @return number
+     * @return int
      */
-    public function getNumber()
+    public function getNumber() : int
     {
-        return $this->number;
+        return intval($this->number);
     }
 
     /**
      * Returns the decimals of the number, if any.
-     * @return number|NULL
+     * @return int
      */
-    public function getDecimals()
+    public function getDecimals() : int
     {
         return $this->decimals;
     }
 
     /**
      * Counts the amount of decimals in the number.
-     * @return number
+     * @return int
      */
-    public function countDecimals()
+    public function countDecimals() : int
     {
-        if ($this->decimals === null) {
+        if ($this->decimals === 0) {
             return 0;
         }
 
-        return strlen($this->decimals);
+        return strlen(strval($this->decimals));
     }
 }

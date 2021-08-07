@@ -62,7 +62,7 @@
     // selects the default texts source we wish to edit
     $editor->selectDefaultSource(LOCALIZATION_EXAMPLES_SOURCE_ID);
     
-    // customize the name shown in the UI (and translateable
+    // customize the name shown in the UI (and translatable
     // too, using the t() function)
     $editor->setAppName(\AppLocalize\t('Example translator'));
     

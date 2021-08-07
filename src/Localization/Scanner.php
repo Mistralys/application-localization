@@ -1,7 +1,27 @@
 <?php
+/**
+ * File containing the {@see \AppLocalize\Localization_Scanner} class.
+ *
+ * @package AppLocalize
+ * @subpackage Scanner
+ * @see \AppLocalize\Localization_Scanner
+ */
+
+declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppUtils\FileHelper;
+
+/**
+ * The scanner is used to go through all PHP and JavaScript file
+ * sources that have been configured, and detects all translatable
+ * strings.
+ *
+ * @package AppLocalize
+ * @subpackage Scanner
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class Localization_Scanner
 {
    /**
@@ -23,24 +43,34 @@ class Localization_Scanner
     * @var string
     */
     protected $storageFile;
-    
+
+    /**
+     * @var bool
+     */
+    protected $loaded = false;
+
     /**
      * @var Localization_Scanner_StringsCollection|NULL
      * @see Localization_Scanner::getCollection()
      */
     protected $collection;
-    
+
+    /**
+     * @var Localization_Parser
+     */
+    protected $parser;
+
     public function __construct(string $storageFile)
     {
         $this->storageFile = $storageFile;
     }
     
-    public function isScanAvailable()
+    public function isScanAvailable() : bool
     {
         return file_exists($this->storageFile);
     }
     
-    public function scan()
+    public function scan() : void
     {
         if(isset($this->collection)) {
             $this->collection = null;
@@ -58,10 +88,8 @@ class Localization_Scanner
         
         $this->save();
     }
-    
-    protected $loaded = false;
-    
-    public function load()
+
+    public function load() : void
     {
         if(!$this->isScanAvailable()) {
             return;
@@ -73,30 +101,25 @@ class Localization_Scanner
         
         $this->loaded = true;
         
-        $data = \AppUtils\FileHelper::parseJSONFile($this->storageFile);
+        $data = FileHelper::parseJSONFile($this->storageFile);
         
         if($this->getCollection()->fromArray($data) === true) {
             return;
         }
         
-        \AppUtils\FileHelper::deleteFile($this->storageFile);
+        FileHelper::deleteFile($this->storageFile);
         $this->loaded = false;
         $this->collection = null;
     }
     
-    protected function save()
+    protected function save() : void
     {
         $data = $this->collection->toArray();
         
-        \AppUtils\FileHelper::saveAsJSON($data, $this->storageFile);
+        FileHelper::saveAsJSON($data, $this->storageFile);
     }
     
-   /**
-    * @var Localization_Parser
-    */
-    protected $parser;
-
-    public function getParser()
+    public function getParser() : Localization_Parser
     {
         if(!isset($this->parser)) {
             $this->parser = new Localization_Parser($this);
@@ -120,19 +143,19 @@ class Localization_Scanner
      *
      * @return float
      */
-    public function getExecutionTime()
+    public function getExecutionTime() : float
     {
         return $this->timeEnd - $this->timeStart;
     }
     
-    public function countHashes()
+    public function countHashes() : int
     {
         $this->load();
         
         return $this->getCollection()->countHashes();
     }
     
-    public function countFiles()
+    public function countFiles() : int
     {
         $this->load();
         
@@ -151,11 +174,11 @@ class Localization_Scanner
     
    /**
     * Retrieves all warnings that have been registered
-    * during the last search for translateable texts.
+    * during the last search for translatable texts.
     * 
-    * @return \AppLocalize\Localization_Scanner_StringsCollection_Warning[]
+    * @return Localization_Scanner_StringsCollection_Warning[]
     */
-    public function getWarnings()
+    public function getWarnings() : array
     {
         return $this->getCollection()->getWarnings();
     }

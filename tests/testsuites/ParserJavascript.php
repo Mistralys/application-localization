@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
 use AppLocalize\Localization;
@@ -26,7 +28,7 @@ final class ParserJavascriptTest extends TestCase
     }
     
    /**
-    * Check that the expected translateable strings are found
+    * Check that the expected translatable strings are found
     * in the test file.
     */
     public function test_findTexts()
@@ -55,9 +57,9 @@ final class ParserJavascriptTest extends TestCase
         
         $this->assertEquals($expectedAmount, count($actual), 'The amount of texts found does not match');
         
-        foreach($actual as $def)
+        foreach($actual as $text)
         {
-            $this->assertContains($def['text'], $expected);
+            $this->assertContains($text->getText(), $expected);
         }
     }
    
@@ -84,7 +86,7 @@ final class ParserJavascriptTest extends TestCase
     }
     
    /**
-    * Check that translateable texts are found as expected
+    * Check that translatable texts are found as expected
     * when parsing a javascript string instead of a file.
     */
     public function test_fromString()
@@ -101,11 +103,11 @@ final class ParserJavascriptTest extends TestCase
         
         $actual = $lang->getTexts();
         
-        $this->assertEquals(count($expected), count($actual), 'The amount of translateable texts must match.');
+        $this->assertEquals(count($expected), count($actual), 'The amount of translatable texts must match.');
         
-        foreach($actual as $def) 
+        foreach($actual as $text)
         {
-            $this->assertContains($def['text'], $expected, 'The translated text does not match the expected texts.');
+            $this->assertContains($text->getText(), $expected, 'The translated text does not match the expected texts.');
         }
     }
 }

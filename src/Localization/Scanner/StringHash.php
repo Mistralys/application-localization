@@ -29,10 +29,13 @@ class Localization_Scanner_StringHash
     * @var Localization_Scanner_StringInfo[]
     */
     protected $strings = array();
-    
+
+    /**
+     * @var array<string,bool>
+     */
     protected $sourceIDs = array();
     
-    public function __construct(Localization_Scanner_StringsCollection $collection, $hash)
+    public function __construct(Localization_Scanner_StringsCollection $collection, string $hash)
     {
         $this->collection = $collection;
         $this->hash = $hash;
@@ -61,7 +64,7 @@ class Localization_Scanner_StringHash
     * Retrieves all individual string locations where this text was found.
     * @return Localization_Scanner_StringInfo[]
     */
-    public function getStrings()
+    public function getStrings() : array
     {
         return $this->strings;
     }

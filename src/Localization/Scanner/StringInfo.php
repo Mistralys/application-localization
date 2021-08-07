@@ -53,7 +53,12 @@ class Localization_Scanner_StringInfo
     {
         return $this->sourceID;
     }
-    
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
     public function setProperty(string $name, $value) : Localization_Scanner_StringInfo
     {
         $this->properties[$name] = $value;

@@ -6,7 +6,12 @@
  * @see Localization_Translator
  */
 
+declare(strict_types=1);
+
 namespace AppLocalize;
+
+use AppUtils\IniHelper;
+use AppUtils\IniHelper_Exception;
 
 /**
  * Application translation manager used to handle translating
@@ -25,9 +30,7 @@ namespace AppLocalize;
 class Localization_Translator
 {
     const ERROR_NO_STRINGS_AVAILABLE_FOR_LOCALE = 333101;
-    
     const ERROR_CANNOT_SAVE_LOCALE_FILE = 333102;
-    
     const ERROR_CANNOT_PARSE_LOCALE_FILE = 333103;
     
     /**
@@ -39,23 +42,42 @@ class Localization_Translator
      * Collection of strings per locale, associative array
      * with locale name => string pairs.
      *
-     * @var array
+     * @var array<string,string[]>
      */
     private $strings = array();
-    
+
+    /**
+     * @var string|null
+     */
     private $targetLocaleName = null;
-    
-   /**
+
+    /**
+     * @var array<string,string>
+     */
+    protected $reverseStrings = array();
+
+    /**
     * @var Localization_Source[]
     */
     private $sources = array();
 
-    public function addSource(Localization_Source $source)
+    /**
+     * Indexed array with locale names for which the strings
+     * have been loaded, used to avoid loading them repeatedly.
+     *
+     * @var array
+     */
+    private $loaded = array();
+
+    public function addSource(Localization_Source $source) : void
     {
         $this->sources[] = $source;
     }
-    
-    public function addSources($sources)
+
+    /**
+     * @param Localization_Source[] $sources
+     */
+    public function addSources(array $sources) : void
     {
         foreach($sources as $source) {
             $this->addSource($source);
@@ -68,8 +90,9 @@ class Localization_Translator
      * triggers loading the locale's strings file.
      *
      * @param Localization_Locale $locale
+     * @throws Localization_Exception
      */
-    public function setTargetLocale(Localization_Locale $locale)
+    public function setTargetLocale(Localization_Locale $locale) : void
     {
         // don't do anything if it's the same locale
         if (isset($this->targetLocale) && $locale->getName() == $this->targetLocale->getName()) {
@@ -82,21 +105,14 @@ class Localization_Translator
     }
 
     /**
-     * Indexed array with locale names for which the strings
-     * have been loaded, used to avoid loading them repatedly.
-     *
-     * @var array
-     */
-    private $loaded = array();
-
-    /**
      * Loads the strings for the specified locale if the
      * according storage file exists.
      *
      * @param Localization_Locale $locale
      * @return boolean
+     * @throws Localization_Exception
      */
-    protected function load(Localization_Locale $locale)
+    protected function load(Localization_Locale $locale) : bool
     {
         // initialize the storage array regardless of success
         $localeName = $locale->getName();
@@ -183,7 +199,7 @@ class Localization_Translator
     * @throws Localization_Exception
     * @return string[]
     */
-    public function getStrings(Localization_Locale $locale)
+    public function getStrings(Localization_Locale $locale) : array
     {
         $this->load($locale);
         
@@ -203,23 +219,28 @@ class Localization_Translator
             self::ERROR_NO_STRINGS_AVAILABLE_FOR_LOCALE
         );
     }
-    
+
+    /**
+     * @param Localization_Locale $locale
+     * @return bool
+     * @throws Localization_Exception
+     */
     public function hasStrings(Localization_Locale $locale) : bool
     {
         $this->load($locale);
         
         return !empty($this->strings[$locale->getName()]);
     }
-    
-   /**
-    * @param string $type
-    * @param Localization_Scanner_StringHash[] $hashes
-    * @param string $file
-    * @param Localization_Locale $locale
-    * @param boolean $editable
-    * @throws Localization_Exception
-    */
-    protected function renderStringsFile($type, Localization_Source $source, $hashes, $file, Localization_Locale $locale, $editable=true)
+
+    /**
+     * @param string $type
+     * @param Localization_Source $source
+     * @param Localization_Scanner_StringHash[] $hashes
+     * @param string $file
+     * @param Localization_Locale $locale
+     * @param boolean $editable
+     */
+    protected function renderStringsFile(string $type, Localization_Source $source, array $hashes, string $file, Localization_Locale $locale, bool $editable=true) : void
     {
         $writer = new Localization_Writer($locale, $type, $file);
 
@@ -248,14 +269,15 @@ class Localization_Translator
         
         $writer->writeFile();
     }
-    
+
     /**
      * Retrieves the full path to the strings storage ini file.
-     * 
+     *
      * @param Localization_Locale $locale
+     * @param Localization_Source $source
      * @return string
      */
-    protected function resolveStorageFile(Localization_Locale $locale, Localization_Source $source)
+    protected function resolveStorageFile(Localization_Locale $locale, Localization_Source $source) : string
     {
         return sprintf(
             '%1$s/%2$s-%3$s-server.ini',
@@ -264,15 +286,16 @@ class Localization_Translator
             $source->getAlias()
         );
     }
-    
-   /**
-    * Retrieves the full path to the strings storage ini file 
-    * for the clientside strings.
-    * 
-    * @param Localization_Locale $locale
-    * @return string
-    */
-    protected function getClientStorageFile(Localization_Locale $locale, Localization_Source $source)
+
+    /**
+     * Retrieves the full path to the strings storage ini file
+     * for the clientside strings.
+     *
+     * @param Localization_Locale $locale
+     * @param Localization_Source $source
+     * @return string
+     */
+    protected function getClientStorageFile(Localization_Locale $locale, Localization_Source $source) : string
     {
         return sprintf(
             '%1$s/%2$s-%3$s-client.ini',
@@ -287,7 +310,7 @@ class Localization_Translator
      * @param string $hash
      * @param string $text
      */
-    public function setTranslation($hash, $text)
+    public function setTranslation(string $hash, string $text) : void
     {
         $this->strings[$this->targetLocale->getName()][$hash] = $text;
     }
@@ -296,12 +319,10 @@ class Localization_Translator
      * Clears a translation for the specified string hash
      * @param string $hash
      */
-    public function clearTranslation($hash)
+    public function clearTranslation(string $hash) : void
     {
         unset($this->strings[$this->targetLocale->getName()][$hash]);
     }
-    
-    protected $reverseStrings = array();
 
     /**
      * Translates a string. The first parameter has to be the string
@@ -351,7 +372,7 @@ class Localization_Translator
      * @param string $hash
      * @return boolean
      */
-    public function hashExists($hash)
+    public function hashExists(string $hash) : bool
     {
         return array_key_exists($hash, $this->strings[$this->targetLocale->getName()]);
     }
@@ -361,7 +382,7 @@ class Localization_Translator
      * @param string $text
      * @return boolean
      */
-    public function translationExists($text)
+    public function translationExists(string $text) : bool
     {
         return array_key_exists(md5($text), $this->strings[$this->targetLocale->getName()]);
     }
@@ -370,17 +391,19 @@ class Localization_Translator
      * Retrieves the locale into which texts are currently translated.
      * @return Localization_Locale
      */
-    public function getTargetLocale()
+    public function getTargetLocale() : Localization_Locale
     {
         return $this->targetLocale;
     }
 
     /**
      * Retrieves the translation for the specified string hash.
+     *
      * @param string $hash
+     * @param Localization_Locale|null $locale
      * @return string|NULL
      */
-    public function getHashTranslation($hash, Localization_Locale $locale=null)
+    public function getHashTranslation(string $hash, ?Localization_Locale $locale=null) : ?string
     {
         if(!$locale) {
             $locale = $this->targetLocale;
@@ -395,13 +418,14 @@ class Localization_Translator
         return null;
     }
 
-   /**
-    * Retrieves only the strings that are available clientside.
-    * 
-    * @param Localization_Locale $locale
-    * @return array
-    */
-    public function getClientStrings(Localization_Locale $locale)
+    /**
+     * Retrieves only the strings that are available clientside.
+     *
+     * @param Localization_Locale $locale
+     * @return array<string,string>
+     * @throws IniHelper_Exception
+     */
+    public function getClientStrings(Localization_Locale $locale) : array
     {
         $result = array();
         
@@ -411,9 +435,9 @@ class Localization_Translator
             if(!file_exists($localeFile)) {
                 continue;
             }
-            
-            $strings = parse_ini_file($localeFile);
-            
+
+            $strings = IniHelper::createFromFile($localeFile)->toArray();
+
             $result = array_merge($result, $strings);
         }
         

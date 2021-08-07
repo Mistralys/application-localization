@@ -32,7 +32,7 @@ class Localization_Scanner_StringsCollection
         $this->scanner = $scanner;
     }
     
-    public function addFromFile(string $sourceID, string $relativePath, string $languageType, Text $text)
+    public function addFromFile(string $sourceID, string $relativePath, string $languageType, Text $text) : void
     {
         $string = $this->createString($sourceID, self::SOURCE_FILE, $text);
         
@@ -42,7 +42,7 @@ class Localization_Scanner_StringsCollection
         $this->add($string);
     }
     
-    public function addWarning(Localization_Parser_Warning $warning)
+    public function addWarning(Localization_Parser_Warning $warning) : void
     {
         $this->warnings[] = $warning->toArray();
     }
@@ -53,7 +53,7 @@ class Localization_Scanner_StringsCollection
     }
     
    /**
-    * Adds a single translateable string.
+    * Adds a single translatable string.
     * 
     * @param Localization_Scanner_StringInfo $string
     * @return Localization_Scanner_StringsCollection
@@ -71,7 +71,7 @@ class Localization_Scanner_StringsCollection
     }
     
    /**
-    * Retrieves all available translateable strings, 
+    * Retrieves all available translatable strings,
     * grouped by their hash to identify unique strings.
     * 
     * @return Localization_Scanner_StringHash[]
@@ -103,8 +103,11 @@ class Localization_Scanner_StringsCollection
             self::ERROR_UNKNOWN_STRING_HASH
         );
     }
-    
-    public function toArray()
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function toArray() : array
     {
         $data = array(
             'formatVersion' => self::STORAGE_FORMAT_VERSION,
@@ -121,8 +124,12 @@ class Localization_Scanner_StringsCollection
         
         return $data;
     }
-    
-    public function fromArray($array) : bool
+
+    /**
+     * @param array<string,mixed> $array
+     * @return bool
+     */
+    public function fromArray(array $array) : bool
     {
         if(!isset($array['formatVersion']) || $array['formatVersion'] != self::STORAGE_FORMAT_VERSION) {
             return false;
@@ -141,7 +148,7 @@ class Localization_Scanner_StringsCollection
     
    /**
     * Whether the parser reported warnings during the
-    * search for translateable texts.
+    * search for translatable texts.
     * 
     * @return bool
     */
@@ -161,7 +168,7 @@ class Localization_Scanner_StringsCollection
     
    /**
     * Retrieves all warning messages that were added
-    * during the search for translateable texts, if any.
+    * during the search for translatable texts, if any.
     * 
     * @return Localization_Scanner_StringsCollection_Warning[]
     */
@@ -195,9 +202,9 @@ class Localization_Scanner_StringsCollection
     * Retrieves all string hashed for the specified source.
     * 
     * @param string $id
-    * @return \AppLocalize\Localization_Scanner_StringHash[]
+    * @return Localization_Scanner_StringHash[]
     */
-    public function getHashesBySourceID(string $id) 
+    public function getHashesBySourceID(string $id) : array
     {
         $hashes = array();
         
@@ -214,9 +221,9 @@ class Localization_Scanner_StringsCollection
     * Retrieves all hashes for the specified language ID.
     * 
     * @param string $languageID The language ID, e.g. "PHP"
-    * @return \AppLocalize\Localization_Scanner_StringHash[]
+    * @return Localization_Scanner_StringHash[]
     */
-    public function getHashesByLanguageID(string $languageID)
+    public function getHashesByLanguageID(string $languageID) : array
     {
         $hashes = array();
         

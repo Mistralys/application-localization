@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
 use AppLocalize\Localization;
@@ -20,6 +22,9 @@ final class EventsTest extends TestCase
     protected function setUp() : void
     {
         Localization::reset();
+
+        $this->assertEquals(Localization::getAppLocaleName(), Localization::BUILTIN_LOCALE_NAME);
+        $this->assertEquals(Localization::getContentLocaleName(), Localization::BUILTIN_LOCALE_NAME);
         
         $this->changeEvent = null;
         $this->changeFooValue = '';
@@ -41,15 +46,15 @@ final class EventsTest extends TestCase
     * Ensure that the onLocaleChanged event is triggered
     * as expected.
     */
-    public function test_changeLocale()
+    public function test_changeLocale() : void
     {
         Localization::onLocaleChanged(array($this, 'handle_onLocaleChanged'));
-        
         Localization::addAppLocale('de_DE');
-        
         Localization::selectAppLocale('de_DE');
-        
+
         $this->assertInstanceOf(Localization_Event_LocaleChanged::class, $this->changeEvent);
+
+        $this->assertNotNull($this->changeEvent, 'No event triggered');
         $this->assertEquals($this->changeEvent->getPrevious()->getName(), 'en_UK');
         $this->assertEquals($this->changeEvent->getCurrent()->getName(), 'de_DE');
         
@@ -66,7 +71,7 @@ final class EventsTest extends TestCase
     * Ensure that optional event listener arguments
     * are passed through as expected.
     */
-    public function test_changeLocale_args()
+    public function test_changeLocale_args() : void
     {
         Localization::onLocaleChanged(array($this, 'handle_onLocaleChanged'), array('bar'));
         

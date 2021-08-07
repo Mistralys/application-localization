@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 use AppUtils\ConvertHelper;
@@ -15,8 +17,11 @@ abstract class Localization_Parser_Token
     * @var Localization_Parser_Token
     */
     protected $parentToken;
-    
-    protected $token;
+
+    /**
+     * @var string
+     */
+    protected $token = '';
 
     /**
      * @var string|NULL
@@ -33,7 +38,11 @@ abstract class Localization_Parser_Token
      */
     protected $nameLookup = array();
 
-    public function __construct($definition, Localization_Parser_Token $parentToken=null)
+    /**
+     * @param array|string $definition
+     * @param Localization_Parser_Token|null $parentToken
+     */
+    public function __construct($definition, ?Localization_Parser_Token $parentToken=null)
     {
         $this->definition = $definition;
         $this->parentToken = $parentToken;
@@ -78,8 +87,11 @@ abstract class Localization_Parser_Token
     }
     
     abstract public function isArgumentSeparator() : bool;
-    
-    public function toArray()
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function toArray() : array
     {
         return array(
             'token' => $this->getToken(),

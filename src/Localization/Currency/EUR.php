@@ -1,32 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 class Localization_Currency_EUR extends Localization_Currency
 {
+    /**
+     * @var string
+     */
     protected $regex = '/\A([0-9%1$s]+)\z|([0-9%1$s]+),-\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
 
-    public function getSingular()
+    public function getSingular() : string
     {
         return t('Euro');
     }
 
-    public function getSymbol()
+    public function getSymbol() : string
     {
         return '€';
     }
 
-    public function getPlural()
+    public function getPlural() : string
     {
         return t('Euros');
     }
 
-    public function isSymbolOnFront()
+    public function isSymbolOnFront() : bool
     {
         return false;
     }
     
-    public function getISO()
+    public function getISO() : string
     {
         return 'EUR';
     }
@@ -45,7 +50,7 @@ class Localization_Currency_EUR extends Localization_Currency
      *
      * @see Localization_Currency::isNumberValid()
      */
-    public function isNumberValid($number)
+    public function isNumberValid($number) : bool
     {
         if (empty($number)) {
             return true;
@@ -58,7 +63,7 @@ class Localization_Currency_EUR extends Localization_Currency
         return true;
     }
 
-    public function getExamples($decimalPositions = 0)
+    public function getExamples(int $decimalPositions = 0) : array
     {
         $decimals = '25874125486589953255847851252585';
         $examples = array();

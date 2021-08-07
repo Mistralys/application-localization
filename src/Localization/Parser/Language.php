@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AppLocalize;
 
 use AppLocalize\Parser\Text;
+use AppUtils\FileHelper;
+use AppUtils\FileHelper_Exception;
 
 abstract class Localization_Parser_Language
 {
@@ -118,28 +120,32 @@ abstract class Localization_Parser_Language
         }
         
         $this->sourceFile = $path;
-        $this->content = file_get_contents($path);
-        
-        if($this->content !== false) {
-            $this->parse();
-            return;
+
+        try
+        {
+            $this->content = FileHelper::readContents($path);
+        }
+        catch (FileHelper_Exception $e)
+        {
+            throw new Localization_Exception(
+                sprintf('Source code file [%s] could not be read', basename($path)),
+                sprintf(
+                    'Tried opening the file located at [%s].',
+                    $path
+                ),
+                self::ERROR_FAILED_READING_SOURCE_FILE,
+                $e
+            );
         }
         
-        throw new Localization_Exception(
-            sprintf('Source code file [%s] could not be read', basename($path)),
-            sprintf(
-                'Tried opening the file located at [%s].',
-                $path
-            ),
-            self::ERROR_FAILED_READING_SOURCE_FILE
-        );
+        $this->parse();
     }
     
    /**
     * Parses a source code string.
     * @param string $content
     */
-    public function parseString($content) : void
+    public function parseString(string $content) : void
     {
         $this->content = $content;
         $this->sourceFile = '';
@@ -147,7 +153,7 @@ abstract class Localization_Parser_Language
         $this->parse();
     }
     
-    protected function parse()
+    protected function parse() : void
     {
         $this->texts = array();
         $this->warnings = array();
@@ -172,7 +178,7 @@ abstract class Localization_Parser_Language
         return $this->texts;
     }
     
-    protected function addResult(string $text, int $line=0, string $explanation='')
+    protected function addResult(string $text, int $line=0, string $explanation='') : void
     {
         $this->log(sprintf('Line [%1$s] | Found string [%2$s]', $line, $text));
 
@@ -189,7 +195,7 @@ abstract class Localization_Parser_Language
         return $this->createToken('dummy')->getFunctionNames();
     }
 
-    protected function log($message)
+    protected function log(string $message) : void
     {
         Localization::log(sprintf('%1$s parser | %2$s', $this->getID(), $message));
     }
@@ -351,7 +357,7 @@ abstract class Localization_Parser_Language
         return implode('', $textParts);
     }
 
-    protected function debug($text)
+    protected function debug(string $text) : void
     {
         if($this->debug) {
             echo $text;
@@ -365,7 +371,7 @@ abstract class Localization_Parser_Language
      * @param string $text
      * @return string
      */
-    public function trimText($text)
+    public function trimText(string $text) : string
     {
         return stripslashes(trim($text, "'\""));
     }

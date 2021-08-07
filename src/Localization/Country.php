@@ -6,6 +6,8 @@
  * @see Localization_Country
  */
 
+declare(strict_types=1);
+
 namespace AppLocalize;
 
 /**
@@ -35,10 +37,10 @@ abstract class Localization_Country implements Localization_CountryInterface
     public function __construct()
     {
         $this->currency = Localization_Currency::create($this->getCurrencyID(), $this);
-        $this->code = strtolower(str_replace('AppLocalize\Localization_Country_', '', get_class($this)));
+        $this->code = strtolower(str_replace(Localization_Country::class.'_', '', get_class($this)));
     }
 
-    public function getCode()
+    public function getCode() : string
     {
         return $this->code;
     }
@@ -46,13 +48,13 @@ abstract class Localization_Country implements Localization_CountryInterface
     /**
      * @return Localization_Currency
      */
-    public function getCurrency()
+    public function getCurrency() : Localization_Currency
     {
         return $this->currency;
     }
 
     /**
-     * Returns the human readable locale label.
+     * Returns the human-readable locale label.
      * @return string
      * @see getLabel()
      */

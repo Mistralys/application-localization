@@ -14,7 +14,7 @@ use AppUtils\FileHelper;
 use function AppUtils\parseVariable;
 
 /**
- * File-based parsing engine that extracts translateable
+ * File-based parsing engine that extracts translatable
  * application strings from PHP and Javascript code.
  *
  * Uses the built-in PHP tokenizer and Tim Whitlock's
@@ -39,7 +39,10 @@ class Localization_Parser
     * @var Localization_Scanner_StringsCollection
     */
     protected $collection;
-    
+
+    /**
+     * @var array<string,string>
+     */
     protected $languageMappings = array(
         'js' => 'Javascript',
         'php' => 'PHP'
@@ -99,7 +102,7 @@ class Localization_Parser
      * @throws Localization_Exception
      * @see Localization_Parser::ERROR_UNSUPPORTED_FILE_EXTENSION
      */
-    protected function requireValidFile(string $path)
+    protected function requireValidFile(string $path) : void
     {
         $ext = FileHelper::getExtension($path);
         
@@ -122,7 +125,7 @@ class Localization_Parser
      * @throws Localization_Exception
      * @see Localization_Parser::ERROR_INVALID_LANGUAGE_ID
      */
-    protected function requireValidLanguageID(string $languageID)
+    protected function requireValidLanguageID(string $languageID) : void
     {
         $values = $this->getLanguageIDs();
         

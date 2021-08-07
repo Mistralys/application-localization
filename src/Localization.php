@@ -24,23 +24,14 @@ use HTML_QuickForm2_Element_Select;
 class Localization
 {
     const ERROR_UNKNOWN_CONTENT_LOCALE = 39001;
-    
     const ERROR_UNKNOWN_APPLICATION_LOCALE = 39002;
-    
     const ERROR_NO_STORAGE_FILE_SET = 39003;
-    
     const ERROR_CONFIGURE_NOT_CALLED = 39004;
-    
     const ERROR_NO_SOURCES_ADDED = 39005;
-    
     const ERROR_NO_LOCALE_SELECTED_IN_NS = 39006;
-    
     const ERROR_NO_LOCALES_IN_NAMESPACE = 39007;
-    
     const ERROR_UNKNOWN_NAMESPACE = 39008;
-    
     const ERROR_UNKNOWN_LOCALE_IN_NS = 39009;
-    
     const ERROR_UNKNOWN_EVENT_NAME = 39010;
     
     /**
@@ -54,11 +45,12 @@ class Localization
     const NAMESPACE_APPLICATION = '__application';
     
     const NAMESPACE_CONTENT = '__content';
-    
-   /**
+    const EVENT_LOCALE_CHANGED = 'LocaleChanged';
+
+    /**
     * Collection of all locales by namespace (application, content, custom...). 
     *
-    * @var array
+    * @var array<string,array<string,Localization_Locale>>
     * @see Localization::addLocale()
     */
     protected static $locales = array();
@@ -355,11 +347,15 @@ class Localization
 
    /**
     * Selects the active locale for the specified namespace.
+    *
+    * NOTE: Triggers the "LocaleChanged" event.
     * 
     * @param string $localeName
     * @param string $namespace
     * @return Localization_Locale
     * @throws Localization_Exception
+    *
+    * @see Localization_Event_LocaleChanged
     */
     public static function selectLocaleByNS(string $localeName, string $namespace) : Localization_Locale
     {
@@ -382,7 +378,7 @@ class Localization
         self::$selected[$namespace] = $locale;
         
         self::triggerEvent(
-            'LocaleChanged', 
+            self::EVENT_LOCALE_CHANGED,
             array(
                 $namespace,
                 $previous, 
@@ -392,14 +388,15 @@ class Localization
         
         return $locale;
     }
-    
-   /**
-    * Triggers the specified event, with the provided arguments.
-    * 
-    * @param string $name The event name.
-    * @param array $argsList
-    * @see Localization_Event
-    */
+
+    /**
+     * Triggers the specified event, with the provided arguments.
+     *
+     * @param string $name The event name.
+     * @param array $argsList
+     * @return Localization_Event
+     * @see Localization_Event
+     */
     protected static function triggerEvent(string $name, array $argsList) : Localization_Event
     {
         $class = Localization_Event::class.'_'.$name;
@@ -475,7 +472,7 @@ class Localization
      */
     public static function onLocaleChanged($callback, array $args=array()) : int
     {
-        return self::addEventListener('LocaleChanged', $callback, $args);
+        return self::addEventListener(self::EVENT_LOCALE_CHANGED, $callback, $args);
     }
 
     /**
@@ -550,7 +547,7 @@ class Localization
      * @return string[]
      * @throws Localization_Exception
      */
-    public static function getLocaleNamesByNS(string $namespace)
+    public static function getLocaleNamesByNS(string $namespace) : array
     {
         self::requireNamespace($namespace);
         
@@ -962,7 +959,7 @@ class Localization
 
     /**
      * Creates the scanner instance that is used to find
-     * all translateable strings in the application.
+     * all translatable strings in the application.
      *
      * @return Localization_Scanner
      * @throws Localization_Exception
@@ -1117,7 +1114,7 @@ class Localization
 
     /**
      * Creates the editor instance that can be used to
-     * display the localization UI to edit translateable
+     * display the localization UI to edit translatable
      * strings in the browser.
      *
      * @return Localization_Editor

@@ -45,6 +45,8 @@ function t(string $text, ...$args) : string
  * Same as the {@link t()} function, but echos the
  * translated string.
  *
+ * @param string $text
+ * @param mixed ...$args
  * @see \AppLocalize\t()
  */
 function pt(string $text, ...$args) : void

@@ -7,13 +7,13 @@ namespace AppLocalize;
 abstract class Localization_Source
 {
    /**
-    * Human readable label for the source.
+    * Human-readable label for the source.
     * @var string
     */
     protected $label;
     
    /**
-    * Human readable group name to categorize the source.
+    * Human-readable group name to categorize the source.
     * @var string
     */
     protected $group;
@@ -71,7 +71,7 @@ abstract class Localization_Source
         return $this->storageFolder;
     }
     
-    public function scan(Localization_Scanner $scanner)
+    public function scan(Localization_Scanner $scanner) : void
     {
         $this->collection = $scanner->getCollection();
         $this->parser = $scanner->getParser();
@@ -81,9 +81,11 @@ abstract class Localization_Source
         $this->collection = null;
     }
     
-    
-    abstract protected function _scan();
+    abstract protected function _scan() : void;
 
+    /**
+     * @var array<string,string>
+     */
     protected $extensions = array(
         'js' => 'Javascript',
         'php' => 'PHP'
@@ -123,7 +125,7 @@ abstract class Localization_Source
         }
     }
     
-    protected function log($message)
+    protected function log(string $message) : void
     {
         Localization::log(sprintf(
             'Source [%s] | %s',
@@ -131,15 +133,19 @@ abstract class Localization_Source
             $message
         ));
     }
-    
-    public function getHashes(Localization_Scanner $scanner)
+
+    /**
+     * @param Localization_Scanner $scanner
+     * @return Localization_Scanner_StringHash[]
+     */
+    public function getHashes(Localization_Scanner $scanner) : array
     {
         $scanner->load();
         $collection = $scanner->getCollection();
         return $collection->getHashesBySourceID($this->getID());
     }
     
-    public function countUntranslated($scanner)
+    public function countUntranslated(Localization_Scanner $scanner) : int
     {
         $translator = Localization::getTranslator();
         $amount = 0;

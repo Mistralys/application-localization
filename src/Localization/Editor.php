@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
-use AppUtils\ConvertHelper;
+use AppLocalize\Editor\OutputBuffering;use AppUtils\ConvertHelper;
 use AppUtils\PaginationHelper;
 use AppUtils\Traits_Optionable;
 use AppUtils\Interface_Optionable;
@@ -35,7 +35,8 @@ class Localization_Editor implements Interface_Optionable
     const MESSAGE_SUCCESS = 'success';
     
     const ERROR_NO_SOURCES_AVAILABLE = 40001;
-    
+    const ERROR_LOCAL_PATH_NOT_FOUND = 40002;
+
    /**
     * @var string
     */
@@ -47,7 +48,7 @@ class Localization_Editor implements Interface_Optionable
     protected $sources;
     
    /**
-    * @var \AppUtils\Request
+    * @var Request
     */
     protected $request;
     
@@ -77,7 +78,7 @@ class Localization_Editor implements Interface_Optionable
     protected $filters;
 
    /**
-    * @var string[]string
+    * @var array<string,string>
     */
     protected $requestParams = array();
     
@@ -85,10 +86,32 @@ class Localization_Editor implements Interface_Optionable
     * @var string
     */
     protected $varPrefix = 'applocalize_';
-    
+
+    /**
+     * @var int
+     */
+    protected $perPage = 20;
+
+    /**
+     * @throws Localization_Exception
+     * @see \AppLocalize\Localization_Editor::ERROR_LOCAL_PATH_NOT_FOUND
+     */
     public function __construct()
     {
-        $this->installPath = realpath(__DIR__.'/../');
+        $path = realpath(__DIR__.'/../');
+        if($path === false)
+        {
+            throw new Localization_Exception(
+                'Local path not found',
+                sprintf(
+                    'Could not get the parent folder\'s real path from [%s].',
+                    __DIR__
+                ),
+                self::ERROR_LOCAL_PATH_NOT_FOUND
+            );
+        }
+
+        $this->installPath = $path;
         $this->request = new Request();
         $this->scanner = Localization::createScanner();
         $this->scanner->load();
@@ -127,7 +150,7 @@ class Localization_Editor implements Interface_Optionable
         return $this->activeSource;
     }
     
-    protected function initSession()
+    protected function initSession() : void
     {
         if(session_status() != PHP_SESSION_ACTIVE) {
             session_start();
@@ -138,12 +161,15 @@ class Localization_Editor implements Interface_Optionable
         }
     }
     
-    public function getVarName($name)
+    public function getVarName(string $name) : string
     {
         return $this->varPrefix.$name;
     }
-    
-    protected function initSources()
+
+    /**
+     * @throws Localization_Exception
+     */
+    protected function initSources() : void
     {
         $this->sources = Localization::getSources();
         
@@ -164,7 +190,7 @@ class Localization_Editor implements Interface_Optionable
         $this->activeSource = Localization::getSourceByID($activeID);
     }
     
-    protected function getDefaultSourceID()
+    protected function getDefaultSourceID() : string
     {
         $default = $this->getOption('default-source');
         if(!empty($default) && Localization::sourceAliasExists($default)) {
@@ -174,7 +200,7 @@ class Localization_Editor implements Interface_Optionable
         return $this->sources[0]->getID();
     }
     
-    protected function initAppLocales()
+    protected function initAppLocales() : void
     {
         $names = array();
         
@@ -202,7 +228,7 @@ class Localization_Editor implements Interface_Optionable
         Localization::selectAppLocale($activeID);
     }
     
-    protected function handleActions()
+    protected function handleActions() : void
     {
         $this->initSources();
         
@@ -222,14 +248,19 @@ class Localization_Editor implements Interface_Optionable
     {
         return $this->scanner;
     }
-    
-    public function render()
+
+    /**
+     * @return string
+     * @throws Localization_Exception
+     * @see \AppLocalize\Localization_Editor::ERROR_RENDERING_FAILED
+     */
+    public function render() : string
     {
         $this->handleActions();
         
         $appName = $this->getAppName();
         
-        ob_start();
+        OutputBuffering::start();
         
 ?><!doctype html>
 <html lang="en">
@@ -312,7 +343,7 @@ class Localization_Editor implements Interface_Optionable
                                     </div>
                                 </li>
                                 <li class="nav-item">
-                    				<a href="<?php echo $this->getScanURL() ?>" class="btn btn-light btn-sm" title="<?php pt('Scan all source files to find translateable texts.') ?>" data-toggle="tooltip">
+                    				<a href="<?php echo $this->getScanURL() ?>" class="btn btn-light btn-sm" title="<?php pt('Scan all source files to find translatable texts.') ?>" data-toggle="tooltip">
                                     	<i class="fa fa-refresh"></i>
                                     	<?php pt('Scan') ?>
                                     </a>
@@ -322,7 +353,7 @@ class Localization_Editor implements Interface_Optionable
                         			    ?>
                         			    	<li class="nav-item">
                         			    		<a href="<?php echo $this->getWarningsURL() ?>">
-                            			    		<span class="badge badge-warning" title="<?php pts('The last scan for translateable texts reported warnings.'); pts('Click for details.'); ?>" data-toggle="tooltip">
+                            			    		<span class="badge badge-warning" title="<?php pts('The last scan for translatable texts reported warnings.'); pts('Click for details.'); ?>" data-toggle="tooltip">
                             			    			<i class="fa fa-exclamation-triangle"></i>
                             			    			<?php echo $this->scanner->countWarnings() ?>
                             			    		</span>
@@ -420,9 +451,9 @@ class Localization_Editor implements Interface_Optionable
                 				else
                 				{
                 				    echo $this->filters->renderForm();
-                				    echo $this->renderList();
+
+                				    $this->displayList();
                 				}
-            				
         				}
     				?>
 			</div>
@@ -431,13 +462,13 @@ class Localization_Editor implements Interface_Optionable
 </html>
 <?php
 
-        return ob_get_clean();
+        return OutputBuffering::getClean();
     }
 
-    protected function renderWarnings()
+    protected function renderWarnings() : string
     {
-        ob_start();
-        
+        OutputBuffering::start();
+
         ?>
         	<h1><?php pt('Warnings') ?></h1>
         	<p class="abstract">
@@ -460,11 +491,14 @@ class Localization_Editor implements Interface_Optionable
         		?>
         	</dl>
     	<?php 
-    	
-        return ob_get_clean();
+
+        return OutputBuffering::getClean();
     }
-    
-    protected function getFilteredStrings()
+
+    /**
+     * @return Localization_Scanner_StringHash[]
+     */
+    protected function getFilteredStrings() : array
     {
         $strings = $this->activeSource->getHashes($this->scanner);
         
@@ -499,9 +533,7 @@ class Localization_Editor implements Interface_Optionable
         );
     }
     
-    protected $perPage = 20;
-    
-    protected function renderList()
+    protected function displayList() : void
     {
         $strings = $this->getFilteredStrings();
         
@@ -603,14 +635,14 @@ class Localization_Editor implements Interface_Optionable
         <?php 
     }
     
-    protected function getPaginationURL(int $page, $params=array())
+    protected function getPaginationURL(int $page, array $params=array()) : string
     {
         $params[$this->getVarName('page')] = $page;
         
         return $this->getURL($params);
     }
     
-    protected function renderListEntry(Localization_Scanner_StringHash $string)
+    protected function renderListEntry(Localization_Scanner_StringHash $string) : void
     {
         $hash = $string->getHash();
         $text = $string->getText();
@@ -683,9 +715,7 @@ class Localization_Editor implements Interface_Optionable
                     				    $file = $location->getSourceFile();
                     				    $line = $location->getLine();
                     				    
-                    				    $icon = '';
-                    				    
-                    				    $ext = \AppUtils\FileHelper::getExtension($file);
+                    				    $ext = FileHelper::getExtension($file);
                     				    
                     				    if($ext == 'php') {
                     				        $icon = 'fab fa-php';
@@ -769,46 +799,46 @@ class Localization_Editor implements Interface_Optionable
         return $result;
     }
     
-    public function display()
+    public function display() : void
     {
         echo $this->render();
     }
     
     protected function getJavascript() : string
     {
-        return file_get_contents($this->installPath.'/js/editor.js');
+        return FileHelper::readContents($this->installPath.'/js/editor.js');
     }
     
     protected function getCSS() : string
     {
-        return file_get_contents($this->installPath.'/css/editor.css');
+        return FileHelper::readContents($this->installPath.'/css/editor.css');
     }
     
-    public function getSourceURL(Localization_Source $source, array $params=array())
+    public function getSourceURL(Localization_Source $source, array $params=array()) : string
     {
         $params[$this->getVarName('source')] = $source->getID();
         
         return $this->getURL($params);
     }
     
-    public function getLocaleURL(Localization_Locale $locale, array $params=array())
+    public function getLocaleURL(Localization_Locale $locale, array $params=array()) : string
     {
         $params[$this->getVarName('locale')] = $locale->getName();
         
         return $this->getURL($params);
     }
     
-    public function getScanURL()
+    public function getScanURL() : string
     {
         return $this->getSourceURL($this->activeSource, array($this->getVarName('scan') => 'yes'));
     }
     
-    public function getWarningsURL()
+    public function getWarningsURL() : string
     {
         return $this->getSourceURL($this->activeSource, array($this->getVarName('warnings') => 'yes'));
     }
     
-    public function getURL(array $params=array())
+    public function getURL(array $params=array()) : string
     {
         $persist = $this->getRequestParams();
         
@@ -820,14 +850,18 @@ class Localization_Editor implements Interface_Optionable
         
         return '?'.http_build_query($params);
     }
-    
-    public function redirect($url)
+
+    /**
+     * @param string $url
+     * @return never-returns
+     */
+    public function redirect(string $url) : void
     {
         header('Location:'.$url);
         exit;
     }
     
-    protected function executeScan()
+    protected function executeScan() : void
     {
         $this->scanner->scan();
 
@@ -839,7 +873,7 @@ class Localization_Editor implements Interface_Optionable
         $this->redirect($this->getSourceURL($this->activeSource));
     }
     
-    protected function executeSave()
+    protected function executeSave() : void
     {
         $data = $_POST;
         
@@ -870,7 +904,7 @@ class Localization_Editor implements Interface_Optionable
         $this->redirect($this->getURL());
     }
     
-    protected function renderStatus(Localization_Scanner_StringHash $hash)
+    protected function renderStatus(Localization_Scanner_StringHash $hash) : string
     {
         if($hash->isTranslated()) {
             return '<i class="fa fa-check text-success"></i>';
@@ -879,7 +913,7 @@ class Localization_Editor implements Interface_Optionable
         return '<i class="fa fa-ban text-danger"></i>';
     }
     
-    protected function renderTypes(Localization_Scanner_StringHash $hash)
+    protected function renderTypes(Localization_Scanner_StringHash $hash) : string
     {
         $types = array();
         
@@ -894,14 +928,17 @@ class Localization_Editor implements Interface_Optionable
         return implode(', ', $types);
     }
     
-    protected function addMessage($message, $type=self::MESSAGE_INFO)
+    protected function addMessage(string $message, string $type=self::MESSAGE_INFO) : void
     {
         $_SESSION['localization_messages'][] = array(
             'text' => $message,
             'type' => $type
         );
     }
-    
+
+    /**
+     * @return array<string,string>
+     */
     public function getDefaultOptions() : array
     {
         return array(
@@ -935,12 +972,13 @@ class Localization_Editor implements Interface_Optionable
         return t('Localization editor');
     }
 
-   /**
-    * Selects the default source to use if none has been 
-    * explicitly selected.
-    * 
-    * @param string $sourceID
-    */
+    /**
+     * Selects the default source to use if none has been
+     * explicitly selected.
+     *
+     * @param string $sourceID
+     * @return Localization_Editor
+     */
     public function selectDefaultSource(string $sourceID) : Localization_Editor
     {
         $this->setOption('default-source', $sourceID);

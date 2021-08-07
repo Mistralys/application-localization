@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppUtils\FileHelper;
+use DirectoryIterator;
+
 class Localization_Source_Folder extends Localization_Source
 {
    /**
-    * The folder under which all translateable files are kept.
+    * The folder under which all translatable files are kept.
     * @var string
     */
     protected $sourcesFolder;
@@ -19,10 +22,10 @@ class Localization_Source_Folder extends Localization_Source
 
    /**
     * @param string $alias An alias for this source, to recognize it by.
-    * @param string $label The human readable label, used in the editor.
-    * @param string $group A human readable group label to group several sources by. Used in the editor.
+    * @param string $label The human-readable label, used in the editor.
+    * @param string $group A human-readable group label to group several sources by. Used in the editor.
     * @param string $storageFolder The folder in which to store the localization files.
-    * @param string $sourcesFolder The folder in which to analyze files to find translateable strings. 
+    * @param string $sourcesFolder The folder in which to analyze files to find translatable strings.
     */
     public function __construct(string $alias, string $label, string $group, string $storageFolder, string $sourcesFolder)
     {
@@ -42,6 +45,9 @@ class Localization_Source_Folder extends Localization_Source
         return $this->sourcesFolder;
     }
 
+    /**
+     * @var array<string,string[]>
+     */
     protected $excludes = array(
         'folders' => array(),
         'files' => array()
@@ -65,25 +71,25 @@ class Localization_Source_Folder extends Localization_Source
         return $this;
     }
     
-    public function excludeFiles($files)
+    public function excludeFiles(array $files) : Localization_Source_Folder
     {
         $this->excludes['files'] = array_merge($this->excludes['files'], $files);
         return $this;
     }
     
-    protected function _scan()
+    protected function _scan() : void
     {
         $this->processFolder($this->getSourcesFolder());
     }
 
     /**
-     * Processes the target folder, and recurses into subfolders.
+     * Processes the target folder, and recurses into sub folders.
      * @param string $folder
+     * @throws Localization_Exception
      */
-    protected function processFolder($folder)
+    protected function processFolder(string $folder) : void
     {
-        /* @var $item \DirectoryIterator */
-        $d = new \DirectoryIterator($folder);
+        $d = new DirectoryIterator($folder);
         foreach ($d as $item) 
         {
             if ($item->isDot()) {
@@ -103,7 +109,7 @@ class Localization_Source_Folder extends Localization_Source
         }
     }
     
-    protected function isExcluded($filename)
+    protected function isExcluded(string $filename) : bool
     {
         foreach ($this->excludes['files'] as $search) {
             if (stristr($filename, $search)) {
@@ -112,10 +118,5 @@ class Localization_Source_Folder extends Localization_Source
         }
         
         return false;
-    }
-    
-    protected function relativizePath($filePath)
-    {
-        return \AppUtils\FileHelper::relativizePath($filePath, $this->getSourcesFolder());
     }
 }

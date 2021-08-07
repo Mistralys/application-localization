@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppLocalize\Editor\OutputBuffering;
+use AppUtils\Request;
+
 /**
  * Handles the list filters in the editor UI.
  *
@@ -26,7 +29,7 @@ class Localization_Editor_Filters
     protected $editor;
     
    /**
-    * @var \AppUtils\Request
+    * @var Request
     */
     
     protected $request; 
@@ -37,7 +40,7 @@ class Localization_Editor_Filters
     protected $sessionName = 'localize_filters';
     
    /**
-    * @var string[]string
+    * @var string[]
     */
     protected $vars = array(
         'resetfilter' => '',
@@ -96,7 +99,7 @@ class Localization_Editor_Filters
         }
     }
     
-    protected function setValue(string $filterName, string $value)
+    protected function setValue(string $filterName, string $value) : void
     {
         $_SESSION[$this->sessionName][$filterName] = $value;
     }
@@ -114,11 +117,18 @@ class Localization_Editor_Filters
         
         return '';
     }
- 
+
+    /**
+     * @var string[]
+     */
     protected $searchTerms = array();
+
+    /**
+     * @var string
+     */
     protected $searchString = '';
     
-    protected function parseSearchTerms(string $searchString)
+    protected function parseSearchTerms(string $searchString) : void
     {
         if(empty($searchString)) 
         {
@@ -144,7 +154,7 @@ class Localization_Editor_Filters
         $this->searchString = implode(' ', $keep);
     }
     
-    public function isStringMatch(Localization_Scanner_StringHash $string)
+    public function isStringMatch(Localization_Scanner_StringHash $string) : bool
     {
         if(!empty($this->searchTerms)) 
         {
@@ -173,8 +183,11 @@ class Localization_Editor_Filters
         
         return true;
     }
-    
-    protected function getDefaultValues()
+
+    /**
+     * @return array<string,string>
+     */
+    protected function getDefaultValues() : array
     {
         return array(
             $this->vars['search'] => '',
@@ -183,9 +196,9 @@ class Localization_Editor_Filters
         );
     }
     
-    public function renderForm()
+    public function renderForm() : string
     {
-        ob_start();
+        OutputBuffering::start();
         
         ?>
             <form class="form-inline">
@@ -262,14 +275,20 @@ class Localization_Editor_Filters
 			<br>
         <?php
         
-        return ob_get_clean();
+        return OutputBuffering::getClean();
     }
-    
-    protected function renderSelect(string $filterName, $entries)
+
+    /**
+     * @param string $filterName
+     * @param array<int,array<string,string>> $entries
+     * @return string
+     * @throws Editor\EditorException
+     */
+    protected function renderSelect(string $filterName, array $entries) : string
     {
         $value = $this->getValue($filterName);
         
-        ob_start();
+        OutputBuffering::start();
         
         ?>
         	<select class="form-control" name="<?php echo $filterName ?>">
@@ -291,6 +310,6 @@ class Localization_Editor_Filters
             </select>
         <?php
         
-        return ob_get_clean();
+        return OutputBuffering::getClean();
     }
 }

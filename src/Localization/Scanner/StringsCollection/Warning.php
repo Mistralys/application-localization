@@ -16,23 +16,23 @@ class Localization_Scanner_StringsCollection_Warning
         $this->data = $data;
     }
     
-    public function getFile()
+    public function getFile() : string
     {
-        return $this->data['file'];
+        return strval($this->data['file']);
     }
     
-    public function getLine()
+    public function getLine() : int
     {
-        return $this->data['line'];
+        return intval($this->data['line']);
     }
     
-    public function getLanguageID()
+    public function getLanguageID() : string
     {
-        return $this->data['languageID'];
+        return strval($this->data['languageID']);
     }
     
-    public function getMessage()
+    public function getMessage() : string
     {
-        return $this->data['message'];
+        return strval($this->data['message']);
     }
 }
