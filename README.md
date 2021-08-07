@@ -224,7 +224,7 @@ ptex(
 
 ### Split sentences
 
-The number of translateable texts in a typical application can grow very quickly. 
+The number of translatable texts in a typical application can grow very quickly. 
 Whenever possible, try to split the texts into manageable chunks by splitting longer 
 texts into smaller sentences. This has the added benefit of being able to reuse some 
 of these text chunks in other places.
