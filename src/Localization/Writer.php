@@ -95,7 +95,7 @@ class Localization_Writer
             $lines[] = sprintf(
                 '%s= "%s"',
                 $entry['hash'],
-                addslashes($entry['text'])
+                str_replace('"', '\"', $entry['text'])
             );
         }
         
