@@ -83,9 +83,10 @@ function pts(string $text, ...$args) : void
  * explain the content of placeholders.
  *
  * @param string $text
- * @param string $context
- * @param ...$args
+ * @param string $context Translation context hints, shown in the translation UI.
+ * @param mixed ...$args
  * @return string
+ * @see \AppLocalize\t()
  */
 function tex(string $text, string $context, ...$args) : string
 {
@@ -98,6 +99,15 @@ function tex(string $text, string $context, ...$args) : string
     );
 }
 
+/**
+ * Like {@see \AppLocalize\pt()}, but with translation
+ * context information.
+ *
+ * @param string $text
+ * @param string $context Translation context hints, shown in the translation UI.
+ * @param mixed ...$args
+ * @see \AppLocalize\pt()
+ */
 function ptex(string $text, string $context, ...$args) : void
 {
     unset($context); // Only used by the parser.
@@ -109,6 +119,15 @@ function ptex(string $text, string $context, ...$args) : void
     );
 }
 
+/**
+ * Like {@see \AppLocalize\pts()}, but with translation
+ * context information.
+ *
+ * @param string $text
+ * @param string $context Translation context hints, shown in the translation UI.
+ * @param mixed ...$args
+ * @see \AppLocalize\pts()
+ */
 function ptexs(string $text, string $context, ...$args) : void
 {
     unset($context); // Only used by the parser.
