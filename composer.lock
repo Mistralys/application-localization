@@ -54,27 +54,31 @@
         },
         {
             "name": "mistralys/application-utils",
-            "version": "1.3.1",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils.git",
-                "reference": "b768dcaf6c1b1a64384739d6d57f147946525fad"
+                "reference": "289f9df6e00ca3502044def6295419b82fa3c197"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/b768dcaf6c1b1a64384739d6d57f147946525fad",
-                "reference": "b768dcaf6c1b1a64384739d6d57f147946525fad",
+                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/289f9df6e00ca3502044def6295419b82fa3c197",
+                "reference": "289f9df6e00ca3502044def6295419b82fa3c197",
                 "shasum": ""
             },
             "require": {
-                "geshi/geshi": "1.0.9.1",
-                "mistralys/html_quickform2": ">=2.1",
-                "neitanod/forceutf8": "2.0.1",
-                "parsecsv/php-parsecsv": "0.4.5"
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "geshi/geshi": ">=1.0.9.1",
+                "mistralys/html_quickform2": ">=2.1.2",
+                "neitanod/forceutf8": ">=2.0.4",
+                "parsecsv/php-parsecsv": "1.2.*",
+                "php": ">=7.3"
             },
             "require-dev": {
-                "phpstan/phpstan": "0.12.4",
-                "phpunit/phpunit": "8.5.3"
+                "phpstan/phpstan": ">=0.12.74",
+                "phpunit/phpunit": ">=8.5"
             },
             "suggest": {
                 "mistralys/application-localization": "Required to translate available texts, from date related methods or file size labels for example."
@@ -105,9 +109,9 @@
             "description": "Drop-in utilities for PHP applications.",
             "support": {
                 "issues": "https://github.com/Mistralys/application-utils/issues",
-                "source": "https://github.com/Mistralys/application-utils/tree/1.3.1"
+                "source": "https://github.com/Mistralys/application-utils/tree/1.5.1"
             },
-            "time": "2020-12-07T14:27:25+00:00"
+            "time": "2021-07-08T07:38:45+00:00"
         },
         {
             "name": "mistralys/html_quickform2",
@@ -232,16 +236,16 @@
         },
         {
             "name": "neitanod/forceutf8",
-            "version": "v2.0.1",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neitanod/forceutf8.git",
-                "reference": "47c883ab2739e7938a8bb0bfd1c29d48c88858de"
+                "reference": "c1fbe70bfb5ad41b8ec5785056b0e308b40d4831"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neitanod/forceutf8/zipball/47c883ab2739e7938a8bb0bfd1c29d48c88858de",
-                "reference": "47c883ab2739e7938a8bb0bfd1c29d48c88858de",
+                "url": "https://api.github.com/repos/neitanod/forceutf8/zipball/c1fbe70bfb5ad41b8ec5785056b0e308b40d4831",
+                "reference": "c1fbe70bfb5ad41b8ec5785056b0e308b40d4831",
                 "shasum": ""
             },
             "require": {
@@ -254,6 +258,9 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
             "authors": [
                 {
                     "name": "Sebastián Grignoli",
@@ -266,30 +273,42 @@
                 "issues": "https://github.com/neitanod/forceutf8/issues",
                 "source": "https://github.com/neitanod/forceutf8/tree/master"
             },
-            "time": "2017-05-22T18:50:57+00:00"
+            "time": "2019-12-10T14:09:14+00:00"
         },
         {
             "name": "parsecsv/php-parsecsv",
-            "version": "0.4.5",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/parsecsv/parsecsv-for-php.git",
-                "reference": "0486a4bf3ef80dfa215f38f865ed8685fbb472c7"
+                "reference": "947b1c0866cc0a8162692d42c814a6ce07caf319"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/parsecsv/parsecsv-for-php/zipball/0486a4bf3ef80dfa215f38f865ed8685fbb472c7",
-                "reference": "0486a4bf3ef80dfa215f38f865ed8685fbb472c7",
+                "url": "https://api.github.com/repos/parsecsv/parsecsv-for-php/zipball/947b1c0866cc0a8162692d42c814a6ce07caf319",
+                "reference": "947b1c0866cc0a8162692d42c814a6ce07caf319",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.5"
+            },
             "require-dev": {
-                "phpunit/phpunit": "4.1.*"
+                "phpunit/phpunit": "^6",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "suggest": {
+                "illuminate/support": "Fluent array interface for map functions"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
-                "classmap": [
-                    "."
-                ]
+                "psr-4": {
+                    "ParseCsv\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -299,36 +318,51 @@
                 {
                     "name": "Jim Myhrberg",
                     "email": "contact@jimeh.me"
+                },
+                {
+                    "name": "William Knauss",
+                    "email": "will.knauss@gmail.com"
+                },
+                {
+                    "name": "Susann Sgorzaly",
+                    "homepage": "https://github.com/susgo"
+                },
+                {
+                    "name": "Christian Bläul",
+                    "homepage": "https://github.com/Fonata"
                 }
             ],
             "description": "CSV data parser for PHP",
             "support": {
                 "issues": "https://github.com/parsecsv/parsecsv-for-php/issues",
-                "source": "https://github.com/parsecsv/parsecsv-for-php/tree/master"
+                "source": "https://github.com/parsecsv/parsecsv-for-php"
             },
-            "time": "2014-06-03T00:37:04+00:00"
+            "time": "2020-04-25T17:17:04+00:00"
         },
         {
             "name": "pear/html_common2",
-            "version": "v2.1.2",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/HTML_Common2.git",
-                "reference": "a7867b8deb887765a431a5877d90d3430624dea7"
+                "reference": "b945e83eb1dc615d092a348e00623133856d8074"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/HTML_Common2/zipball/a7867b8deb887765a431a5877d90d3430624dea7",
-                "reference": "a7867b8deb887765a431a5877d90d3430624dea7",
+                "url": "https://api.github.com/repos/pear/HTML_Common2/zipball/b945e83eb1dc615d092a348e00623133856d8074",
+                "reference": "b945e83eb1dc615d092a348e00623133856d8074",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.4.0"
+            },
             "require-dev": {
-                "phpunit/phpunit": "^3.7|^4.8|^5.7"
+                "phpunit/phpunit": "^4.8|^5.7"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "HTML": "./"
+                    "HTML_Common2": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -359,27 +393,27 @@
                 "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=HTML_Common2",
                 "source": "https://github.com/pear/HTML_Common2"
             },
-            "time": "2019-04-07T10:59:56+00:00"
+            "time": "2021-04-25T13:27:00+00:00"
         },
         {
             "name": "pear/pear_exception",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/PEAR_Exception.git",
-                "reference": "dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7"
+                "reference": "b14fbe2ddb0b9f94f5b24cf08783d599f776fff0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7",
-                "reference": "dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7",
+                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/b14fbe2ddb0b9f94f5b24cf08783d599f776fff0",
+                "reference": "b14fbe2ddb0b9f94f5b24cf08783d599f776fff0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=4.4.0"
+                "php": ">=5.2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "*"
+                "phpunit/phpunit": "<9"
             },
             "type": "class",
             "extra": {
@@ -418,7 +452,7 @@
                 "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=PEAR_Exception",
                 "source": "https://github.com/pear/PEAR_Exception"
             },
-            "time": "2019-12-10T10:24:42+00:00"
+            "time": "2021-03-21T15:43:46+00:00"
         }
     ],
     "packages-dev": [
@@ -819,16 +853,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.12.2",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "245710e971a030f42e08f4912863805570f23d39"
+                "reference": "be1996ed8adc35c3fd795488a653f4b518be70ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/245710e971a030f42e08f4912863805570f23d39",
-                "reference": "245710e971a030f42e08f4912863805570f23d39",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/be1996ed8adc35c3fd795488a653f4b518be70ea",
+                "reference": "be1996ed8adc35c3fd795488a653f4b518be70ea",
                 "shasum": ""
             },
             "require": {
@@ -880,22 +914,22 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy/issues",
-                "source": "https://github.com/phpspec/prophecy/tree/1.12.2"
+                "source": "https://github.com/phpspec/prophecy/tree/1.13.0"
             },
-            "time": "2020-12-19T10:15:11+00:00"
+            "time": "2021-03-17T13:42:18+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.81",
+            "version": "0.12.94",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8"
+                "reference": "3d0ba4c198a24e3c3fc489f3ec6ac9612c4be5d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
-                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3d0ba4c198a24e3c3fc489f3ec6ac9612c4be5d6",
+                "reference": "3d0ba4c198a24e3c3fc489f3ec6ac9612c4be5d6",
                 "shasum": ""
             },
             "require": {
@@ -926,11 +960,15 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.81"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.94"
             },
             "funding": [
                 {
                     "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
                     "type": "github"
                 },
                 {
@@ -942,20 +980,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-08T22:03:02+00:00"
+            "time": "2021-07-30T09:05:27+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "7.0.14",
+            "version": "7.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "bb7c9a210c72e4709cdde67f8b7362f672f2225c"
+                "reference": "819f92bba8b001d4363065928088de22f25a3a48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/bb7c9a210c72e4709cdde67f8b7362f672f2225c",
-                "reference": "bb7c9a210c72e4709cdde67f8b7362f672f2225c",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/819f92bba8b001d4363065928088de22f25a3a48",
+                "reference": "819f92bba8b001d4363065928088de22f25a3a48",
                 "shasum": ""
             },
             "require": {
@@ -964,7 +1002,7 @@
                 "php": ">=7.2",
                 "phpunit/php-file-iterator": "^2.0.2",
                 "phpunit/php-text-template": "^1.2.1",
-                "phpunit/php-token-stream": "^3.1.1 || ^4.0",
+                "phpunit/php-token-stream": "^3.1.3 || ^4.0",
                 "sebastian/code-unit-reverse-lookup": "^1.0.1",
                 "sebastian/environment": "^4.2.2",
                 "sebastian/version": "^2.0.1",
@@ -1007,7 +1045,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/7.0.14"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/7.0.15"
             },
             "funding": [
                 {
@@ -1015,20 +1053,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-02T13:39:03+00:00"
+            "time": "2021-07-26T12:20:09+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
-                "reference": "4b49fb70f067272b659ef0174ff9ca40fdaa6357"
+                "reference": "28af674ff175d0768a5a978e6de83f697d4a7f05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/4b49fb70f067272b659ef0174ff9ca40fdaa6357",
-                "reference": "4b49fb70f067272b659ef0174ff9ca40fdaa6357",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/28af674ff175d0768a5a978e6de83f697d4a7f05",
+                "reference": "28af674ff175d0768a5a978e6de83f697d4a7f05",
                 "shasum": ""
             },
             "require": {
@@ -1067,7 +1105,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-file-iterator/issues",
-                "source": "https://github.com/sebastianbergmann/php-file-iterator/tree/2.0.3"
+                "source": "https://github.com/sebastianbergmann/php-file-iterator/tree/2.0.4"
             },
             "funding": [
                 {
@@ -1075,7 +1113,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-30T08:25:21+00:00"
+            "time": "2021-07-19T06:46:01+00:00"
         },
         {
             "name": "phpunit/php-text-template",
@@ -2059,16 +2097,16 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.22.1",
+            "version": "v1.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "c6c942b1ac76c82448322025e084cadc56048b4e"
+                "reference": "46cd95797e9df938fdd2b03693b5fca5e64b01ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/c6c942b1ac76c82448322025e084cadc56048b4e",
-                "reference": "c6c942b1ac76c82448322025e084cadc56048b4e",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/46cd95797e9df938fdd2b03693b5fca5e64b01ce",
+                "reference": "46cd95797e9df938fdd2b03693b5fca5e64b01ce",
                 "shasum": ""
             },
             "require": {
@@ -2080,7 +2118,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.22-dev"
+                    "dev-main": "1.23-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -2118,7 +2156,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.22.1"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.23.0"
             },
             "funding": [
                 {
@@ -2134,20 +2172,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-02-19T12:13:01+00:00"
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "75a63c33a8577608444246075ea0af0d052e452a"
+                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/75a63c33a8577608444246075ea0af0d052e452a",
-                "reference": "75a63c33a8577608444246075ea0af0d052e452a",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/34a41e998c2183e22995f158c581e7b5e755ab9e",
+                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e",
                 "shasum": ""
             },
             "require": {
@@ -2176,7 +2214,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/master"
+                "source": "https://github.com/theseer/tokenizer/tree/1.2.1"
             },
             "funding": [
                 {
@@ -2184,7 +2222,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-07-12T23:59:07+00:00"
+            "time": "2021-07-28T10:34:58+00:00"
         },
         {
             "name": "webmozart/assert",
