@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/Mistralys/application-localization.svg?branch=master)](https://travis-ci.com/Mistralys/application-localization)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Mistralys/application-localization/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Mistralys/application-localization/?branch=master)
 
 # Application Localization
 
@@ -292,6 +293,28 @@ translation function each time, with the `sprintf` PHP function:
 for($i=1; $i <= 10; $i++)
 {
     echo sprintf($template, $i);
+}
+```
+
+## Events
+
+### When the active locale is changed
+
+The `LocaleChanged` event is triggered when a different locale is selected
+at runtime. It is possible to add a listener to this event, and react to
+locale changes.
+
+Here is an example:
+
+```php
+use AppLocalize\Localization;
+use AppLocalize\Localization_Event_LocaleChanged;
+
+Localization::addEventListener(Localization::EVENT_LOCALE_CHANGED, 'listenerFunction');
+
+function listenerFunction(Localization_Event_LocaleChanged $event) : void
+{
+    // do something
 }
 ```
 
