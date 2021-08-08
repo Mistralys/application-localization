@@ -3,31 +3,31 @@
 
 # Application Localization
 
-PHP and Javascript localization library, written in PHP. It is a simple localization layer that stores translated strings in ini files.
+PHP and Javascript localization library, written in PHP. It is a simple but powerful
+localization layer that stores translated strings in ini files.
 
 ## Highlights
 
-* Easy to configure for the application's source files structure
+* Easy to adjust to an application's files structure
 * Built-in translator UI that can be integrated into an existing UI
-* Supports clientside translations with auto-generated include files
+* Clientside translations with auto-generated include files
+* Translations with or without translation context information for translators
 
 ## Installation
 
-Simply require the package via your composer.json:
+Simply require the package via composer:
 
-```json
-"require": {
-   "mistralys/localization": "dev-master"
-}
+```
+composer require mistralys/application-localization
 ```
 
-See packagist page: https://packagist.org/packages/mistralys/application-localization
+Also see the [Packagist page][].
 
 ## Configuration
 
 ### 1) Adding locales
 
-Note: The native application locale should be english. Any additional locales can be added like this:
+The native application locale should be english. Any additional locales can be added like this:
 
 ```php
 use AppLocalize\Localization;
@@ -35,6 +35,10 @@ use AppLocalize\Localization;
 Localization::addAppLocale('de_DE');
 Localization::addAppLocale('fr_FR');
 ````
+
+> Note: The package has not been tested with non-latin scripts, like Sinic 
+> (Chinese, Japanese, Korean, Vietnamese) or Brahmic (Indian, Tibetan, Thai, Lao).
+
 ### 2) Adding file source folders
 
 This defines in which folders to search for PHP or Javascript files. These files will be 
@@ -54,9 +58,11 @@ $source = Localization::addSourceFolder(
 );
 ```
 
+#### Excluding files and folders
+
 For performance reasons, it is recommended to exclude any files or folders that do not 
 need to be analyzed. The Javascript analysis in particular still has issues with minified 
-files like Jquery or Bootstrap, so they should definitely be excluded.
+library files like jQuery or Bootstrap, so they should definitely be excluded.
 
 To exclude folders or files by name:
 
@@ -66,11 +72,11 @@ $source->excludeFile('jquery'); // any file with "jquery" in its name
 $source->excludeFile('jquery-ui.min.js'); // by exact file name match
 ```
 
-Note: No need to specifiy the absolute path or file name, as long as the name is unique.
+> Note: No need to specify the absolute path or file name, as long as the name is unique.
 
 ### 3) Main configuration settings
 
-Note: This must be done last, after the locales and sources have been defined.
+> Note: This must be done last, after the locales and sources have been defined.
 
 ```php
 use AppLocalize\Localization;
@@ -80,11 +86,10 @@ Localization::configure(
     '/path/to/javascript/includes/' // Where the clientside files should be stored (Optional)
 );
 ```
+
 If no path is specified for the clientside includes, they will be disabled.
 
 ### 4) Select the target locale
-
-Note: How to store the selected locale is entirely up to your application logic.
 
 The locale is english by default, and you can switch the locale anytime using this:
 
@@ -93,6 +98,8 @@ use AppLocalize\Localization;
 
 Localization::selectAppLocale('de_DE');
 ```
+
+> Note: Your application logic must handle the decision of which locale to use.
 
 ### 5) Include the client libraries (optional)
 
@@ -104,17 +111,18 @@ files to enable the translation functions:
 * `md5.min.js`
 * `translator.js`
 
-Where `xx` is the two-letter ISO code of the target language. There is one for each 
-of the locales you added.
+Where `xx` is the two-letter ISO code of the target language. There will be one for 
+each of the locales you added.
 
-NOTE: Once the javascript include files have been written, they are only refreshed 
-whenever texts are updated in the localization editor UI.  
+> Once the javascript include files have been written, they are only refreshed 
+> whenever texts are updated in the localization editor UI. We recommend using
+> a cache key (see below).
 
 #### Using a cache key to update libraries 
 
 The libraries cache key is an arbitrary string that can be set. Whenever this changes, the 
-javascript include files are refreshed automatically. Thus, a good way to keep them up  
-to date is to use your application's version number as cache key.
+javascript include files are refreshed automatically. A good way to keep them up to date 
+is to use your application's version number as cache key.
 
 ```php
 $myAppVersion = 'v1.5.1';
@@ -134,9 +142,12 @@ To use the translation functions, you have to add use statements for those you n
 use function AppLocalize\t;
 use function AppLocalize\pt;
 use function AppLocalize\pts;
+use function AppLocalize\tex;
+use function AppLocalize\ptex;
+use function AppLocalize\ptexs;
 ```
 
-### The t() function
+### The `t()` function
 
 Be it serverside or clientside, you may use the `t()` function to have texts automatically 
 translated to the target locale. Simply wrap any of the native english texts in the 
@@ -152,9 +163,9 @@ JavaScript:
 var text = t('Text to translate here');
 ```
 
-### The pt() and pts() functions
+### The `pt()` and `pts()` functions
 
-Note: This is only available serverside.
+> Note: This is only available serverside.
 
 These are the same as `t()`, except that they echo the translated string. This is 
 handy for templates for example:
@@ -162,6 +173,7 @@ handy for templates for example:
 ```php
 <title><?php pt('Page title') ?></title>
 ```
+
 The `pts()` function adds a space after the translated string, so that you do not have 
 to manually add spaces when chaining several strings:
 
@@ -177,7 +189,7 @@ to manually add spaces when chaining several strings:
 ### Using placeholders
 
 The translation functions accept any number of additional parameters, which are injected 
-into the translated string using the `sprintf` PHP function. This means you can use 
+into the translated string using the [sprintf][] PHP function. This means you can use 
 placeholders like this:
 
 ```php
@@ -192,14 +204,19 @@ var amount = 50;
 var text = t('We found %1$s entries.', amount);
 ```
 
+> When using placeholders, we recommend systematically using numbered placeholders
+> like `%1$s` or `%02d`. Primarily because the order of placeholders often changes 
+> in translated texts, but also to avoid confusion for whoever does the translating.
+
 ### Providing translation context information
 
-To add an explanation of the context in which a text is used to help translators decide how
-best to translate texts, use the flavored functions:
+In some cases, knowing in which context a text is used will be critical to correctly
+translate it. The context flavored translation functions offer a second parameter
+dedicated to adding this context information.
 
-- `tex()`
-- `ptex()`
-- `ptexs()`
+- `t()` -> `tex()`
+- `pt()` -> `ptex()`
+- `pts()` -> `ptexs()`
 
 ```php
 use function AppLocalize\ptex;
@@ -213,13 +230,14 @@ ptex(
 // Placeholder values come after the context information.
 ptex(
     '%1$s records', 
-    'Placeholder contains the amount of records.', 
+    'The placeholder contains the amount of records.', 
     42
 );
 ```
 
 > Note: The context text must be a string, just like the text to translate.
-> Linebreaks and string concatenation are allowed, but no variables or functions.
+> Linebreaks and string concatenation are allowed, but no variables or functions,
+> since this extracted offline, instead of being evaluated at runtime.
 
 ## Tips & best practices
 
@@ -237,7 +255,7 @@ is critical to allow for different sentence structures depending on the language
 A placeholder placed at the end of a sentence may have to be moved to the beginning 
 of the text in another language. Using numbered placeholders makes this easy.
 
-Note: placeholders are highlighted in the localization UI, so that complex texts stay readable.
+> Note: placeholders are highlighted in the localization UI, so that complex texts stay readable.
 
 ### Put HTML tags in placeholders
 
@@ -252,6 +270,7 @@ use function AppLocalize\t;
 
 $text = t('This is %1$sbold%2$s text.', '<strong>', '</strong>');
 ```
+
 This way, the application can decide not only which tag to use, but also add classes 
 to it if needed in the future - without having to touch any of the translated texts.
 
@@ -272,7 +291,7 @@ $textWithLink = t(
 To use a translated text as a template to re-use multiple times, simply replace 
 the placeholders with placeholders.
 
-Sound strange? Look at this example:
+Sounds strange? Look at this example:
 
 ```php
 use function AppLocalize\t;
@@ -294,6 +313,24 @@ for($i=1; $i <= 10; $i++)
 {
     echo sprintf($template, $i);
 }
+```
+
+## Going further
+
+The [Application Utils][] package has a string builder class used for concatenating 
+strings, and which supports this package out of the box. Building complex sentences 
+is easy with this, including in an HTML context.
+
+Example:
+
+```php
+use function AppUtils\sb;
+
+$html = (string)sb()
+  ->bold(t('Easy string concatenation'))
+  ->nl()
+  ->t('For more information, see here:')
+  ->link(t('Application Utils'), 'https://github.com/Mistralys/application-utils');
 ```
 
 ## Events
@@ -328,4 +365,10 @@ webserver's webroot).
 
 There are other localization libraries out there, but this was historically integrated 
 in several applications. It has been moved to a separate package to make maintaining 
-it easier. It has no pretention of rivalry with any of the established i18n libraries.
+it easier. It has no pretension of rivalry with any of the established i18n libraries.
+
+
+
+[Packagist page]: https://packagist.org/packages/mistralys/application-localization
+[sprintf]: https://www.php.net/manual/en/function.sprintf.php
+[Application Utils]: https://github.com/Mistralys/application-utils
