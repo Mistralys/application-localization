@@ -7,6 +7,11 @@
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 
+    declare(strict_types=1);
+
+    use AppLocalize\Localization;
+    use function AppLocalize\t;
+
     $root = __DIR__;
     
     $autoload = realpath($root.'/../vendor/autoload.php');
@@ -31,14 +36,14 @@
     $librariesFolder = $root.'/client-libraries';
     
     // add the locales we wish to manage (en_UK is always present)
-    \AppLocalize\Localization::addAppLocale('de_DE');
-    \AppLocalize\Localization::addAppLocale('fr_FR');
+    Localization::addAppLocale('de_DE');
+    Localization::addAppLocale('fr_FR');
     
     define('LOCALIZATION_EXAMPLES_SOURCE_ID', 'localization-examples');
     
     // register the sources folder: this file's folder
     // so even this file is included in the search.
-    $source = \AppLocalize\Localization::addSourceFolder(
+    $source = Localization::addSourceFolder(
         LOCALIZATION_EXAMPLES_SOURCE_ID, 
         'Example texts', 
         'Examples', 
@@ -54,21 +59,21 @@
     )); 
 
     // has to be called last after all sources and locales have been configured
-    \AppLocalize\Localization::configure($storageFile, $librariesFolder);
+    Localization::configure($storageFile, $librariesFolder);
     
     // create the editor UI and start it
-    $editor = \AppLocalize\Localization::createEditor();
+    $editor = Localization::createEditor();
 
     // selects the default texts source we wish to edit
     $editor->selectDefaultSource(LOCALIZATION_EXAMPLES_SOURCE_ID);
     
     // customize the name shown in the UI (and translatable
     // too, using the t() function)
-    $editor->setAppName(\AppLocalize\t('Example translator'));
+    $editor->setAppName(t('Example translator'));
     
     $editor->setBackURL(
         'https://github.com/Mistralys/application-localization', 
-        \AppLocalize\t('Project Github page')
+        t('Project Github page')
     );
     
     // display the editor UI
