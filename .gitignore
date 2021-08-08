@@ -20,3 +20,4 @@ tests/storage/trywrite.ini
 .idea/php.xml
 .idea/phpunit.xml
 .idea/vcs.xml
+example/client-libraries/cachekey.txt
