@@ -8,6 +8,8 @@
 
 namespace AppLocalize;
 
+use AppUtils\FileHelper;
+
 /**
  * Individual locale representation with information about
  * the country and currency.
@@ -16,10 +18,8 @@ namespace AppLocalize;
  * @subpackage Core
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Localization_Locale
+abstract class Localization_Locale
 {
-    const ERROR_UNKNOWN_LOCALE_NAME = 39101;
-    
     const ERROR_LOCALE_LABEL_MISSING = 39102;
     
     /**
@@ -42,30 +42,15 @@ class Localization_Locale
     */
     protected $languageCode;
 
-    /**
-     * @param string $localeName
-     * @throws Localization_Exception
-     */
-    public function __construct(string $localeName)
+    public function __construct()
     {
-        if(!self::isLocaleKnown($localeName)) 
-        {
-            throw new Localization_Exception(
-                'Invalid locale',
-                sprintf(
-                    'The locale [%s] is not known. Valid locales are: [%s].',
-                    $localeName,
-                    implode(', ', Localization::getSupportedLocaleNames())
-                ),
-                self::ERROR_UNKNOWN_LOCALE_NAME
-            );
-        }
-
+        $localeName = explode('\\', get_class($this));
+        $localeName = array_pop($localeName);
         $tokens = explode('_', $localeName);
-        
+
         $this->localeName = $localeName;
         $this->countryCode = strtolower($tokens[1]);
-        $this->languageCode = $tokens[0];
+        $this->languageCode = strtolower($tokens[0]);
     }
     
    /**
@@ -139,44 +124,16 @@ class Localization_Locale
      * Returns the localized label for the locale, e.g. "German"
      * 
      * @return string
-     * @throws Localization_Exception
      */
-    public function getLabel() : string
-    {
-        switch($this->localeName) 
-        {
-            case 'de_DE':
-                return t('German');
-
-            case 'en_US':
-                return t('English (US)');
-
-            case 'en_UK':
-                return t('English (UK)');
-                
-            case 'en_CA':
-                return t('English (CA)');
-
-            case 'es_ES':
-                return t('Spanish');
-
-            case 'pl_PL':
-                return t('Polish');
-                
-            case 'fr_FR':
-                return t('French');
-        }
-
-        throw new Localization_Exception(
-            'Label is missing for the locale ' . $this->localeName,
-            null,
-            self::ERROR_LOCALE_LABEL_MISSING
-        );
-    }
+    abstract public function getLabel() : string;
 
     /**
      * Retrieves the country object for this locale
+     *
      * @return Localization_Country
+     *
+     * @throws Localization_Exception
+     * @see Localization::ERROR_COUNTRY_NOT_FOUND
      */
     public function getCountry() : Localization_Country
     {
@@ -189,7 +146,11 @@ class Localization_Locale
 
     /**
      * Retrieves the currency object for this locale
+     *
      * @return Localization_Currency
+     *
+     * @throws Localization_Exception
+     * @see Localization::ERROR_COUNTRY_NOT_FOUND
      */
     public function getCurrency() : Localization_Currency
     {
