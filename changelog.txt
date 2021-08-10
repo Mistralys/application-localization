@@ -1,3 +1,11 @@
+v1.4.1
+- Editor: Fixed the error message shown when using the search.
+- Tests: Added tests to the PHPStan analysis; Added type hints.
+- Example: Updated the example files to be fully valid PHP files.
+- Locales: Moved locales to separate files for easier maintenance.
+- Core: Updated `createLocale()` and `createCountry()` to check the created objects.
+- Contexts: Partially sanitizing the context information to remove unsupported HTML tags.
+
 v1.4.0
 - Added support for adding translation context information.
 - When available, context information is shown in the translation UI.
