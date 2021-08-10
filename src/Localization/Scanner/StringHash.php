@@ -179,9 +179,7 @@ class Localization_Scanner_StringHash
         
         // some files may have the same name, there's no
         // sense in using duplicates in this context.
-        $result = array_unique($result);
-        
-        return $result;
+        return array_unique($result);
     }
     
    /**
@@ -193,7 +191,7 @@ class Localization_Scanner_StringHash
     */
     public function getSearchString() : string
     {
-        $parts = array($this->getTranslatedText(), $this->getText());
+        $parts = array($this->getTranslatedText(), $this->getText()->getText());
         
         $parts = array_merge($parts, $this->getFiles());
         
