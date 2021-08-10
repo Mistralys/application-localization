@@ -1,23 +1,28 @@
 <?php
 
-    function textsInFunction()
+    declare(strict_types=1);
+
+    use function AppLocalize\t;
+    use function AppLocalize\pt;
+
+    function textsInFunction() : string
     {
-        t('This text is in a function.');
+        return t('This text is in a function.');
     }
     
-    t('This text is in the global scope.');
+    $textA = t('This text is in the global scope.');
     
-    t('This text is used serverside and on the client.');
+    $textB = t('This text is used serverside and on the client.');
     
     class Texts
     {
-        public function display()
+        public function display() : void
         {
             pt('This text is printed from a class.');
         }
     }
     
-    function textsDuplicates()
+    function textsDuplicates() : string
     {
-        t('This text is in a function.');
+        return t('This text is in a function.');
     }
