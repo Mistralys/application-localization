@@ -10,8 +10,11 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppUtils\FileHelper;
+use AppUtils\FileHelper_Exception;
 use HTML_QuickForm2_Container;
 use HTML_QuickForm2_Element_Select;
+use Throwable;
 
 /**
  * Localization handling collection for both the
@@ -33,6 +36,8 @@ class Localization
     const ERROR_UNKNOWN_NAMESPACE = 39008;
     const ERROR_UNKNOWN_LOCALE_IN_NS = 39009;
     const ERROR_UNKNOWN_EVENT_NAME = 39010;
+    const ERROR_LOCALE_NOT_FOUND = 39011;
+    const ERROR_COUNTRY_NOT_FOUND = 39012;
     
     /**
      * The name of the default application locale, i.e. the
@@ -220,14 +225,42 @@ class Localization
         
         return self::$locales[$namespace][$localeName];
     }
-    
+
     /**
      * @param string $localeName
      * @return Localization_Locale
+     *
+     * @throws Localization_Exception
+     * @see Localization::ERROR_LOCALE_NOT_FOUND
      */
-    protected static function createLocale(string $localeName)
+    protected static function createLocale(string $localeName) : Localization_Locale
     {
-        return new Localization_Locale($localeName);
+        $class = '\AppLocalize\Locale\\'.$localeName;
+        $e = null;
+
+        try
+        {
+            $locale = new $class();
+
+            if ($locale instanceof Localization_Locale)
+            {
+                return $locale;
+            }
+        }
+        catch (Throwable $e)
+        {
+
+        }
+
+        throw new Localization_Exception(
+            'Locale not supported.',
+            sprintf(
+                'The locale class [%s] does not exist.',
+                $localeName
+            ),
+            self::ERROR_LOCALE_NOT_FOUND,
+            $e
+        );
     }
 
     /**
@@ -235,18 +268,39 @@ class Localization
      *
      * @param string $id
      * @return Localization_Country
+     *
+     * @throws Localization_Exception
+     * @see Localization::ERROR_COUNTRY_NOT_FOUND
      */
-    public static function createCountry(string $id)
+    public static function createCountry(string $id) : Localization_Country
     {
-        $className = '\AppLocalize\Localization_Country_' . strtoupper($id);
-        return new $className();
+        $className = Localization_Country::class.'_' . strtoupper($id);
+
+        $country = new $className();
+
+        if($country instanceof Localization_Country)
+        {
+            return $country;
+        }
+
+        throw new Localization_Exception(
+            'Country does not exist.',
+            sprintf(
+                'Could not find country class [%s].',
+                $className
+            ),
+            self::ERROR_COUNTRY_NOT_FOUND
+        );
     }
-    
-   /**
-    * Retrieves the currency of the selected app locale.
-    * 
-    * @return Localization_Currency
-    */
+
+    /**
+     * Retrieves the currency of the selected app locale.
+     *
+     * @return Localization_Currency
+     *
+     * @throws Localization_Exception
+     * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
+     */
     public static function getAppCurrency() : Localization_Currency
     {
         return self::getCurrencyNS(self::NAMESPACE_APPLICATION);
@@ -256,17 +310,23 @@ class Localization
      * Retrieves the currency of the selected content locale.
      *
      * @return Localization_Currency
+     *
+     * @throws Localization_Exception
+     * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
      */
     public static function getContentCurrency() : Localization_Currency
     {
         return self::getCurrencyNS(self::NAMESPACE_CONTENT);
     }
-    
+
     /**
      * Retrieves the currency of the selected locale in the specified namespace.
      *
      * @param string $namespace
      * @return Localization_Currency
+     *
+     * @throws Localization_Exception
+     * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
      */
     public static function getCurrencyNS(string $namespace) : Localization_Currency
     {
@@ -320,6 +380,7 @@ class Localization
     * @param string $namespace
     * @return Localization_Locale
     * @throws Localization_Exception
+    * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
     */
     public static function getSelectedLocaleByNS(string $namespace) : Localization_Locale
     {
@@ -426,7 +487,7 @@ class Localization
      * @return int The listener number.
      *
      * @throws Localization_Exception
-     * @see \AppLocalize\Localization::ERROR_UNKNOWN_EVENT_NAME
+     * @see Localization::ERROR_UNKNOWN_EVENT_NAME
      */
     public static function addEventListener(string $eventName, $callback, array $args=array()) : int
     {
@@ -975,15 +1036,17 @@ class Localization
     {
         // FIXME: TODO: Add this
     }
-    
-   /**
-    * Configures the localization for the application:
-    * sets the location of the required files and folders.
-    * Also updated the client library files as needed.
-    * 
-    * @param string $storageFile Where to store the file analysis storage file.
-    * @param string $clientLibrariesFolder Where to put the client libraries and translation files. Will be created if it does not exist. Optional: if not set, client libraries will not be created.
-    */
+
+    /**
+     * Configures the localization for the application:
+     * sets the location of the required files and folders.
+     * Also updated the client library files as needed.
+     *
+     * @param string $storageFile Where to store the file analysis storage file.
+     * @param string $clientLibrariesFolder Where to put the client libraries and translation files. Will be created if it does not exist. Optional: if not set, client libraries will not be created.
+     * @throws FileHelper_Exception
+     * @throws Localization_Exception
+     */
     public static function configure(string $storageFile, string $clientLibrariesFolder='') : void
     {
         self::$configured = true;
@@ -1048,7 +1111,7 @@ class Localization
      * method.
      *
      * @param bool $force Whether to refresh the files, even if they exist.
-     * @throws Localization_Exception
+     * @throws Localization_Exception|FileHelper_Exception
      * @see Localization_ClientGenerator
      */
     public static function writeClientFiles(bool $force=false) : void
@@ -1175,29 +1238,25 @@ class Localization
     }
     
     /**
-     * Indxed array with locale names supported by the application
+     * Indexed array with locale names supported by the application
      * @var string[]
      */
-    protected static $supportedLocales = array(
-        'de_DE',
-        'en_US',
-        'en_CA',
-        'en_UK',
-        'es_ES',
-        'fr_FR',
-        'pl_PL',
-        'it_IT',
-        'de_AT',
-        'de_CH'
-    );
-    
-   /**
-    * Retrieves a list of all supported locales.
-    * 
-    * @return string[]
-    */
+    protected static $supportedLocales = array();
+
+    /**
+     * Retrieves a list of all supported locales.
+     *
+     * @return string[]
+     * @throws FileHelper_Exception
+     */
     public static function getSupportedLocaleNames() : array
     {
+        if(empty(self::$supportedLocales))
+        {
+            self::$supportedLocales = FileHelper::createFileFinder(__DIR__.'/Localization/Locale')
+                ->getPHPClassNames();
+        }
+
         return self::$supportedLocales;
     }
     
@@ -1209,7 +1268,7 @@ class Localization
     */
     public static function isLocaleSupported(string $localeName) : bool
     {
-        return in_array($localeName, self::$supportedLocales);
+        return file_exists(__DIR__.'/Localization/Locale/'.$localeName.'.php');
     }
 }
 
