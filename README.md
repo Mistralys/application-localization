@@ -235,9 +235,11 @@ ptex(
 );
 ```
 
-> Note: The context text must be a string, just like the text to translate.
-> Linebreaks and string concatenation are allowed, but no variables or functions,
-> since this extracted offline, instead of being evaluated at runtime.
+The context text must be a string, just like the text to translate.
+Linebreaks and string concatenation are allowed, but no variables or functions,
+since this extracted offline, instead of being evaluated at runtime.
+
+> Hint: It is possible to use basic HTML tags for formatting.
 
 ## Tips & best practices
 
