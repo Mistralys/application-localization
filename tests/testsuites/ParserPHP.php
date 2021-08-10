@@ -10,21 +10,28 @@ use AppLocalize\Localization_Exception;
 
 final class ParserPHPTest extends TestCase
 {
-    protected $phpFile;
+    /**
+     * @var string
+     */
+    protected static $phpFile = '';
     
     protected function setUp() : void
     {
-        if(isset($this->phpFile)) {
+        if(!empty(self::$phpFile)) {
             return;
         }
         
-        $this->phpFile = realpath(__DIR__.'/../assets/Parser/translations.php');
+        $phpFile = realpath(__DIR__.'/../assets/Parser/translations.php');
         
-        if($this->phpFile === false) {
-            throw new Exception(
-                'Cannot run parser tests: the parser PHP test file does not exist.'
-            );
+        if($phpFile !== false)
+        {
+            self::$phpFile = $phpFile;
+            return;
         }
+
+        throw new Exception(
+            'Cannot run parser tests: the parser PHP test file does not exist.'
+        );
     }
     
     /**
@@ -35,7 +42,7 @@ final class ParserPHPTest extends TestCase
     {
         $parser = Localization::createScanner()->getParser();
         
-        $lang = $parser->parseFile($this->phpFile);
+        $lang = $parser->parseFile(self::$phpFile);
         
         $this->assertInstanceOf(Localization_Parser_Language_PHP::class, $lang);
         
@@ -87,7 +94,7 @@ final class ParserPHPTest extends TestCase
     {
         $parser = Localization::createScanner()->getParser();
         
-        $lang = $parser->parseFile($this->phpFile);
+        $lang = $parser->parseFile(self::$phpFile);
         
         $this->assertTrue($lang->hasWarnings());
         
@@ -97,7 +104,7 @@ final class ParserPHPTest extends TestCase
         
         foreach($warnings as $warning)
         {
-            $this->assertEquals($this->phpFile, $warning->getFile());
+            $this->assertEquals(self::$phpFile, $warning->getFile());
         }
     }
     

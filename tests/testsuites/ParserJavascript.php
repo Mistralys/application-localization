@@ -10,21 +10,29 @@ use AppLocalize\Localization_Exception;
 
 final class ParserJavascriptTest extends TestCase
 {
-    protected $jsFile;
+    /**
+     * @var string
+     */
+    protected static $jsFile = '';
     
     protected function setUp() : void
     {
-        if(isset($this->jsFile)) {
+        if(!empty(self::$jsFile))
+        {
             return;
         }
         
-        $this->jsFile = realpath(__DIR__.'/../assets/Parser/translations.js');
+        $jsFile = realpath(__DIR__.'/../assets/Parser/translations.js');
         
-        if($this->jsFile === false) {
-            throw new Exception(
-                'Cannot run parser tests: the parser javascript file does not exist.'    
-            );
+        if($jsFile !== false)
+        {
+            self::$jsFile = $jsFile;
+            return;
         }
+
+        throw new Exception(
+            'Cannot run parser tests: the parser javascript file does not exist.'
+        );
     }
     
    /**
@@ -35,7 +43,7 @@ final class ParserJavascriptTest extends TestCase
     {
         $parser = Localization::createScanner()->getParser();
         
-        $lang = $parser->parseFile($this->jsFile);
+        $lang = $parser->parseFile(self::$jsFile);
         
         $this->assertInstanceOf(Localization_Parser_Language_Javascript::class, $lang);
         
@@ -71,7 +79,7 @@ final class ParserJavascriptTest extends TestCase
     {
         $parser = Localization::createScanner()->getParser();
         
-        $lang = $parser->parseFile($this->jsFile);
+        $lang = $parser->parseFile(self::$jsFile);
 
         $this->assertTrue($lang->hasWarnings());
         
@@ -81,7 +89,7 @@ final class ParserJavascriptTest extends TestCase
         
         foreach($warnings as $warning)
         {
-            $this->assertEquals($this->jsFile, $warning->getFile());
+            $this->assertEquals(self::$jsFile, $warning->getFile());
         }
     }
     
