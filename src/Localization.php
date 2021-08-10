@@ -15,6 +15,7 @@ use AppUtils\FileHelper_Exception;
 use Exception;
 use HTML_QuickForm2_Container;
 use HTML_QuickForm2_Element_Select;
+use Throwable;
 
 /**
  * Localization handling collection for both the
@@ -236,7 +237,6 @@ class Localization
     protected static function createLocale(string $localeName) : Localization_Locale
     {
         $class = '\AppLocalize\Locale\\'.$localeName;
-        $e = null;
 
         try
         {
@@ -247,7 +247,7 @@ class Localization
                 return $locale;
             }
         }
-        catch (Exception $e)
+        catch (Throwable $e)
         {
 
         }
@@ -258,8 +258,7 @@ class Localization
                 'The locale class [%s] does not exist.',
                 $localeName
             ),
-            self::ERROR_LOCALE_NOT_FOUND,
-            $e
+            self::ERROR_LOCALE_NOT_FOUND
         );
     }
 
