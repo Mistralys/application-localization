@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
 use AppLocalize\Localization;
@@ -14,7 +16,7 @@ final class TranslatorTest extends TestCase
    /**
     * Ensure that the bundled translations work out of the box.
     */
-    public function test_bundledTexts()
+    public function test_bundledTexts() : void
     {
         Localization::addAppLocale('de_DE');
         

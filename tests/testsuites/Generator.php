@@ -30,11 +30,11 @@ final class GeneratorTest extends TestCase
         }
     }
 
-   /*
+   /**
     * Files should be written for each locale, plus
     * the required libraries.
     */
-    public function test_writeFiles()
+    public function test_writeFiles() : void
     {
         Localization::addAppLocale('fr_FR');
         Localization::addAppLocale('de_DE');
@@ -59,7 +59,7 @@ final class GeneratorTest extends TestCase
     * libraries folder, nothing should be written to disk.
     * It should effectively disable those libraries.
     */
-    public function test_writeFiles_disabled()
+    public function test_writeFiles_disabled() : void
     {
         Localization::addAppLocale('fr_FR');
         Localization::addAppLocale('de_DE');
@@ -95,7 +95,7 @@ final class GeneratorTest extends TestCase
     * Test that forcing files to be written works, as well as
     * not writing them again otherwise.
     */
-    public function test_writeFiles_force()
+    public function test_writeFiles_force() : void
     {
         Localization::addAppLocale('de_DE');
         
@@ -119,7 +119,7 @@ final class GeneratorTest extends TestCase
     * Test that changing the cache key triggers a rewrite
     * of all locale files.
     */
-    public function test_writeFiles_cacheKey()
+    public function test_writeFiles_cacheKey() : void
     {
         Localization::addAppLocale('de_DE');
         

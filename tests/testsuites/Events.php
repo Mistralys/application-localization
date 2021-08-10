@@ -10,7 +10,7 @@ use AppLocalize\Localization_Event_LocaleChanged;
 final class EventsTest extends TestCase
 {
    /**
-    * @var Localization_Event_LocaleChanged
+    * @var Localization_Event_LocaleChanged|NULL
     */
     protected $changeEvent = null;
     
@@ -36,7 +36,7 @@ final class EventsTest extends TestCase
     * @param Localization_Event_LocaleChanged $event
     * @param string $foo
     */
-    public function handle_onLocaleChanged(Localization_Event_LocaleChanged $event, string $foo='')
+    public function handle_onLocaleChanged(Localization_Event_LocaleChanged $event, string $foo='') : void
     {
         $this->changeEvent = $event;
         $this->changeFooValue = $foo;
@@ -86,7 +86,7 @@ final class EventsTest extends TestCase
     * Make sure that trying to set the same locale again
     * does not trigger the change locale event.
     */
-    public function test_changeLocale_unchanged()
+    public function test_changeLocale_unchanged() : void
     {
         Localization::onLocaleChanged(array($this, 'handle_onLocaleChanged'));
         
@@ -96,9 +96,9 @@ final class EventsTest extends TestCase
     }
     
    /**
-    * The event must specifiy the correct namespace information.
+    * The event must specify the correct namespace information.
     */
-    public function test_changeLocale_namespace()
+    public function test_changeLocale_namespace() : void
     {
         Localization::onLocaleChanged(array($this, 'handle_onLocaleChanged'));
         

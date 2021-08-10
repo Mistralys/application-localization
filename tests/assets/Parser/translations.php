@@ -1,10 +1,12 @@
 <?php
 
-    $text = t('Global context');
+    use function AppLocalize\t;
+
+    $textA = t('Global context');
     
-    $text = t("With double quotes");
+    $textB = t("With double quotes");
     
-    function bothWorlds()
+    function bothWorlds() : string
     {
         return t('Within function');
     }
@@ -28,7 +30,7 @@
     
     class PHP_Translations_Testfile
     {
-        private function translateMe()
+        private function translateMe() : string
         {
             return t('Within class method.');
         }

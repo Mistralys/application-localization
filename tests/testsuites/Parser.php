@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
 use AppLocalize\Localization;
@@ -13,7 +15,7 @@ final class ParserTest extends TestCase
      * to parse a file with an extension that is not
      * supported.
      */
-    public function test_unsupportedFiles()
+    public function test_unsupportedFiles() : void
     {
         $parser = Localization::createScanner()->getParser();
         
@@ -26,7 +28,7 @@ final class ParserTest extends TestCase
      * Check that the file not found exception is triggered
      * if the file to parse does not exist.
      */
-    public function test_fileNotFound()
+    public function test_fileNotFound() : void
     {
         $parser = Localization::createScanner()->getParser();
         

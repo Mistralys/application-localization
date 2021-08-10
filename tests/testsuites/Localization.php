@@ -12,7 +12,7 @@ final class LocalizationTest extends TestCase
         Localization::reset();
     }
     
-    public function test_defaultLocale_app()
+    public function test_defaultLocale_app() : void
     {
         $this->assertEquals(
             Localization::BUILTIN_LOCALE_NAME, 
@@ -27,7 +27,7 @@ final class LocalizationTest extends TestCase
         );
     }
     
-    public function test_defaultLocale_content()
+    public function test_defaultLocale_content() : void
     {
         $this->assertEquals(
             Localization::BUILTIN_LOCALE_NAME,
@@ -45,42 +45,50 @@ final class LocalizationTest extends TestCase
    /**
     * Custom namespaces have no default locale.
     */
-    public function test_defaultLocale_custom()
+    public function test_defaultLocale_custom() : void
     {
         $this->expectException(Localization_Exception::class);
         
         Localization::getLocaleNameByNS('custom');
     }
     
-    public function test_addLocale_app()
+    public function test_addLocale_app() : void
     {
         Localization::addAppLocale('de_DE');
         
         $this->assertEquals('de_DE', Localization::getAppLocaleByName('de_DE')->getName());
     }
 
-    public function test_addLocale_content()
+    public function test_addLocale_content() : void
     {
         Localization::addContentLocale('de_DE');
         
         $this->assertEquals('de_DE', Localization::getContentLocaleByName('de_DE')->getName());
     }
     
-    public function test_addLocale_custom()
+    public function test_addLocale_custom() : void
     {
         Localization::addLocaleByNS('de_DE', 'custom');
         
         $this->assertEquals('de_DE', Localization::getLocaleByNameNS('de_DE', 'custom')->getName());
     }
     
-    public function test_addLocale_invalidLocale()
+    public function test_addLocale_invalidLocale() : void
     {
-        $this->expectException(Localization_Exception::class);
-        
-        Localization::addAppLocale('invalid_locale');
+        try
+        {
+            Localization::addAppLocale('invalid_locale');
+        }
+        catch (Localization_Exception $e)
+        {
+            $this->assertSame(Localization::ERROR_LOCALE_NOT_FOUND, $e->getCode());
+            return;
+        }
+
+        $this->fail('No exception or other exception thrown.');
     }
     
-    public function test_selectLocale_content()
+    public function test_selectLocale_content() : void
     {
         Localization::addContentLocale('de_DE');
         Localization::selectContentLocale('de_DE');
@@ -98,7 +106,7 @@ final class LocalizationTest extends TestCase
         );
     }
     
-    public function test_selectLocale_app()
+    public function test_selectLocale_app() : void
     {
         Localization::addAppLocale('de_DE');
         Localization::selectAppLocale('de_DE');
@@ -116,7 +124,7 @@ final class LocalizationTest extends TestCase
         );
     }
     
-    public function test_selectLocale_custom()
+    public function test_selectLocale_custom() : void
     {
         Localization::addLocaleByNS('de_DE', 'custom');
         Localization::selectLocaleByNS('de_DE', 'custom');
@@ -134,7 +142,7 @@ final class LocalizationTest extends TestCase
         );
     }
     
-    public function test_getLocaleNames_app()
+    public function test_getLocaleNames_app() : void
     {
         Localization::addAppLocale('de_DE');
         
@@ -153,7 +161,7 @@ final class LocalizationTest extends TestCase
         );
     }
 
-    public function test_getLocaleNames_content()
+    public function test_getLocaleNames_content() : void
     {
         Localization::addContentLocale('de_DE');
         
@@ -172,7 +180,7 @@ final class LocalizationTest extends TestCase
         );
     }
     
-    public function test_getLocaleNames_custom()
+    public function test_getLocaleNames_custom() : void
     {
         Localization::addLocaleByNS('de_DE', 'custom');
         
@@ -188,7 +196,7 @@ final class LocalizationTest extends TestCase
         );
     }
     
-    public function test_localeExists_app()
+    public function test_localeExists_app() : void
     {
         $this->assertFalse(Localization::appLocaleExists('de_DE'));
         
@@ -197,7 +205,7 @@ final class LocalizationTest extends TestCase
         $this->assertTrue(Localization::appLocaleExists('de_DE'));
     }
 
-    public function test_localeExists_content()
+    public function test_localeExists_content() : void
     {
         $this->assertFalse(Localization::contentLocaleExists('de_DE'));
         
@@ -206,7 +214,7 @@ final class LocalizationTest extends TestCase
         $this->assertTrue(Localization::contentLocaleExists('de_DE'));
     }
 
-    public function test_localeExists_custom()
+    public function test_localeExists_custom() : void
     {
         $this->assertFalse(Localization::localeExistsInNS('de_DE', 'custom'));
         
@@ -215,7 +223,7 @@ final class LocalizationTest extends TestCase
         $this->assertTrue(Localization::localeExistsInNS('de_DE', 'custom'));
     }
     
-    public function test_injectLocalesSelector_app()
+    public function test_injectLocalesSelector_app() : void
     {
         $form = new HTML_QuickForm2('dummy');
         
@@ -228,7 +236,7 @@ final class LocalizationTest extends TestCase
         $this->assertEquals(2, $select->countOptions());
     }
     
-    public function test_injectLocalesSelector_content()
+    public function test_injectLocalesSelector_content() : void
     {
         $form = new HTML_QuickForm2('dummy');
         
@@ -241,7 +249,7 @@ final class LocalizationTest extends TestCase
         $this->assertEquals(2, $select->countOptions());
     }
     
-    public function test_getSelectedCurrency_app()
+    public function test_getSelectedCurrency_app() : void
     {
         Localization::addAppLocale('de_DE');
         Localization::selectAppLocale('de_DE');
@@ -252,7 +260,7 @@ final class LocalizationTest extends TestCase
         $this->assertEquals('EUR', $currency->getISO());
     }
     
-    public function test_getSelectedCurrency_content()
+    public function test_getSelectedCurrency_content() : void
     {
         Localization::addContentLocale('de_DE');
         Localization::selectContentLocale('de_DE');
@@ -263,7 +271,7 @@ final class LocalizationTest extends TestCase
         $this->assertEquals('EUR', $currency->getISO());
     }
     
-    public function test_getSelectedCurrency_custom()
+    public function test_getSelectedCurrency_custom() : void
     {
         Localization::addLocaleByNS('de_DE', 'custom');
         Localization::selectLocaleByNS('de_DE', 'custom');

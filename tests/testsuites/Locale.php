@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
 use AppLocalize\Localization;
@@ -11,7 +13,7 @@ final class LocaleTest extends TestCase
         Localization::reset();
     }
     
-    public function test_getLanguageCode()
+    public function test_getLanguageCode() : void
     {
         $tests = array(
             'de_DE' => 'de',
@@ -31,7 +33,7 @@ final class LocaleTest extends TestCase
         }
     }
     
-    public function test_getCountryCode()
+    public function test_getCountryCode() : void
     {
         $tests = array(
             'de_DE' => 'de',
@@ -52,7 +54,7 @@ final class LocaleTest extends TestCase
         }
     }
     
-    public function test_getName()
+    public function test_getName() : void
     {
         $tests = array(
             'de_DE',
@@ -73,7 +75,7 @@ final class LocaleTest extends TestCase
         }
     }
     
-    public function test_isNative()
+    public function test_isNative() : void
     {
         $tests = array(
             Localization::BUILTIN_LOCALE_NAME => true,
@@ -93,7 +95,7 @@ final class LocaleTest extends TestCase
         }
     }
     
-    public function test_getLabel()
+    public function test_getLabel() : void
     {
         $this->assertEquals('English (UK)', Localization::getAppLocale()->getLabel());
     }

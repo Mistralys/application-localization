@@ -1,8 +1,9 @@
 parameters:
     excludes_analyse:
-        - tests/*
         - vendor/*
         - css/*
     paths:
         - ../../src
+        - ../../example
+        - ../../tests
     checkMissingIterableValueType: false

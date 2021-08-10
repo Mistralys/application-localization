@@ -31,7 +31,7 @@ final class ParserPHPTest extends TestCase
      * Check that the expected translatable strings are found
      * in the test file.
      */
-    public function test_findTexts()
+    public function test_findTexts() : void
     {
         $parser = Localization::createScanner()->getParser();
         
@@ -53,13 +53,29 @@ final class ParserPHPTest extends TestCase
         
         $expectedAmount = count($expected);
         
-        $actual = $lang->getTexts();
-        
-        $this->assertEquals($expectedAmount, count($actual), 'The amount of texts found does not match');
+        $texts = $lang->getTexts();
+
+        $actual = array();
+        foreach ($texts as $text)
+        {
+            $actual[] = $text->getText();
+        }
+
+        $actual = array_unique($actual);
+
+        $this->assertEquals(
+            $expectedAmount,
+            count($actual),
+            'The amount of texts found does not match.'.PHP_EOL.
+            'Expected:'.PHP_EOL.
+            print_r($expected, true).PHP_EOL.
+            'Actual:'.PHP_EOL.
+            print_r($actual, true)
+        );
         
         foreach($actual as $text)
         {
-            $this->assertContains($text->getText(), $expected);
+            $this->assertContains($text, $expected);
         }
     }
     
@@ -67,7 +83,7 @@ final class ParserPHPTest extends TestCase
      * Check that the expected warnings are triggered when
      * parsing the test file.
      */
-    public function test_triggerWarnings()
+    public function test_triggerWarnings() : void
     {
         $parser = Localization::createScanner()->getParser();
         
@@ -89,7 +105,7 @@ final class ParserPHPTest extends TestCase
      * Check that translatable texts are found as expected
      * when parsing a javascript string instead of a file.
      */
-    public function test_fromString()
+    public function test_fromString() : void
     {
         $parser = Localization::createScanner()->getParser();
         

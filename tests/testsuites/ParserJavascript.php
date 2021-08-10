@@ -31,7 +31,7 @@ final class ParserJavascriptTest extends TestCase
     * Check that the expected translatable strings are found
     * in the test file.
     */
-    public function test_findTexts()
+    public function test_findTexts() : void
     {
         $parser = Localization::createScanner()->getParser();
         
@@ -67,7 +67,7 @@ final class ParserJavascriptTest extends TestCase
     * Check that the expected warnings are triggered when
     * parsing the test file.
     */
-    public function test_triggerWarnings()
+    public function test_triggerWarnings() : void
     {
         $parser = Localization::createScanner()->getParser();
         
@@ -89,7 +89,7 @@ final class ParserJavascriptTest extends TestCase
     * Check that translatable texts are found as expected
     * when parsing a javascript string instead of a file.
     */
-    public function test_fromString()
+    public function test_fromString() : void
     {
         $parser = Localization::createScanner()->getParser();
         
