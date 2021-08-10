@@ -12,13 +12,13 @@ namespace AppLocalize;
 
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
+use Exception;
 use HTML_QuickForm2_Container;
 use HTML_QuickForm2_Element_Select;
-use Throwable;
 
 /**
  * Localization handling collection for both the
- * application itself as well as its user contents.
+ * application itself and its user contents.
  *
  * @package Localization
  * @subpackage Core
@@ -48,8 +48,8 @@ class Localization
     const BUILTIN_LOCALE_NAME = 'en_UK';
 
     const NAMESPACE_APPLICATION = '__application';
-    
     const NAMESPACE_CONTENT = '__content';
+
     const EVENT_LOCALE_CHANGED = 'LocaleChanged';
 
     /**
@@ -130,7 +130,7 @@ class Localization
         // add the localization package's own sources,
         // so the bundled localized strings can
         // always be translated.
-        \AppLocalize\Localization::addSourceFolder(
+        Localization::addSourceFolder(
             'application-localization',
             'Application Localization Package',
             'Composer packages',
@@ -247,7 +247,7 @@ class Localization
                 return $locale;
             }
         }
-        catch (Throwable $e)
+        catch (Exception $e)
         {
 
         }
