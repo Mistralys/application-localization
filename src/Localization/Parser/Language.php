@@ -67,7 +67,22 @@ abstract class Localization_Parser_Language
     * @var string
     */
     protected $sourceFile = '';
-    
+
+    /**
+     * @var string[]
+     */
+    private static $allowedContextTags = array(
+        'br',
+        'p',
+        'strong',
+        'em',
+        'b',
+        'i',
+        'a',
+        'code',
+        'pre'
+    );
+
     public function __construct(Localization_Parser $parser)
     {
         $this->parser = $parser;
@@ -177,10 +192,24 @@ abstract class Localization_Parser_Language
     {
         return $this->texts;
     }
-    
+
+    /**
+     * Retrieves a list of the names of all tags that may be used
+     * in the translation context strings.
+     *
+     * @return string[]
+     */
+    public static function getAllowedContextTags() : array
+    {
+        return self::$allowedContextTags;
+    }
+
     protected function addResult(string $text, int $line=0, string $explanation='') : void
     {
         $this->log(sprintf('Line [%1$s] | Found string [%2$s]', $line, $text));
+
+        $explanation = strip_tags($explanation, '<'.implode('><', self::$allowedContextTags).'>');
+
 
         $this->texts[] = new Text($text, $line, $explanation);
     }
