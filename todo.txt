@@ -1,9 +1,0 @@
-Core:
-- Replace jtokenizer with peast: https://github.com/mck89/peast
-- Be able to set the translation function names?
-- injectLocalesSelector() should support namespaces
-
-Editor:
-- Import/Export
-- Validate the amount of placeholders in strings
-- Allow different sorting options of the list
