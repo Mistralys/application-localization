@@ -1,12 +1,26 @@
 <?php
+/**
+ * File containing the class {@see \AppLocalize\Localization_Source_Folder}.
+ *
+ * @package Localization
+ * @subpackage Parser
+ * @see \AppLocalize\Localization_Source_Folder
+ */
 
 declare(strict_types=1);
 
 namespace AppLocalize;
 
-use AppUtils\FileHelper;
 use DirectoryIterator;
 
+/**
+ * Localization source that reads text to translate from files
+ * stored in a folder.
+ *
+ * @package Localization
+ * @subpackage Parser
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class Localization_Source_Folder extends Localization_Source
 {
    /**
@@ -77,18 +91,20 @@ class Localization_Source_Folder extends Localization_Source
         return $this;
     }
     
-    protected function _scan() : void
+    protected function _scan(Localization_Source_Scanner $scanner) : void
     {
-        $this->processFolder($this->getSourcesFolder());
+        $this->processFolder($this->getSourcesFolder(), $scanner);
     }
 
     /**
      * Processes the target folder, and recurses into sub folders.
      * @param string $folder
+     * @param Localization_Source_Scanner $scanner
      * @throws Localization_Exception
      */
-    protected function processFolder(string $folder) : void
+    protected function processFolder(string $folder, Localization_Source_Scanner $scanner) : void
     {
+        $parser = $scanner->getParser();
         $d = new DirectoryIterator($folder);
         foreach ($d as $item) 
         {
@@ -99,12 +115,12 @@ class Localization_Source_Folder extends Localization_Source
             $filename = $item->getFilename();
             
             if ($item->isDir() && !in_array($filename, $this->excludes['folders'])) {
-                $this->processFolder($item->getPathname());
+                $this->processFolder($item->getPathname(), $scanner);
                 continue;
             }
             
-            if ($item->isFile() && $this->parser->isFileSupported($filename) && !$this->isExcluded($filename)) {
-                $this->parseFile($item->getPathname());
+            if ($item->isFile() && $parser->isFileSupported($filename) && !$this->isExcluded($filename)) {
+                $scanner->parseFile($item->getPathname());
             }
         }
     }

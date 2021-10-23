@@ -1,9 +1,30 @@
 <?php
+/**
+ * File containing the class {@see \AppLocalize\Localization_Source}.
+ *
+ * @package Localization
+ * @subpackage Parser
+ * @see \AppLocalize\Localization_Source
+ */
 
 declare(strict_types=1);
 
 namespace AppLocalize;
 
+/**
+ * Base source class for a location that stores texts to translate.
+ * This can be from the file system, as well as a database for example.
+ * Each source type must extend this class.
+ *
+ * Sources are added manually when configuring the localization layer.
+ * See for example {@see Localization::addSourceFolder()}.
+ *
+ * @package Localization
+ * @subpackage Parser
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @see Localization_Source_Folder
+ */
 abstract class Localization_Source
 {
    /**
@@ -28,19 +49,7 @@ abstract class Localization_Source
     * @var string
     */
     protected $alias;
-    
-   /**
-    * Available during scanning.
-    * @var Localization_Scanner_StringsCollection|NULL
-    */
-    protected $collection;
-    
-   /**
-    * Available during scanning.
-    * @var Localization_Parser|NULL
-    */
-    protected $parser;
-    
+
     public function __construct(string $alias, string $label, string $group, string $storageFolder)
     {
         $this->alias = $alias;
@@ -73,58 +82,23 @@ abstract class Localization_Source
     
     public function scan(Localization_Scanner $scanner) : void
     {
-        $this->collection = $scanner->getCollection();
-        $this->parser = $scanner->getParser();
-        
-        $this->_scan();
-        
-        $this->collection = null;
+        $this->_scan($this->getSourceScanner($scanner));
     }
-    
-    abstract protected function _scan() : void;
 
     /**
-     * @var array<string,string>
-     */
-    protected $extensions = array(
-        'js' => 'Javascript',
-        'php' => 'PHP'
-    );
-
-    /**
-     * Parses the code of the target file to find all
-     * supported function calls and extract the native
-     * application language string from the code. Adds any
-     * strings it finds to the results collection.
+     * Retrieves the scanner instance that can access this
+     * source's string hashes and parsing methods.
      *
-     * @param string $file
-     * @throws Localization_Exception
+     * @param Localization_Scanner $scanner
+     * @return Localization_Source_Scanner
      */
-    protected function parseFile(string $file) : void
+    public function getSourceScanner(Localization_Scanner $scanner) : Localization_Source_Scanner
     {
-        $this->log(sprintf('Parsing file [%s].', $file));
-        
-        $language = $this->parser->parseFile($file);
-        
-        $texts = $language->getTexts();
-        
-        foreach($texts as $text)
-        {
-            $this->collection->addFromFile(
-                $this->getID(),
-                $file,
-                $language->getID(), 
-                $text
-            );
-        }
-        
-        $warnings = $language->getWarnings();
-        
-        foreach($warnings as $warning) {
-            $this->collection->addWarning($warning);
-        }
+        return new Localization_Source_Scanner($this, $scanner);
     }
     
+    abstract protected function _scan(Localization_Source_Scanner $scanner) : void;
+
     protected function log(string $message) : void
     {
         Localization::log(sprintf(
@@ -132,32 +106,5 @@ abstract class Localization_Source
             $this->getID(),
             $message
         ));
-    }
-
-    /**
-     * @param Localization_Scanner $scanner
-     * @return Localization_Scanner_StringHash[]
-     */
-    public function getHashes(Localization_Scanner $scanner) : array
-    {
-        $scanner->load();
-        $collection = $scanner->getCollection();
-        return $collection->getHashesBySourceID($this->getID());
-    }
-    
-    public function countUntranslated(Localization_Scanner $scanner) : int
-    {
-        $translator = Localization::getTranslator();
-        $amount = 0;
-        
-        $hashes = $this->getHashes($scanner);
-        foreach($hashes as $hash) {
-            $text = $translator->getHashTranslation($hash->getHash());
-            if(empty($text)) {
-                $amount++;
-            }
-        }
-        
-        return $amount;
     }
 }
