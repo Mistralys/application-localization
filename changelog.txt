@@ -1,5 +1,6 @@
 v1.4.2
 - Editor: Replaced output buffer handling with the AppUtils one.
+- Editor: Split the HTML scaffold rendering to a separate class.
 - Scanner: Separated some logic in the sources to a separate scanner class.
 - Scanner: Added string hash `getTextAsString()` to avoid null checks.
 
