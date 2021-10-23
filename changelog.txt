@@ -1,3 +1,8 @@
+v1.4.2
+- Editor: Replaced output buffer handling with the AppUtils one.
+- Scanner: Separated some logic in the sources to a separate scanner class.
+- Scanner: Added string hash `getTextAsString()` to avoid null checks.
+
 v1.4.1
 - Editor: Fixed the error message shown when using the search.
 - Tests: Added tests to the PHPStan analysis; Added type hints.
