@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
-use AppLocalize\Editor\OutputBuffering;
+use AppUtils\OutputBuffering;
+use AppUtils\OutputBuffering_Exception;
 use AppUtils\Request;
 
 /**
@@ -275,14 +276,14 @@ class Localization_Editor_Filters
 			<br>
         <?php
         
-        return OutputBuffering::getClean();
+        return OutputBuffering::get();
     }
 
     /**
      * @param string $filterName
      * @param array<int,array<string,string>> $entries
      * @return string
-     * @throws Editor\EditorException
+     * @throws OutputBuffering_Exception
      */
     protected function renderSelect(string $filterName, array $entries) : string
     {
@@ -310,6 +311,6 @@ class Localization_Editor_Filters
             </select>
         <?php
         
-        return OutputBuffering::getClean();
+        return OutputBuffering::get();
     }
 }

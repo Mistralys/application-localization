@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
-use AppLocalize\Editor\OutputBuffering;use AppUtils\ConvertHelper;
-use AppUtils\PaginationHelper;
+use AppLocalize\Editor\EditorException;use AppUtils\ConvertHelper;
+use AppUtils\OutputBuffering;use AppUtils\PaginationHelper;
 use AppUtils\Traits_Optionable;
 use AppUtils\Interface_Optionable;
 use AppUtils\FileHelper;
@@ -36,6 +36,7 @@ class Localization_Editor implements Interface_Optionable
     
     const ERROR_NO_SOURCES_AVAILABLE = 40001;
     const ERROR_LOCAL_PATH_NOT_FOUND = 40002;
+    const ERROR_STRING_HASH_WITHOUT_TEXT = 40003;
 
    /**
     * @var string
@@ -312,7 +313,7 @@ class Localization_Editor implements Interface_Optionable
                                             				}
                                         				?>
                                         				<?php
-                                        				    $untranslated = $source->countUntranslated($this->scanner);
+                                        				    $untranslated = $source->getSourceScanner($this->scanner)->countUntranslated();
                                         				    if($untranslated > 0) {
                                         				        ?>
                                         				        	(<span class="text-danger" title="<?php ptex('%1$s texts have not been translated in this text source.', 'Amount of texts', $untranslated) ?>"><?php echo $untranslated ?></span>)
@@ -429,7 +430,8 @@ class Localization_Editor implements Interface_Optionable
                 				        '</span>'
                                     );
             				    ?><br>
-            					<?php pt('Found %1$s texts to translate.', $this->activeSource->countUntranslated($this->scanner)) ?>
+
+            					<?php pt('Found %1$s texts to translate.', $this->activeSource->getSourceScanner($this->scanner)->countUntranslated()) ?>
             				</p>
             				<br>
             				<?php
@@ -462,7 +464,7 @@ class Localization_Editor implements Interface_Optionable
 </html>
 <?php
 
-        return OutputBuffering::getClean();
+        return OutputBuffering::get();
     }
 
     protected function renderWarnings() : string
@@ -492,7 +494,7 @@ class Localization_Editor implements Interface_Optionable
         	</dl>
     	<?php 
 
-        return OutputBuffering::getClean();
+        return OutputBuffering::get();
     }
 
     /**
@@ -500,7 +502,7 @@ class Localization_Editor implements Interface_Optionable
      */
     protected function getFilteredStrings() : array
     {
-        $strings = $this->activeSource->getHashes($this->scanner);
+        $strings = $this->activeSource->getSourceScanner($this->scanner)->getHashes();
         
         $result = array();
         
@@ -646,6 +648,15 @@ class Localization_Editor implements Interface_Optionable
     {
         $hash = $string->getHash();
         $text = $string->getText();
+
+        if($text===null)
+        {
+            throw new EditorException(
+            'String hash has no text',
+                '',
+                self::ERROR_STRING_HASH_WITHOUT_TEXT
+            );
+        }
         
         $previewText = $string->getTranslatedText();
         if(empty($previewText)) {
