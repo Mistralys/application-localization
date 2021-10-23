@@ -30,7 +30,7 @@
 	"prefer-stable" : true,
 	"require" : 
 	{
-		"mistralys/application-utils" : ">=1.2.0",
+		"mistralys/application-utils" : "^1.8",
 		"mistralys/jtokenizer" : ">=1.0.1",
 		"php": ">=7.3",
 		"ext-json": "*",
