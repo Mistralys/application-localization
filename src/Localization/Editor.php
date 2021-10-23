@@ -35,8 +35,12 @@ class Localization_Editor implements Interface_Optionable
     const ERROR_NO_SOURCES_AVAILABLE = 40001;
     const ERROR_LOCAL_PATH_NOT_FOUND = 40002;
     const ERROR_STRING_HASH_WITHOUT_TEXT = 40003;
+    const VARIABLE_STRINGS = 'strings';
+    const VARIABLE_SAVE = 'save';
+    const VARIABLE_SCAN = 'scan';
+    const VARIABLE_WARNINGS = 'warnings';
 
-   /**
+    /**
     * @var string
     */
     protected $installPath;
@@ -248,17 +252,27 @@ class Localization_Editor implements Interface_Optionable
         return strval($this->getOption('back-label'));
     }
 
+    public function getSaveVariableName() : string
+    {
+        return $this->getVarName(self::VARIABLE_SAVE);
+    }
+
+    public function getStringsVariableName() : string
+    {
+        return $this->getVarName(self::VARIABLE_STRINGS);
+    }
+
     protected function handleActions() : void
     {
         $this->initSources();
         
         $this->filters = new Localization_Editor_Filters($this);
         
-        if($this->request->getBool($this->getVarName('scan'))) 
+        if($this->request->getBool($this->getVarName(self::VARIABLE_SCAN)))
         {
             $this->executeScan();
         } 
-        else if($this->request->getBool($this->getVarName('save'))) 
+        else if($this->request->getBool($this->getSaveVariableName()))
         {
             $this->executeSave();
         }
@@ -295,7 +309,7 @@ class Localization_Editor implements Interface_Optionable
 
     public function isShowWarningsEnabled() : bool
     {
-        return $this->request->getBool($this->getVarName('warnings'));
+        return $this->request->getBool($this->getVarName(self::VARIABLE_WARNINGS));
     }
 
     public function getFilters() : Localization_Editor_Filters
@@ -391,12 +405,12 @@ class Localization_Editor implements Interface_Optionable
     
     public function getScanURL() : string
     {
-        return $this->getSourceURL($this->activeSource, array($this->getVarName('scan') => 'yes'));
+        return $this->getSourceURL($this->activeSource, array($this->getVarName(self::VARIABLE_SCAN) => 'yes'));
     }
     
     public function getWarningsURL() : string
     {
-        return $this->getSourceURL($this->activeSource, array($this->getVarName('warnings') => 'yes'));
+        return $this->getSourceURL($this->activeSource, array($this->getVarName(self::VARIABLE_WARNINGS) => 'yes'));
     }
     
     public function getURL(array $params=array()) : string
@@ -440,7 +454,7 @@ class Localization_Editor implements Interface_Optionable
         
         $translator = Localization::getTranslator($this->activeAppLocale);
         
-        $strings = $data[$this->getVarName('strings')];
+        $strings = $data[$this->getVarName(self::VARIABLE_STRINGS)];
         foreach($strings as $hash => $text) 
         {
             $text = trim($text);

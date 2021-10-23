@@ -214,7 +214,7 @@ class Localization_Editor_Template_PageScaffold
             ?>
             <br>
             <p>
-                <button type="submit" name="<?php echo $this->editor->getVarName('save') ?>" value="yes" class="btn btn-primary">
+                <button type="submit" name="<?php echo $this->editor->getSaveVariableName() ?>" value="yes" class="btn btn-primary">
                     <i class="fas fa-save"></i>
                     <?php pt('Save now') ?>
                 </button>
@@ -260,7 +260,7 @@ class Localization_Editor_Template_PageScaffold
                 <label for="<?php echo $labelID ?>"><?php pt('Native text:') ?></label>
                 <p class="native-text"><?php echo $this->renderText($text->getText()) ?></p>
                 <p>
-                    <textarea rows="4" id="<?php echo $labelID ?>" class="form-control" name="<?php echo $this->editor->getVarName('strings') ?>[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
+                    <textarea rows="4" id="<?php echo $labelID ?>" class="form-control" name="<?php echo $this->editor->getStringsVariableName() ?>[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
                 </p>
                 <?php
                 $explanation = $text->getExplanation();
