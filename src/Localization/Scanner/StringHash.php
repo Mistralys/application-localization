@@ -191,10 +191,22 @@ class Localization_Scanner_StringHash
     */
     public function getSearchString() : string
     {
-        $parts = array($this->getTranslatedText(), $this->getText()->getText());
+        $parts = array($this->getTranslatedText(), $this->getTextAsString());
         
         $parts = array_merge($parts, $this->getFiles());
         
         return implode(' ', $parts);
+    }
+
+    public function getTextAsString() : string
+    {
+        $text = $this->getText();
+
+        if($text !== null)
+        {
+            return $text->getText();
+        }
+
+        return '';
     }
 }
