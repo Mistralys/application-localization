@@ -126,7 +126,7 @@ class Localization_Scanner_StringsCollection
     }
 
     /**
-     * @param array<string,mixed> $array
+     * @param array<int|string,mixed> $array
      * @return bool
      */
     public function fromArray(array $array) : bool
