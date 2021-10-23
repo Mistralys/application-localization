@@ -14,7 +14,7 @@ abstract class Localization_Parser_Token
     protected $definition;
     
    /**
-    * @var Localization_Parser_Token
+    * @var Localization_Parser_Token|NULL
     */
     protected $parentToken;
 
