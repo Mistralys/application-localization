@@ -114,7 +114,7 @@ class Localization_Scanner
     
     protected function save() : void
     {
-        $data = $this->collection->toArray();
+        $data = $this->getCollection()->toArray();
         
         FileHelper::saveAsJSON($data, $this->storageFile);
     }
