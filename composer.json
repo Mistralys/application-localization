@@ -33,7 +33,7 @@
 		"mistralys/application-utils" : ">=1.8",
 		"mistralys/jtokenizer" : ">=1.0.1",
 		"mistralys/php-sprintf-parser" : "^1.0",
-		"php": ">=7.3",
+		"php": ">=7.4",
 		"ext-json": "*",
       	"ext-mbstring": "*"
     },
