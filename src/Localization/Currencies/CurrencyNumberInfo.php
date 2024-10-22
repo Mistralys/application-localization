@@ -1,14 +1,12 @@
 <?php
 /**
- * File containing the {@link Localization_Currency_Number} class.
  * @package Localization
  * @subpackage Currencies
- * @see Localization_Currency_Number
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Currencies;
 
 /**
  * Number container for currency price notations, used to
@@ -19,19 +17,12 @@ namespace AppLocalize;
  * @subpackage Currencies
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
- * @see Localization_Currency::tryParseNumber()
+ * @see BaseCurrency::tryParseNumber()
  */
-class Localization_Currency_Number
+class CurrencyNumberInfo
 {
-    /**
-     * @var number|string
-     */
-    protected $number;
-
-    /**
-     * @var int
-     */
-    protected $decimals = 0;
+    protected int $number;
+    protected int $decimals;
 
     /**
      * @var float
@@ -39,13 +30,18 @@ class Localization_Currency_Number
     protected $float;
 
     /**
-     * @param string|number $number
+     * @param int $number
      * @param int $decimals
      */
-    public function __construct($number, int $decimals = 0)
+    public function __construct(int $number, int $decimals = 0)
     {
-        $this->number = floatval($number);
+        $this->number = $number;
         $this->decimals = $decimals;
+    }
+
+    public function isNegative() : bool
+    {
+        return $this->number < 0;
     }
 
     /**
@@ -54,7 +50,7 @@ class Localization_Currency_Number
      */
     public function getFloat() : float
     {
-        return floatval($this->number . '.' . $this->decimals);
+        return (float)($this->getString());
     }
 
     /**
@@ -63,7 +59,7 @@ class Localization_Currency_Number
      */
     public function getNumber() : int
     {
-        return intval($this->number);
+        return $this->number;
     }
 
     /**
@@ -76,7 +72,7 @@ class Localization_Currency_Number
     }
 
     /**
-     * Counts the amount of decimals in the number.
+     * Counts the number of decimals in the number.
      * @return int
      */
     public function countDecimals() : int
@@ -85,6 +81,11 @@ class Localization_Currency_Number
             return 0;
         }
 
-        return strlen(strval($this->decimals));
+        return strlen((string)$this->decimals);
+    }
+
+    public function getString() : string
+    {
+        return $this->number . '.' . $this->decimals;
     }
 }
