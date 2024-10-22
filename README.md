@@ -1,21 +1,19 @@
-[![Build Status](https://travis-ci.com/Mistralys/application-localization.svg?branch=master)](https://travis-ci.com/Mistralys/application-localization)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Mistralys/application-localization/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Mistralys/application-localization/?branch=master)
-
 # Application Localization
 
-PHP and Javascript localization library, written in PHP. It is a simple but powerful
+PHP and JavaScript localization library, written in PHP. It is a simple but powerful
 localization layer that stores translated strings in ini files.
 
 ## Highlights
 
-* Easy to adjust to an application's files structure
+* Easy to adjust to an application's file structure
+* Automatic discovery of texts in PHP and JavaScript source files
 * Built-in translator UI that can be integrated into an existing UI
 * Clientside translations with auto-generated include files
 * Translations with or without translation context information for translators
 
 ## Installation
 
-Simply require the package via composer:
+Require the package via composer:
 
 ```
 composer require mistralys/application-localization
