@@ -8,7 +8,8 @@
 
 namespace AppLocalize;
 
-use AppUtils\FileHelper;
+use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization\Currencies\CurrencyInterface;
 
 /**
  * Individual locale representation with information about
@@ -18,9 +19,9 @@ use AppUtils\FileHelper;
  * @subpackage Core
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class Localization_Locale
+abstract class Localization_Locale implements LocaleInterface
 {
-    const ERROR_LOCALE_LABEL_MISSING = 39102;
+    public const ERROR_LOCALE_LABEL_MISSING = 39102;
     
     /**
      * @var string
@@ -28,7 +29,7 @@ abstract class Localization_Locale
     private $localeName;
 
     /**
-     * @var Localization_Country
+     * @var BaseCountry
      */
     protected $country;
     
@@ -53,37 +54,16 @@ abstract class Localization_Locale
         $this->languageCode = strtolower($tokens[0]);
     }
     
-   /**
-    * Retrieves the two-letter language code of the locale.
-    * 
-    * @return string Language code, e.g. "en", "de"
-    */
     public function getLanguageCode() : string
     {
         return $this->languageCode;
     }
 
-    /**
-     * Checks whether the specified locale name is known
-     * (supported by the application).
-     *
-     * @param string $localeName
-     * @return boolean
-     */
     public static function isLocaleKnown(string $localeName) : bool
     {
         return Localization::isLocaleSupported($localeName);
     }
 
-    /**
-     * Returns the locale name, e.g. "en_US"
-     * @return string
-     */
-    public function getName() : string
-    {
-        return $this->localeName;
-    }
-    
    /**
     * Retrieves the shortened version of the locale name,
     * e.g. "en" or "de".
@@ -117,42 +97,19 @@ abstract class Localization_Locale
      */
     public function isNative() : bool
     {
-        return $this->getName() == Localization::BUILTIN_LOCALE_NAME;
+        return $this->getName() === Localization::BUILTIN_LOCALE_NAME;
     }
 
-    /**
-     * Returns the localized label for the locale, e.g. "German"
-     * 
-     * @return string
-     */
-    abstract public function getLabel() : string;
-
-    /**
-     * Retrieves the country object for this locale
-     *
-     * @return Localization_Country
-     *
-     * @throws Localization_Exception
-     * @see Localization::ERROR_COUNTRY_NOT_FOUND
-     */
-    public function getCountry() : Localization_Country
+    public function getCountry() : BaseCountry
     {
         if(!isset($this->country)) {
-            $this->country = Localization::createCountry($this->countryCode);
+            $this->country = Localization::createCountries()->getByID($this->getCountryCode());
         }
         
         return $this->country;
     }
 
-    /**
-     * Retrieves the currency object for this locale
-     *
-     * @return Localization_Currency
-     *
-     * @throws Localization_Exception
-     * @see Localization::ERROR_COUNTRY_NOT_FOUND
-     */
-    public function getCurrency() : Localization_Currency
+    public function getCurrency() : CurrencyInterface
     {
         return $this->getCountry()->getCurrency();
     }
