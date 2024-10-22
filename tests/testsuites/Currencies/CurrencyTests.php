@@ -14,12 +14,24 @@ use PHPUnit\Framework\TestCase;
 
 class CurrencyTests extends TestCase
 {
-    public function test_getByID() : void
+    public function test_choose() : void
     {
         $usd = CurrencyCollection::getInstance()->choose()->usd();
 
         $this->assertSame('USD', $usd->getISO());
         $this->assertTrue($usd->isSymbolOnFront());
+    }
+
+    public function test_getByISO() : void
+    {
+        $this->assertInstanceOf(Localization_Currency_USD::class, CurrencyCollection::getInstance()->getByISO('USD'));
+        $this->assertInstanceOf(Localization_Currency_USD::class, CurrencyCollection::getInstance()->getByISO('usd'));
+    }
+
+    public function test_isoExists() : void
+    {
+        $this->assertTrue(CurrencyCollection::getInstance()->isoExists('USD'));
+        $this->assertTrue(CurrencyCollection::getInstance()->isoExists('usd'));
     }
 
     public function test_EUR_getCountries() : void
