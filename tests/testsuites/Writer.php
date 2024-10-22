@@ -13,7 +13,7 @@ final class WriterTest extends TestCase
    /**
     * @var string
     */
-    private static $storagePath = '';
+    private static string $storagePath = '';
     
     protected function setUp() : void
     {

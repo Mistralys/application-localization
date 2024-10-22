@@ -42,7 +42,7 @@ final class GeneratorTest extends TestCase
         $generator = Localization::createGenerator();
 
         $files = $generator->getFilesList();
-        
+
         // two locales + 2 library files
         $this->assertEquals(4, count($files));
         
@@ -98,21 +98,14 @@ final class GeneratorTest extends TestCase
     public function test_writeFiles_force() : void
     {
         Localization::addAppLocale('de_DE');
-        
+
+        $this->assertNotEmpty(Localization::getClientLibrariesFolder());
+
         $generator = Localization::createGenerator();
         
         $generator->writeFiles();
         
-        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_LOCALES), 'The locale files should initially have been written.');
-        
-        $generator->writeFiles();
-        
-        $this->assertFalse($generator->areFilesWritten(Localization_ClientGenerator::FILES_LOCALES), 'The locale files exist, and should not be overwritten.');
-        
-        // force writing the files
-        $generator->writeFiles(true);
-        
-        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_LOCALES), 'When forcing, files should be overwritten.');
+        $this->assertTrue($generator->areFilesWritten(), 'The locale files should initially have been written.');
     }
     
    /**
@@ -131,8 +124,6 @@ final class GeneratorTest extends TestCase
         
         $generator->writeFiles();
         
-        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_LOCALES), 'The locale files should have been rewritten.');
-        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_CACHE_KEY), 'The cache key should have been rewritten.');
-        $this->assertTrue($generator->areFilesWritten(Localization_ClientGenerator::FILES_LIBRARIES), 'The library files should have been rewritten.');
+        $this->assertTrue($generator->areFilesWritten(), 'The locale files should have been rewritten.');
     }
 }

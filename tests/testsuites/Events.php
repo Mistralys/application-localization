@@ -5,19 +5,12 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 use AppLocalize\Localization;
-use AppLocalize\Localization_Event_LocaleChanged;
+use AppLocalize\Localization\Event\LocaleChanged;
 
 final class EventsTest extends TestCase
 {
-   /**
-    * @var Localization_Event_LocaleChanged|NULL
-    */
-    protected $changeEvent = null;
-    
-   /**
-    * @var string
-    */
-    protected $changeFooValue = '';
+    protected ?LocaleChanged $changeEvent = null;
+    protected string $changeFooValue = '';
     
     protected function setUp() : void
     {
@@ -33,10 +26,10 @@ final class EventsTest extends TestCase
    /**
     * Event handler used to store the result of a triggered event.
     *
-    * @param Localization_Event_LocaleChanged $event
+    * @param LocaleChanged $event
     * @param string $foo
     */
-    public function handle_onLocaleChanged(Localization_Event_LocaleChanged $event, string $foo='') : void
+    public function handle_onLocaleChanged(LocaleChanged $event, string $foo='') : void
     {
         $this->changeEvent = $event;
         $this->changeFooValue = $foo;
@@ -52,7 +45,7 @@ final class EventsTest extends TestCase
         Localization::addAppLocale('de_DE');
         Localization::selectAppLocale('de_DE');
 
-        $this->assertInstanceOf(Localization_Event_LocaleChanged::class, $this->changeEvent);
+        $this->assertInstanceOf(LocaleChanged::class, $this->changeEvent);
 
         $this->assertNotNull($this->changeEvent, 'No event triggered');
         $this->assertEquals($this->changeEvent->getPrevious()->getName(), 'en_UK');
@@ -62,7 +55,7 @@ final class EventsTest extends TestCase
         
         Localization::selectAppLocale('en_UK');
         
-        $this->assertInstanceOf(Localization_Event_LocaleChanged::class, $this->changeEvent);
+        $this->assertInstanceOf(LocaleChanged::class, $this->changeEvent);
         $this->assertEquals($this->changeEvent->getPrevious()->getName(), 'de_DE');
         $this->assertEquals($this->changeEvent->getCurrent()->getName(), 'en_UK');
     }
