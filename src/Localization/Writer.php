@@ -21,35 +21,22 @@ use AppUtils\FileHelper;
 class Localization_Writer
 {
    /**
-    * @var boolean
-    */
-    private $editable = false;
-    
-   /**
     * @var array<string,string>
     */
-    private $hashes = array();
-    
-   /**
-    * @var Localization_Locale
-    */
-    private $locale;
-    
-   /**
-    * @var string
-    */
-    private $fileType;
-    
-   /**
-    * @var string
-    */
-    private $filePath;
+    private array $hashes = array();
+
+    private bool $editable = false;
+    private Localization_Locale $locale;
+    private string $fileType;
+    private string $filePath;
+    private string $hashFilePath;
     
     public function __construct(Localization_Locale $locale, string $fileType, string $filePath)
     {
         $this->locale = $locale;
         $this->fileType = $fileType;
         $this->filePath = $filePath;
+        $this->hashFilePath = $filePath.'.hash';
     }
     
     public function makeEditable() : Localization_Writer
@@ -83,6 +70,7 @@ class Localization_Writer
         $this->renderHashes();
         
         FileHelper::saveFile($this->filePath, $content);
+        FileHelper::saveFile($this->hashFilePath, hash('crc32c', $content));
     }
     
     private function renderHashes() : string
