@@ -5,9 +5,9 @@ namespace AppLocalize\Locale;
 use AppLocalize\Localization_Locale;
 use function AppLocalize\t;
 
-class en_UK extends Localization_Locale
+class es_MX extends Localization_Locale
 {
-    public const LOCALE_NAME = 'en_UK';
+    public const LOCALE_NAME = 'es_MX';
 
     public function getName() : string
     {
@@ -16,6 +16,6 @@ class en_UK extends Localization_Locale
 
     public function getLabel() : string
     {
-        return t('English (UK)');
+        return t('Mexican Spanish');
     }
 }
