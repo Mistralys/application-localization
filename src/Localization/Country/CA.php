@@ -8,6 +8,8 @@
 
 namespace AppLocalize;
 
+use AppLocalize\Localization\Countries\BaseCountry;
+
 /**
  * Country class with the definitions for Canada.
  *
@@ -16,25 +18,32 @@ namespace AppLocalize;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_CA extends Localization_Country
+class Localization_Country_CA extends BaseCountry
 {
-    public function getNumberThousandsSeparator() : string
+    public const ISO_CODE = 'ca';
+
+    public function getCode(): string
     {
-        return '.';
+        return self::ISO_CODE;
     }
 
-    public function getNumberDecimalsSeparator() : string
+    public function getNumberThousandsSeparator() : string
     {
         return ',';
     }
 
-    public function getLabel()
+    public function getNumberDecimalsSeparator() : string
+    {
+        return '.';
+    }
+
+    public function getLabel() : string
     {
         return t('Canada');
     }
 
-    public function getCurrencyID()
+    public function getCurrencyISO() : string
     {
-        return 'CAD';
+        return Localization_Currency_CAD::ISO_CODE;
     }
 }

@@ -8,6 +8,8 @@
 
 namespace AppLocalize;
 
+use AppLocalize\Localization\Countries\BaseCountry;
+
 /**
  * Country class with the definitions for Mexico.
  *
@@ -16,25 +18,32 @@ namespace AppLocalize;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_MX extends Localization_Country
+class Localization_Country_MX extends BaseCountry
 {
-    public function getNumberThousandsSeparator() : string
+    public const ISO_CODE = 'mx';
+
+    public function getCode(): string
     {
-        return '.';
+        return self::ISO_CODE;
     }
 
-    public function getNumberDecimalsSeparator() : string
+    public function getNumberThousandsSeparator() : string
     {
         return ',';
     }
 
-    public function getLabel()
+    public function getNumberDecimalsSeparator() : string
+    {
+        return '.';
+    }
+
+    public function getLabel() : string
     {
         return t('Mexico');
     }
 
-    public function getCurrencyID()
+    public function getCurrencyISO() : string
     {
-        return 'MXN';
+        return Localization_Currency_MXN::ISO_CODE;
     }
 }

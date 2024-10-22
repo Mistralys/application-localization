@@ -8,6 +8,8 @@
 
 namespace AppLocalize;
 
+use AppLocalize\Localization\Countries\BaseCountry;
+
 /**
  * Country class with the definitions for Romania.
  *
@@ -16,8 +18,15 @@ namespace AppLocalize;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_RO extends Localization_Country
+class Localization_Country_RO extends BaseCountry
 {
+    public const ISO_CODE = 'ro';
+
+    public function getCode(): string
+    {
+        return self::ISO_CODE;
+    }
+
     public function getNumberThousandsSeparator() : string
     {
         return '.';
@@ -28,13 +37,13 @@ class Localization_Country_RO extends Localization_Country
         return ',';
     }
 
-    public function getLabel()
+    public function getLabel() : string
     {
         return t('Romania');
     }
 
-    public function getCurrencyID()
+    public function getCurrencyISO() : string
     {
-        return 'RON';
+        return Localization_Currency_RON::ISO_CODE;
     }
 }

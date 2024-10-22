@@ -1,12 +1,12 @@
 <?php
 /**
- * File containing the {@link Localization_Country_PL} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_PL
  */
 
 namespace AppLocalize;
+
+use AppLocalize\Localization\Countries\BaseCountry;
 
 /**
  * Country class with the definitions for Poland.
@@ -16,8 +16,15 @@ namespace AppLocalize;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_PL extends Localization_Country
+class Localization_Country_PL extends BaseCountry
 {
+    public const ISO_CODE = 'pl';
+
+    public function getCode(): string
+    {
+        return self::ISO_CODE;
+    }
+
     public function getNumberThousandsSeparator() : string
     {
         return '.';
@@ -28,13 +35,13 @@ class Localization_Country_PL extends Localization_Country
         return ',';
     }
 
-    public function getLabel()
+    public function getLabel() : string
     {
         return t('Poland');
     }
 
-    public function getCurrencyID()
+    public function getCurrencyISO() : string
     {
-        return 'PLN';
+        return Localization_Currency_PLN::ISO_CODE;
     }
 }

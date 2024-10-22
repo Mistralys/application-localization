@@ -8,6 +8,8 @@
 
 namespace AppLocalize;
 
+use AppLocalize\Localization\Countries\BaseCountry;
+
 /**
  * Country class with the definitions for Germany.
  *
@@ -16,8 +18,15 @@ namespace AppLocalize;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_DE extends Localization_Country
+class Localization_Country_DE extends BaseCountry
 {
+    public const ISO_CODE = 'de';
+
+    public function getCode(): string
+    {
+        return self::ISO_CODE;
+    }
+
     public function getNumberThousandsSeparator() : string
     {
         return '.';
@@ -28,13 +37,13 @@ class Localization_Country_DE extends Localization_Country
         return ',';
     }
 
-    public function getLabel()
+    public function getLabel() : string
     {
         return t('Germany');
     }
 
-    public function getCurrencyID()
+    public function getCurrencyISO() : string
     {
-        return 'EUR';
+        return Localization_Currency_EUR::ISO_CODE;
     }
 }

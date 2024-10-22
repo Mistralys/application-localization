@@ -8,6 +8,8 @@
 
 namespace AppLocalize;
 
+use AppLocalize\Localization\Countries\BaseCountry;
+
 /**
  * Country class with the definitions for France.
  *
@@ -16,11 +18,18 @@ namespace AppLocalize;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_FR extends Localization_Country
+class Localization_Country_FR extends BaseCountry
 {
+    public const ISO_CODE = 'fr';
+
+    public function getCode(): string
+    {
+        return self::ISO_CODE;
+    }
+
     public function getNumberThousandsSeparator() : string
     {
-        return '.';
+        return ' ';
     }
 
     public function getNumberDecimalsSeparator() : string
@@ -28,13 +37,13 @@ class Localization_Country_FR extends Localization_Country
         return ',';
     }
 
-    public function getLabel()
+    public function getLabel() : string
     {
         return t('France');
     }
 
-    public function getCurrencyID()
+    public function getCurrencyISO() : string
     {
-        return 'EUR';
+        return Localization_Currency_EUR::ISO_CODE;
     }
 }
