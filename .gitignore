@@ -23,3 +23,4 @@ tests/storage/trywrite.ini
 example/client-libraries/cachekey.txt
 .idea/php-test-framework.xml
 version.txt
+tests/storage/trywrite.ini.hash
