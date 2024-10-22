@@ -10,9 +10,12 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization\Countries\CountryCollection;
+use AppLocalize\Localization\Currencies\CurrencyCollection;
+use AppLocalize\Localization\Currencies\CurrencyInterface;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
-use Exception;
 use HTML_QuickForm2_Container;
 use HTML_QuickForm2_Element_Select;
 use Throwable;
@@ -262,45 +265,62 @@ class Localization
         );
     }
 
+    private static ?CountryCollection $countries = null;
+
+    /**
+     * Retrieves the country collection instance to
+     * access all available countries.
+     *
+     * @return CountryCollection
+     */
+    public static function createCountries() : CountryCollection
+    {
+        if(!isset(self::$countries)) {
+            self::$countries = CountryCollection::getInstance();
+        }
+
+        return self::$countries;
+    }
+
+    private static ?CurrencyCollection $currencies = null;
+
+    /**
+     * Retrieves the currency collection instance to
+     * access all available currencies.
+     *
+     * @return CurrencyCollection
+     */
+    public static function createCurrencies() : CurrencyCollection
+    {
+        if(!isset(self::$currencies)) {
+            self::$currencies = CurrencyCollection::getInstance();
+        }
+
+        return self::$currencies;
+    }
+
     /**
      * Creates a new country object for the specified country, e.g. "uk".
      *
      * @param string $id
-     * @return Localization_Country
+     * @return BaseCountry
      *
-     * @throws Localization_Exception
-     * @see Localization::ERROR_COUNTRY_NOT_FOUND
+     * @deprecated Use the collection instead: {@see self::createCountries()}
      */
-    public static function createCountry(string $id) : Localization_Country
+    public static function createCountry(string $id) : BaseCountry
     {
-        $className = Localization_Country::class.'_' . strtoupper($id);
-
-        $country = new $className();
-
-        if($country instanceof Localization_Country)
-        {
-            return $country;
-        }
-
-        throw new Localization_Exception(
-            'Country does not exist.',
-            sprintf(
-                'Could not find country class [%s].',
-                $className
-            ),
-            self::ERROR_COUNTRY_NOT_FOUND
-        );
+        return self::createCountries()->getByID($id);
     }
 
     /**
      * Retrieves the currency of the selected app locale.
      *
-     * @return Localization_Currency
+     * @return CurrencyInterface
      *
      * @throws Localization_Exception
      * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
      */
-    public static function getAppCurrency() : Localization_Currency
+    public static function getAppCurrency() : CurrencyInterface
     {
         return self::getCurrencyNS(self::NAMESPACE_APPLICATION);
     }
@@ -308,12 +328,12 @@ class Localization
     /**
      * Retrieves the currency of the selected content locale.
      *
-     * @return Localization_Currency
+     * @return CurrencyInterface
      *
      * @throws Localization_Exception
      * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
      */
-    public static function getContentCurrency() : Localization_Currency
+    public static function getContentCurrency() : CurrencyInterface
     {
         return self::getCurrencyNS(self::NAMESPACE_CONTENT);
     }
@@ -322,12 +342,12 @@ class Localization
      * Retrieves the currency of the selected locale in the specified namespace.
      *
      * @param string $namespace
-     * @return Localization_Currency
+     * @return CurrencyInterface
      *
      * @throws Localization_Exception
      * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
      */
-    public static function getCurrencyNS(string $namespace) : Localization_Currency
+    public static function getCurrencyNS(string $namespace) : CurrencyInterface
     {
         return self::getSelectedLocaleByNS($namespace)->getCurrency();
     }
