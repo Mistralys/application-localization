@@ -347,14 +347,79 @@ Here is an example:
 
 ```php
 use AppLocalize\Localization;
-use AppLocalize\Localization_Event_LocaleChanged;
+use AppLocalize\Localization\Event\LocaleChanged;
 
-Localization::addEventListener(Localization::EVENT_LOCALE_CHANGED, 'listenerFunction');
-
-function listenerFunction(Localization_Event_LocaleChanged $event) : void
-{
+Localization::onLocaleChanged(function(LocaleChanged $event) {
     // do something
-}
+});
+```
+
+## Countries and Currencies
+
+The library comes with a collection of countries and currencies for the 
+supported locales. These allow accessing general information about countries
+and currencies, like names, symbols, and codes.
+
+### Countries
+
+To work with countries, use the factory method:
+
+```php
+use AppLocalize\Localization;
+use AppLocalize\Localization_Country_ES;
+
+$countries = Localization::createCountries();
+
+// Get a country by its two-letter ISO code
+$germany = $countries->getByISO('de');
+
+// Every country has a constant for its ISO code
+$spain = $countries->getByISO(Localization_Country_ES::ISO_CODE);
+
+// Or use the predefined list using choose():
+$france = $countries->choose()->fr();
+```
+
+### Currencies
+
+To work with currencies, use the factory method:
+
+```php
+use AppLocalize\Localization;
+use AppLocalize\Localization_Currency_EUR;
+
+$currencies = Localization::createCurrencies();
+
+// Get a currency by its three-letter ISO code
+$dollar = $currencies->getByISO('USD');
+
+// Every currency has a constant for its ISO code
+$euro = $currencies->getByISO(Localization_Currency_EUR::ISO_CODE);
+
+// Or use the predefined list using choose():
+$pound = $currencies->choose()->gbp();
+```
+
+#### Country-specific currencies
+
+When getting a currency from a country, the currency offers formatting
+features that are adjusted to the country's preferences.
+
+```php
+use AppLocalize\Localization;
+
+$eurDE = Localization::createCountries()
+    ->choose()
+    ->de()
+    ->getCurrency();
+
+echo $eurDE->makeReadable(1445.42);
+```
+
+This will output:
+
+```
+1.445,42 €
 ```
 
 ## Examples
