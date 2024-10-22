@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
-class Localization_Currency_GBP extends Localization_Currency
+use AppLocalize\Localization\Countries\CountryInterface;
+use AppLocalize\Localization\Currencies\BaseCurrency;
+
+class Localization_Currency_GBP extends BaseCurrency
 {
-    /**
-     * @var string
-     */
-    protected $regex = '/\A([0-9%1$s]+)\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
+    public const ISO_CODE = 'GBP';
 
     public function getSingular() : string
     {
@@ -28,7 +28,7 @@ class Localization_Currency_GBP extends Localization_Currency
     
     public function getISO() : string
     {
-        return 'GBP';
+        return self::ISO_CODE;
     }
 
     public function isSymbolOnFront() : bool
@@ -36,28 +36,13 @@ class Localization_Currency_GBP extends Localization_Currency
         return true;
     }
 
-    public function isNumberValid($number) : bool
+    public function isNamePreferred() : bool
     {
-        if (empty($number)) {
-            return true;
-        }
-
-        return preg_match($this->getRegex(), strval($number)) !== false;
+        return false;
     }
 
-    public function getExamples(int $decimalPositions = 0) : array
+    public function getStructuralTemplate(?CountryInterface $country=null): string
     {
-        $decimals = '25874125486589953255847851252585';
-        $examples = array();
-        $examples[] = '50';
-        $examples[] = '1500';
-        $examples[] = '1.500';
-
-        if ($decimalPositions > 0) {
-            $examples[] = '50,' . substr($decimals, 0, $decimalPositions);
-            $examples[] = '1.500,' . substr($decimals, 0, $decimalPositions);
-        }
-
-        return $examples;
+        return '-{symbol}{amount}';
     }
 }
