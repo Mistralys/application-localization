@@ -47,11 +47,20 @@ final class GeneratorTest extends TestCase
         $this->assertEquals(4, count($files));
         
         $generator->writeFiles();
-        
+
         foreach($files as $file)
         {
-            $this->assertTrue(file_exists($file));
+            $this->assertFileExists($file);
         }
+
+        $referenceFile = $files[0];
+        $referenceTime = filemtime($referenceFile);
+
+        usleep(3000);
+
+        $generator->writeFiles();
+
+        $this->assertSame($referenceTime, filemtime($referenceFile), 'The file should not have been rewritten.');
     }
     
    /**
