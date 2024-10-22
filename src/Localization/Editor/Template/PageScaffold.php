@@ -368,7 +368,7 @@ class Localization_Editor_Template_PageScaffold
     {
         $locales = $this->editor->getAppLocales();
 
-        if (empty($this->appLocales))
+        if (empty($locales))
         {
             return;
         }
