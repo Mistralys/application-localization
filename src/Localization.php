@@ -14,10 +14,14 @@ use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Countries\CountryCollection;
 use AppLocalize\Localization\Currencies\CurrencyCollection;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
+use AppLocalize\Localization\Event\LocaleChanged;
+use AppUtils\ClassHelper;
 use AppUtils\FileHelper;
+use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper_Exception;
 use HTML_QuickForm2_Container;
 use HTML_QuickForm2_Element_Select;
+use Mistralys\ChangelogParser\ChangelogParser;
 use Throwable;
 
 /**
@@ -54,7 +58,9 @@ class Localization
     const NAMESPACE_APPLICATION = '__application';
     const NAMESPACE_CONTENT = '__content';
 
-    const EVENT_LOCALE_CHANGED = 'LocaleChanged';
+    public const EVENT_LOCALE_CHANGED = 'LocaleChanged';
+    public const EVENT_CLIENT_FOLDER_CHANGED = 'ClientFolderChanged';
+    public const EVENT_CACHE_KEY_CHANGED = 'CacheKeyChanged';
 
     /**
     * Collection of all locales by namespace (application, content, custom...). 
@@ -102,7 +108,7 @@ class Localization
     * Stores event listener instances.
     * @var array
     */
-    protected static $listeners = array();
+    protected static array $listeners = array();
     
    /**
     * @var integer
@@ -435,7 +441,7 @@ class Localization
     * @return Localization_Locale
     * @throws Localization_Exception
     *
-    * @see Localization_Event_LocaleChanged
+    * @see LocaleChanged
     */
     public static function selectLocaleByNS(string $localeName, string $namespace) : Localization_Locale
     {
@@ -479,8 +485,12 @@ class Localization
      */
     protected static function triggerEvent(string $name, array $argsList) : Localization_Event
     {
-        $class = Localization_Event::class.'_'.$name;
-        $event = new $class($argsList);
+        $class = self::resolveEventClass($name);
+
+        $event = ClassHelper::requireObjectInstanceOf(
+            Localization_Event::class,
+            new $class($argsList)
+        );
         
         if(!isset(self::$listeners[$name])) {
             return $event;
@@ -514,27 +524,34 @@ class Localization
             self::$listeners[$eventName] = array();
         }
         
-        $className = Localization_Event::class.'_'.$eventName;
-        
-        if(!class_exists($className)) 
-        {
-            throw new Localization_Exception(
-                sprintf('Unknown localization event [%s].', $eventName),
-                sprintf('The required event class [%s] is not present.', $className),
-                self::ERROR_UNKNOWN_EVENT_NAME
-            );
-        }
-        
         self::$listenersCounter++;
         
         self::$listeners[$eventName][] = array(
-            'class' => $className,
+            'class' => self::resolveEventClass($eventName),
             'callback' => $callback,
             'args' => $args,
             'id' => self::$listenersCounter
         );
         
         return self::$listenersCounter;
+    }
+
+    private static function resolveEventClass(string $eventName) : string
+    {
+        $className = ClassHelper::resolveClassName(
+            Localization_Event::class.'_'.$eventName,
+            'AppLocalize'
+        );
+
+        if(class_exists($className)) {
+            return $className;
+        }
+
+        throw new Localization_Exception(
+            sprintf('Unknown localization event [%s].', $eventName),
+            sprintf('The required event class [%s] is not present.', $className),
+            self::ERROR_UNKNOWN_EVENT_NAME
+        );
     }
 
     /**
@@ -548,11 +565,21 @@ class Localization
      * @param array $args Optional indexed array with additional arguments to pass on to the callback function.
      * @return int
      * @throws Localization_Exception
-     * @see Localization_Event_LocaleChanged
+     * @see LocaleChanged
      */
     public static function onLocaleChanged($callback, array $args=array()) : int
     {
         return self::addEventListener(self::EVENT_LOCALE_CHANGED, $callback, $args);
+    }
+
+    public static function onClientFolderChanged(callable $callback, array $args=array()) : int
+    {
+        return self::addEventListener(self::EVENT_CLIENT_FOLDER_CHANGED, $callback, $args);
+    }
+
+    public static function onCacheKeyChanged(callable $callback, array $args=array()) : int
+    {
+        return self::addEventListener(self::EVENT_CACHE_KEY_CHANGED, $callback, $args);
     }
 
     /**
@@ -1094,7 +1121,10 @@ class Localization
     */
     public static function setClientLibrariesCacheKey(string $key) : void
     {
-        self::$clientCacheKey = $key;
+        if($key !== self::$clientCacheKey) {
+            self::$clientCacheKey = $key;
+            self::triggerEvent(self::EVENT_CACHE_KEY_CHANGED, array($key));
+        }
     }
     
     public static function getClientLibrariesCacheKey() : string
@@ -1108,7 +1138,10 @@ class Localization
     */
     public static function setClientLibrariesFolder(string $folder) : void
     {
-        self::$clientFolder = $folder;
+        if($folder !== self::$clientFolder) {
+            self::$clientFolder = $folder;
+            self::triggerEvent(self::EVENT_CLIENT_FOLDER_CHANGED, array($folder));
+        }
     }
     
    /**
@@ -1135,9 +1168,11 @@ class Localization
      */
     public static function writeClientFiles(bool $force=false) : void
     {
-        self::createGenerator()->writeFiles($force);
+        self::createGenerator()->writeFiles();
     }
-    
+
+    private static ?Localization_ClientGenerator $generator = null;
+
    /**
     * Creates a new instance of the client generator class
     * that is used to write the localization files into the
@@ -1147,7 +1182,11 @@ class Localization
     */
     public static function createGenerator() : Localization_ClientGenerator
     {
-        return new Localization_ClientGenerator();
+        if(!isset(self::$generator)) {
+            self::$generator = new Localization_ClientGenerator();
+        }
+
+        return self::$generator;
     }
 
     /**
@@ -1246,9 +1285,7 @@ class Localization
     {
         self::$locales = array();
         self::$selected = array();
-        self::$listeners = array();
-        self::$listenersCounter = 0;
-        
+
         self::addAppLocale(self::BUILTIN_LOCALE_NAME);
         self::addContentLocale(self::BUILTIN_LOCALE_NAME);
         
@@ -1288,6 +1325,31 @@ class Localization
     public static function isLocaleSupported(string $localeName) : bool
     {
         return file_exists(__DIR__.'/Localization/Locale/'.$localeName.'.php');
+    }
+
+    private static ?string $version = null;
+
+    public static function getVersion() : string
+    {
+        if(isset(self::$version)) {
+            return self::$version;
+        }
+
+        $versionFile = FileInfo::factory(__DIR__.'/../version.txt');
+
+        if($versionFile->exists()) {
+            self::$version = $versionFile->getContents();
+            return self::$version;
+        }
+
+        self::$version = ChangelogParser::parseMarkdownFile(__DIR__.'/../changelog.md')
+            ->requireLatestVersion()
+            ->getVersionInfo()
+            ->getTagVersion();
+
+        $versionFile->putContents(self::$version);
+
+        return self::$version;
     }
 }
 

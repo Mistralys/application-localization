@@ -1,14 +1,19 @@
 <?php
 /**
- * File containing the {@link Localization_Event_LocaleChanged} class.
+ * File containing the {@link \AppLocalize\Localization\Event\LocaleChanged} class.
  * @package Localization
  * @subpackage Events
- * @see Localization_Event_LocaleChanged
+ * @see \AppLocalize\Localization\Event\LocaleChanged
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Event;
+
+use AppLocalize\Localization;
+use AppLocalize\Localization_Event;
+use AppLocalize\Localization_Exception;
+use AppLocalize\Localization_Locale;
 
 /**
  * Event class: used for the "LocaleChanged" event. Provides
@@ -20,9 +25,9 @@ namespace AppLocalize;
  *
  * @see Localization::selectLocaleByNS()
  */
-class Localization_Event_LocaleChanged extends Localization_Event
+class LocaleChanged extends Localization_Event
 {
-    const ERROR_NO_CURRENT_LOCALE_SPECIFIED = 91401;
+    public const ERROR_NO_CURRENT_LOCALE_SPECIFIED = 91401;
 
     /**
     * The locale that was used before the change, if any.
