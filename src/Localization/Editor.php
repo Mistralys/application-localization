@@ -68,7 +68,7 @@ class Localization_Editor implements Interface_Optionable
    /**
     * @var Localization_Locale[]
     */
-    protected $appLocales = array();
+    protected array $appLocales = array();
     
    /**
     * @var Localization_Locale
@@ -209,7 +209,7 @@ class Localization_Editor implements Interface_Optionable
                 $names[] = $locale->getName();
             }
         }
-        
+
         // use the default locale if no other is available.
         if(empty($names)) {
             $this->activeAppLocale = Localization::getAppLocale();
