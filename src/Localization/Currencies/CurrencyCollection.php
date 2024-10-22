@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Currencies;
 
+use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization_Currency_CAD;
 use AppLocalize\Localization_Currency_CHF;
 use AppLocalize\Localization_Currency_EUR;
@@ -17,6 +18,7 @@ use AppLocalize\Localization_Currency_PLN;
 use AppLocalize\Localization_Currency_RON;
 use AppLocalize\Localization_Currency_USD;
 use AppUtils\Collections\BaseStringPrimaryCollection;
+use AppUtils\Collections\CollectionException;
 
 /**
  * @package Localization
@@ -58,6 +60,26 @@ class CurrencyCollection extends BaseStringPrimaryCollection
         $this->registerItem(new Localization_Currency_PLN());
         $this->registerItem(new Localization_Currency_RON());
         $this->registerItem(new Localization_Currency_USD());
+    }
+
+    /**
+     * @param string $iso Three-letter ISO code of the currency, e.g. `EUR`. Case-insensitive.
+     * @return CurrencyInterface
+     * @throws CollectionException
+     */
+    public function getByISO(string $iso) : CurrencyInterface
+    {
+        return $this->getByID(strtoupper($iso));
+    }
+
+    /**
+     * Checks whether the target ISO code is known.
+     * @param string $iso Three-letter ISO code of the currency, e.g. `USD`. Case-insensitive.
+     * @return bool
+     */
+    public function isoExists(string $iso) : bool
+    {
+        return $this->idExists(strtoupper($iso));
     }
 
     private ?CannedCurrencies $canned = null;

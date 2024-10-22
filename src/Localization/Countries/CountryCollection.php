@@ -21,6 +21,7 @@ use AppLocalize\Localization_Country_UK;
 use AppLocalize\Localization_Country_US;
 use AppLocalize\Localization_Country_ZZ;
 use AppUtils\Collections\BaseStringPrimaryCollection;
+use AppUtils\Collections\CollectionException;
 
 /**
  * Country collection that gives access to all available
@@ -48,6 +49,26 @@ class CountryCollection extends BaseStringPrimaryCollection
         }
 
         return self::$instance;
+    }
+
+    /**
+     * @param string $iso Two-letter ISO code of the country, e.g. `de`. Case-insensitive.
+     * @return CountryInterface
+     * @throws CollectionException
+     */
+    public function getByISO(string $iso) : CountryInterface
+    {
+        return $this->getByID(strtolower($iso));
+    }
+
+    /**
+     * Checks whether the target ISO code is known.
+     * @param string $iso Two-letter ISO code of the country, e.g. `de`. Case-insensitive.
+     * @return bool
+     */
+    public function isoExists(string $iso) : bool
+    {
+        return $this->idExists(strtolower($iso));
     }
 
     public function getDefaultID(): string
