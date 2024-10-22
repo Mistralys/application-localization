@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0880bb3599b4684875cec0a622d7b3f5",
+    "content-hash": "f9281d1af8ba6a1df2338913998dd3ac",
     "packages": [
         {
             "name": "geshi/geshi",
@@ -221,6 +221,56 @@
             "time": "2024-10-17T12:47:31+00:00"
         },
         {
+            "name": "mistralys/changelog-parser",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mistralys/changelog-parser.git",
+                "reference": "0576433b5e26adeb368744ca1d1cd6d0b26a1580"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mistralys/changelog-parser/zipball/0576433b5e26adeb368744ca1d1cd6d0b26a1580",
+                "reference": "0576433b5e26adeb368744ca1d1cd6d0b26a1580",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "mistralys/application-utils": ">=2.3.2",
+                "mistralys/version-parser": ">=2.0",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": ">=1.9.2",
+                "phpstan/phpstan-phpunit": ">=1.3.11",
+                "phpunit/phpunit": ">=9.5.26",
+                "roave/security-advisories": "dev-latest"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Mordziol",
+                    "email": "s.mordziol@mistralys.eu",
+                    "role": "lead"
+                }
+            ],
+            "description": "PHP library to parse Markdown-formatted change log files.",
+            "support": {
+                "issues": "https://github.com/Mistralys/changelog-parser/issues",
+                "source": "https://github.com/Mistralys/changelog-parser/tree/1.0.2"
+            },
+            "time": "2023-10-17T08:07:48+00:00"
+        },
+        {
             "name": "mistralys/html_quickform2",
             "version": "2.3.5",
             "source": {
@@ -388,6 +438,52 @@
                 "source": "https://github.com/Mistralys/php-sprintf-parser/tree/1.0.0-beta.1"
             },
             "time": "2021-11-01T16:11:44+00:00"
+        },
+        {
+            "name": "mistralys/version-parser",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mistralys/version-parser.git",
+                "reference": "6d0b87da1aecc11146299cf9b9f40d5a8d8d6ec8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mistralys/version-parser/zipball/6d0b87da1aecc11146299cf9b9f40d5a8d8d6ec8",
+                "reference": "6d0b87da1aecc11146299cf9b9f40d5a8d8d6ec8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "symfony/polyfill-php80": ">=v1.26.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": ">=0.12",
+                "phpunit/phpunit": ">=8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Mordziol",
+                    "email": "s.mordziol@mistralys.eu",
+                    "role": "Lead"
+                }
+            ],
+            "description": "Class used to parse version numbers.",
+            "support": {
+                "issues": "https://github.com/Mistralys/version-parser/issues",
+                "source": "https://github.com/Mistralys/version-parser/tree/2.1.1"
+            },
+            "time": "2023-12-19T07:17:05+00:00"
         },
         {
             "name": "neitanod/forceutf8",

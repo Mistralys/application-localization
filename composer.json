@@ -36,6 +36,7 @@
 		"mistralys/php-sprintf-parser" : "^1.0",
 		"mistralys/html_quickform2": ">=2.3.5",
 		"mistralys/application-utils-collections": ">=1.1.2",
+		"mistralys/changelog-parser": ">=1.0.2",
 		"php": ">=7.4",
 		"ext-json": "*",
       	"ext-mbstring": "*"
