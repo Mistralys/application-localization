@@ -12,6 +12,7 @@ use AppLocalize\Localization\Country\CountryAT;
 use AppLocalize\Localization\Country\CountryBE;
 use AppLocalize\Localization\Country\CountryCA;
 use AppLocalize\Localization\Country\CountryFI;
+use AppLocalize\Localization\Country\CountryIE;
 use AppLocalize\Localization\Country\CountrySG;
 use AppLocalize\Localization\Country\CountryCH;
 use AppLocalize\Localization\Country\CountryDE;
@@ -78,6 +79,14 @@ class CannedCountries
         return ClassHelper::requireObjectInstanceOf(
             CountryFR::class,
             $this->collection->getByID(CountryFR::ISO_CODE)
+        );
+    }
+
+    public function ie() : CountryIE
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryIE::class,
+            $this->collection->getByID(CountryIE::ISO_CODE)
         );
     }
 
