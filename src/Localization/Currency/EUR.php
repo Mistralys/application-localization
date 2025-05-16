@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppLocalize;
 
 use AppLocalize\Localization\Countries\CountryInterface;
+use AppLocalize\Localization\Country\CountryFR;
 use AppLocalize\Localization\Currencies\BaseCurrency;
 
 class Localization_Currency_EUR extends BaseCurrency
@@ -38,7 +39,7 @@ class Localization_Currency_EUR extends BaseCurrency
 
     public function getStructuralTemplate(?CountryInterface $country=null): string
     {
-        if($country instanceof Localization_Country_FR) {
+        if($country instanceof CountryFR) {
             return '- {amount} {symbol}';
         }
 
