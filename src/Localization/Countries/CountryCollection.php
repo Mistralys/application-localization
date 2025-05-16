@@ -8,20 +8,13 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Countries;
 
-use AppLocalize\Localization_Country_AT;
-use AppLocalize\Localization_Country_CA;
-use AppLocalize\Localization_Country_DE;
-use AppLocalize\Localization_Country_ES;
-use AppLocalize\Localization_Country_FR;
-use AppLocalize\Localization_Country_IT;
-use AppLocalize\Localization_Country_MX;
-use AppLocalize\Localization_Country_PL;
-use AppLocalize\Localization_Country_RO;
-use AppLocalize\Localization_Country_UK;
-use AppLocalize\Localization_Country_US;
-use AppLocalize\Localization_Country_ZZ;
-use AppUtils\Collections\BaseStringPrimaryCollection;
+use AppLocalize\Localization\Country\CountryUS;
+use AppUtils\ClassHelper;
+use AppUtils\ClassHelper\BaseClassHelperException;
+use AppUtils\Collections\BaseClassLoaderCollection;
 use AppUtils\Collections\CollectionException;
+use AppUtils\FileHelper\FolderInfo;
+use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
 /**
  * Country collection that gives access to all available
@@ -34,7 +27,7 @@ use AppUtils\Collections\CollectionException;
  * @method BaseCountry getDefault()
  * @method BaseCountry[] getAll()
  */
-class CountryCollection extends BaseStringPrimaryCollection
+class CountryCollection extends BaseClassLoaderCollection
 {
     private static ?CountryCollection $instance = null;
 
@@ -73,23 +66,7 @@ class CountryCollection extends BaseStringPrimaryCollection
 
     public function getDefaultID(): string
     {
-        return Localization_Country_US::ISO_CODE;
-    }
-
-    protected function registerItems(): void
-    {
-        $this->registerItem(new Localization_Country_AT());
-        $this->registerItem(new Localization_Country_CA());
-        $this->registerItem(new Localization_Country_DE());
-        $this->registerItem(new Localization_Country_ES());
-        $this->registerItem(new Localization_Country_FR());
-        $this->registerItem(new Localization_Country_IT());
-        $this->registerItem(new Localization_Country_MX());
-        $this->registerItem(new Localization_Country_PL());
-        $this->registerItem(new Localization_Country_RO());
-        $this->registerItem(new Localization_Country_UK());
-        $this->registerItem(new Localization_Country_US());
-        $this->registerItem(new Localization_Country_ZZ());
+        return CountryUS::ISO_CODE;
     }
 
     private ?CannedCountries $canned = null;
@@ -101,5 +78,33 @@ class CountryCollection extends BaseStringPrimaryCollection
         }
 
         return $this->canned;
+    }
+
+    /**
+     * @param string $class
+     * @return CountryInterface
+     * @throws BaseClassHelperException
+     */
+    protected function createItemInstance(string $class): StringPrimaryRecordInterface
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryInterface::class,
+            new $class()
+        );
+    }
+
+    public function getInstanceOfClassName(): ?string
+    {
+        return CountryInterface::class;
+    }
+
+    public function isRecursive(): bool
+    {
+        return true;
+    }
+
+    public function getClassesFolder(): FolderInfo
+    {
+        return FolderInfo::factory(__DIR__ . '/../Country')->requireExists();
     }
 }
