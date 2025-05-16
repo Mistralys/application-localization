@@ -1,26 +1,28 @@
 <?php
 /**
- * File containing the {@link Localization_Country_IT} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_IT
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
-use AppLocalize\Localization\Countries\BaseCountry;
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_CA;
+use AppLocalize\Localization_Currency_CAD;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Italy.
+ * Country class with the definitions for Canada.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_IT extends BaseCountry
+class CountryCA extends Localization_Country_CA
 {
-    public const ISO_CODE = 'it';
+    public const ISO_CODE = 'ca';
 
     public function getCode(): string
     {
@@ -29,21 +31,21 @@ class Localization_Country_IT extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return '.';
+        return ',';
     }
 
     public function getNumberDecimalsSeparator() : string
     {
-        return ',';
+        return '.';
     }
 
     public function getLabel() : string
     {
-        return t('Italy');
+        return t('Canada');
     }
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_EUR::ISO_CODE;
+        return Localization_Currency_CAD::ISO_CODE;
     }
 }

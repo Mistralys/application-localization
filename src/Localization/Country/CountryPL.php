@@ -1,26 +1,28 @@
 <?php
 /**
- * File containing the {@link Localization_Country_AT} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_AT
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
-use AppLocalize\Localization\Countries\BaseCountry;
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_PL;
+use AppLocalize\Localization_Currency_PLN;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Austria.
+ * Country class with the definitions for Poland.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_AT extends BaseCountry
+class CountryPL extends Localization_Country_PL
 {
-    public const ISO_CODE = 'at';
+    public const ISO_CODE = 'pl';
 
     public function getCode(): string
     {
@@ -39,11 +41,11 @@ class Localization_Country_AT extends BaseCountry
 
     public function getLabel() : string
     {
-        return t('Austria');
+        return t('Poland');
     }
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_EUR::ISO_CODE;
+        return Localization_Currency_PLN::ISO_CODE;
     }
 }

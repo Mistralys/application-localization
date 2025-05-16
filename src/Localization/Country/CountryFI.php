@@ -1,26 +1,28 @@
 <?php
 /**
- * File containing the {@link Localization_Country_ZZ} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_ZZ
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization_Currency_EUR;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Germany.
+ * Country class with the definitions for Finland.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_ZZ extends BaseCountry
+class CountryFI extends BaseCountry
 {
-    public const ISO_CODE = 'zz';
+    public const ISO_CODE = 'fi';
 
     public function getCode(): string
     {
@@ -29,21 +31,21 @@ class Localization_Country_ZZ extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return '.';
+        return ' ';
     }
-    
+
     public function getNumberDecimalsSeparator() : string
     {
         return ',';
     }
-    
+
     public function getLabel() : string
     {
-        return t('Country-independent');
+        return t('Finland');
     }
-    
+
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_USD::ISO_CODE;
+        return Localization_Currency_EUR::ISO_CODE;
     }
 }

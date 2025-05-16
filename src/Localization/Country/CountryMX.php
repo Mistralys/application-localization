@@ -1,26 +1,28 @@
 <?php
 /**
- * File containing the {@link Localization_Country_FR} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_FR
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
-use AppLocalize\Localization\Countries\BaseCountry;
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_MX;
+use AppLocalize\Localization_Currency_MXN;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for France.
+ * Country class with the definitions for Mexico.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_FR extends BaseCountry
+class CountryMX extends Localization_Country_MX
 {
-    public const ISO_CODE = 'fr';
+    public const ISO_CODE = 'mx';
 
     public function getCode(): string
     {
@@ -29,21 +31,21 @@ class Localization_Country_FR extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return ' ';
+        return ',';
     }
 
     public function getNumberDecimalsSeparator() : string
     {
-        return ',';
+        return '.';
     }
 
     public function getLabel() : string
     {
-        return t('France');
+        return t('Mexico');
     }
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_EUR::ISO_CODE;
+        return Localization_Currency_MXN::ISO_CODE;
     }
 }

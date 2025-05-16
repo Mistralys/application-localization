@@ -1,26 +1,24 @@
 <?php
 /**
- * File containing the {@link Localization_Country_UK} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_UK
  */
+
+declare(strict_types=1);
 
 namespace AppLocalize;
 
-use AppLocalize\Localization\Countries\BaseCountry;
-
 /**
- * Country class with the definitions for England.
+ * Country class with the definitions for Spain.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_UK extends BaseCountry
+class CountryES extends Localization_Country_ES
 {
-    public const ISO_CODE = 'uk';
+    public const ISO_CODE = 'es';
 
     public function getCode(): string
     {
@@ -29,21 +27,21 @@ class Localization_Country_UK extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return ',';
+        return '.';
     }
 
     public function getNumberDecimalsSeparator() : string
     {
-        return '.';
+        return ',';
     }
 
     public function getLabel() : string
     {
-        return t('United Kingdom');
+        return t('Spain');
     }
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_GBP::ISO_CODE;
+        return Localization_Currency_EUR::ISO_CODE;
     }
 }

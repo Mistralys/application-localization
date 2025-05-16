@@ -4,7 +4,13 @@
  * @subpackage Countries
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_CH;
+use AppLocalize\Localization_Currency_EUR;
+use function AppLocalize\t;
 
 /**
  * Country class with the definitions for Switzerland.
@@ -14,7 +20,7 @@ namespace AppLocalize;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_CH extends Localization_Country_DE
+class CountryCH extends Localization_Country_CH
 {
     public const ISO_CODE = 'ch';
 

@@ -1,26 +1,28 @@
 <?php
 /**
- * File containing the {@link Localization_Country_ES} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_ES
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
-use AppLocalize\Localization\Countries\BaseCountry;
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_DE;
+use AppLocalize\Localization_Currency_EUR;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Spain.
+ * Country class with the definitions for Germany.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_ES extends BaseCountry
+class CountryDE extends Localization_Country_DE
 {
-    public const ISO_CODE = 'es';
+    public const ISO_CODE = 'de';
 
     public function getCode(): string
     {
@@ -39,7 +41,7 @@ class Localization_Country_ES extends BaseCountry
 
     public function getLabel() : string
     {
-        return t('Spain');
+        return t('Germany');
     }
 
     public function getCurrencyISO() : string

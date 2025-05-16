@@ -1,26 +1,28 @@
 <?php
 /**
- * File containing the {@link Localization_Country_RO} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_RO
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization_Currency_SGD;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Romania.
+ * Country class with the definitions for Singapore.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_RO extends BaseCountry
+class CountrySG extends BaseCountry
 {
-    public const ISO_CODE = 'ro';
+    public const ISO_CODE = 'sg';
 
     public function getCode(): string
     {
@@ -29,21 +31,21 @@ class Localization_Country_RO extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return '.';
+        return ',';
     }
 
     public function getNumberDecimalsSeparator() : string
     {
-        return ',';
+        return '.';
     }
 
     public function getLabel() : string
     {
-        return t('Romania');
+        return t('Singapore');
     }
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_RON::ISO_CODE;
+        return Localization_Currency_SGD::ISO_CODE;
     }
 }

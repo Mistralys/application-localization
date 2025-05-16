@@ -1,26 +1,28 @@
 <?php
 /**
- * File containing the {@link Localization_Country_MX} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_MX
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
-use AppLocalize\Localization\Countries\BaseCountry;
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_RO;
+use AppLocalize\Localization_Currency_RON;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Mexico.
+ * Country class with the definitions for Romania.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_MX extends BaseCountry
+class CountryRO extends Localization_Country_RO
 {
-    public const ISO_CODE = 'mx';
+    public const ISO_CODE = 'ro';
 
     public function getCode(): string
     {
@@ -29,21 +31,21 @@ class Localization_Country_MX extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return ',';
+        return '.';
     }
 
     public function getNumberDecimalsSeparator() : string
     {
-        return '.';
+        return ',';
     }
 
     public function getLabel() : string
     {
-        return t('Mexico');
+        return t('Romania');
     }
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_MXN::ISO_CODE;
+        return Localization_Currency_RON::ISO_CODE;
     }
 }

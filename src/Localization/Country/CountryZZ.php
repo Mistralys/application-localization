@@ -1,26 +1,28 @@
 <?php
 /**
- * File containing the {@link Localization_Country_US} class.
  * @package Localization
  * @subpackage Countries
- * @see Localization_Country_US
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
-use AppLocalize\Localization\Countries\BaseCountry;
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_ZZ;
+use AppLocalize\Localization_Currency_USD;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Germany.
+ * Country class with the definitions for Worldwide (Country-Independent).
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_US extends BaseCountry
+class CountryZZ extends Localization_Country_ZZ
 {
-    public const ISO_CODE = 'us';
+    public const ISO_CODE = 'zz';
 
     public function getCode(): string
     {
@@ -29,19 +31,19 @@ class Localization_Country_US extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return ',';
-    }
-
-    public function getNumberDecimalsSeparator() : string
-    {
         return '.';
     }
-
+    
+    public function getNumberDecimalsSeparator() : string
+    {
+        return ',';
+    }
+    
     public function getLabel() : string
     {
-        return t('United States');
+        return t('Country-independent');
     }
-
+    
     public function getCurrencyISO() : string
     {
         return Localization_Currency_USD::ISO_CODE;

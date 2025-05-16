@@ -6,21 +6,21 @@
 
 namespace AppLocalize\Localization\Country;
 
-use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization_Country_AT;
 use AppLocalize\Localization_Currency_EUR;
 use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Finland.
+ * Country class with the definitions for Austria.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_FI extends BaseCountry
+class CountryAT extends Localization_Country_AT
 {
-    public const ISO_CODE = 'fi';
+    public const ISO_CODE = 'at';
 
     public function getCode(): string
     {
@@ -29,7 +29,7 @@ class Localization_Country_FI extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return ' ';
+        return '.';
     }
 
     public function getNumberDecimalsSeparator() : string
@@ -39,7 +39,7 @@ class Localization_Country_FI extends BaseCountry
 
     public function getLabel() : string
     {
-        return t('Finland');
+        return t('Austria');
     }
 
     public function getCurrencyISO() : string

@@ -4,21 +4,25 @@
  * @subpackage Countries
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
-use AppLocalize\Localization\Countries\BaseCountry;
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_FR;
+use AppLocalize\Localization_Currency_EUR;
+use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Poland.
+ * Country class with the definitions for France.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_PL extends BaseCountry
+class CountryFR extends Localization_Country_FR
 {
-    public const ISO_CODE = 'pl';
+    public const ISO_CODE = 'fr';
 
     public function getCode(): string
     {
@@ -27,7 +31,7 @@ class Localization_Country_PL extends BaseCountry
 
     public function getNumberThousandsSeparator() : string
     {
-        return '.';
+        return ' ';
     }
 
     public function getNumberDecimalsSeparator() : string
@@ -37,11 +41,11 @@ class Localization_Country_PL extends BaseCountry
 
     public function getLabel() : string
     {
-        return t('Poland');
+        return t('France');
     }
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_PLN::ISO_CODE;
+        return Localization_Currency_EUR::ISO_CODE;
     }
 }

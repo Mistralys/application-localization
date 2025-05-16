@@ -4,23 +4,25 @@
  * @subpackage Countries
  */
 
+declare(strict_types=1);
+
 namespace AppLocalize\Localization\Country;
 
-use AppLocalize\Localization\Countries\BaseCountry;
-use AppLocalize\Localization_Currency_SGD;
+use AppLocalize\Localization_Country_US;
+use AppLocalize\Localization_Currency_USD;
 use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Singapore.
+ * Country class with the definitions for Germany.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_SG extends BaseCountry
+class CountryUS extends Localization_Country_US
 {
-    public const ISO_CODE = 'sg';
+    public const ISO_CODE = 'us';
 
     public function getCode(): string
     {
@@ -39,11 +41,11 @@ class Localization_Country_SG extends BaseCountry
 
     public function getLabel() : string
     {
-        return t('Singapore');
+        return t('United States');
     }
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_SGD::ISO_CODE;
+        return Localization_Currency_USD::ISO_CODE;
     }
 }

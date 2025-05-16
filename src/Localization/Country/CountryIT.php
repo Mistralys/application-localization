@@ -4,23 +4,25 @@
  * @subpackage Countries
  */
 
+declare(strict_types=1);
+
 namespace AppLocalize\Localization\Country;
 
-use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization_Country_IT;
 use AppLocalize\Localization_Currency_EUR;
 use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Belgium.
+ * Country class with the definitions for Italy.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class Localization_Country_BE extends BaseCountry
+class CountryIT extends Localization_Country_IT
 {
-    public const ISO_CODE = 'be';
+    public const ISO_CODE = 'it';
 
     public function getCode(): string
     {
@@ -39,7 +41,7 @@ class Localization_Country_BE extends BaseCountry
 
     public function getLabel() : string
     {
-        return t('Belgium');
+        return t('Italy');
     }
 
     public function getCurrencyISO() : string
