@@ -56,10 +56,35 @@ $source = Localization::addSourceFolder(
 );
 ```
 
+### 3) Configure class loading
+
+Ensure that the cache folder for the class helper has been set:
+
+```php
+use AppUtils\ClassHelper;
+
+ClassHelper::setCacheFolder('/path/to/cache');
+```
+
+The cache must be invalidated when the package is updated.
+This can be easily done via the class helper:
+
+```php
+use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
+
+ClassRepositoryManager::create('/path/to/cache')->clearCache();
+```
+
+> NOTE: A good way to handle this is with Composer scripts.
+> Look at the [composer.json](./composer.json) and the 
+> [clear-class-cache.php](./tests/clear-class-cache.php) files
+> for an example.
+
+
 #### Excluding files and folders
 
 For performance reasons, it is recommended to exclude any files or folders that do not 
-need to be analyzed. The Javascript analysis in particular still has issues with minified 
+need to be analyzed. The JavaScript analysis in particular still has issues with minified 
 library files like jQuery or Bootstrap, so they should definitely be excluded.
 
 To exclude folders or files by name:
@@ -364,7 +389,7 @@ To work with countries, use the factory method:
 
 ```php
 use AppLocalize\Localization;
-use AppLocalize\Localization_Country_ES;
+use AppLocalize\Localization\Country\CountryES;
 
 $countries = Localization::createCountries();
 
@@ -372,7 +397,7 @@ $countries = Localization::createCountries();
 $germany = $countries->getByISO('de');
 
 // Every country has a constant for its ISO code
-$spain = $countries->getByISO(Localization_Country_ES::ISO_CODE);
+$spain = $countries->getByISO(CountryES::ISO_CODE);
 
 // Or use the predefined list using choose():
 $france = $countries->choose()->fr();
