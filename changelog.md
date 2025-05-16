@@ -1,8 +1,19 @@
-## v1.5.1 - Added new countries
+## v1.5.1 - Added new countries (Deprecation)
 - Countries: Added Finland (FI).
 - Countries: Added Belgium (BE).
 - Countries: Added Singapore (SG). 
+- Countries: Added Ireland (IE).
+- Countries: Now using dynamic class loading.
+- Countries: Renamed and namespaced all country classes.
 - Currencies: Added the Singapore Dollar (SGD).
+
+### Deprecations
+
+All country classes have been renamed and namespaced from
+`Localization_Country_*` to `Localization\Countries\Country*`. 
+The old classes are still available, but deprecated. Existing
+instance checks will still work even with the new classes
+until the deprecated classes are phased out.
 
 ## v1.5.0 - Country and Currency collections (Deprecation)
 - Countries: Added a country collection accessible via `Localization::createCountries()`.
