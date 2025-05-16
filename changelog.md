@@ -1,4 +1,4 @@
-## v1.5.1 - Added new countries (Deprecation)
+## v1.6.0 - Added new countries (Breaking-S, Deprecation)
 - Countries: Added Finland (FI).
 - Countries: Added Belgium (BE).
 - Countries: Added Singapore (SG). 
@@ -6,6 +6,12 @@
 - Countries: Now using dynamic class loading.
 - Countries: Renamed and namespaced all country classes.
 - Currencies: Added the Singapore Dollar (SGD).
+
+### Breaking changes
+
+No breaking changes to the class APIs, but a hard requirement
+is now to configure a cache folder for the dynamic class loading.
+See the [README](./README.md) file for details.
 
 ### Deprecations
 
