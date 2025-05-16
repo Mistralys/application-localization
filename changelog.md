@@ -1,3 +1,9 @@
+## v1.5.1 - Added new countries
+- Countries: Added Finland (FI).
+- Countries: Added Belgium (BE).
+- Countries: Added Singapore (SG). 
+- Currencies: Added the Singapore Dollar (SGD).
+
 ## v1.5.0 - Country and Currency collections (Deprecation)
 - Countries: Added a country collection accessible via `Localization::createCountries()`.
 - Countries: Added the `ISO_CODE` constant to all country classes.
