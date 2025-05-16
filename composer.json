@@ -45,5 +45,9 @@
 	{
 		"phpunit/phpunit" : ">=9.6",
         "phpstan/phpstan" : ">=0.12"
+	},
+	"scripts": {
+		"post-autoload-dump": "@php tests/clear-class-cache.php",
+		"clear-class-cache": "@php tests/clear-class-cache.php"
 	}
 }
