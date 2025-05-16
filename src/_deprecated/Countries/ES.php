@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize;
 
 use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization\Country\CountryES;
 
 /**
  * Country class with the definitions for Spain.
