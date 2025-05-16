@@ -6,7 +6,11 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Country;
+
+use AppLocalize\Localization_Country_ES;
+use AppLocalize\Localization_Currency_EUR;
+use function AppLocalize\t;
 
 /**
  * Country class with the definitions for Spain.
