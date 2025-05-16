@@ -6,11 +6,11 @@ namespace testsuites\Currencies;
 
 use AppLocalize\Localization\Countries\CountryCollection;
 use AppLocalize\Localization_Country_CA;
-use AppLocalize\Localization_Country_DE;
-use AppLocalize\Localization_Country_FR;
-use AppLocalize\Localization_Country_MX;
-use AppLocalize\Localization_Country_UK;
-use AppLocalize\Localization_Country_US;
+use AppLocalize\Localization\Country\CountryDE;
+use AppLocalize\Localization\Country\CountryFR;
+use AppLocalize\Localization\Country\CountryMX;
+use AppLocalize\Localization\Country\CountryUK;
+use AppLocalize\Localization\Country\CountryUS;
 use PHPUnit\Framework\TestCase;
 
 class FormattingTests extends TestCase
