@@ -2,10 +2,10 @@
 
 namespace AppLocalize\Locale;
 
-use AppLocalize\Localization_Locale;
+use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
 
-class de_CH extends Localization_Locale
+class de_CH extends BaseLocale
 {
     public const LOCALE_NAME = 'de_CH';
 

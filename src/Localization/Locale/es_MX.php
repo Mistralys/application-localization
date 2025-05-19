@@ -2,10 +2,10 @@
 
 namespace AppLocalize\Locale;
 
-use AppLocalize\Localization_Locale;
+use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
 
-class es_MX extends Localization_Locale
+class es_MX extends BaseLocale
 {
     public const LOCALE_NAME = 'es_MX';
 

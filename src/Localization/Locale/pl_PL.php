@@ -2,10 +2,10 @@
 
 namespace AppLocalize\Locale;
 
-use AppLocalize\Localization_Locale;
+use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
 
-class pl_PL extends Localization_Locale
+class pl_PL extends BaseLocale
 {
     public const LOCALE_NAME = 'pl_PL';
 
