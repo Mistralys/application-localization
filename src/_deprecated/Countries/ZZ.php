@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppLocalize\Localization\Currency\CurrencyUSD;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryZZ;
 
@@ -46,6 +47,6 @@ class Localization_Country_ZZ extends BaseCountry
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_USD::ISO_CODE;
+        return CurrencyUSD::ISO_CODE;
     }
 }

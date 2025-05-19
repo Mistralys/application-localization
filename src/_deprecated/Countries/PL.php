@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize;
 
 use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization\Currency\CurrencyPLN;
 
 /**
  * Country class with the definitions for Poland.
@@ -45,6 +46,6 @@ class Localization_Country_PL extends BaseCountry
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_PLN::ISO_CODE;
+        return CurrencyPLN::ISO_CODE;
     }
 }

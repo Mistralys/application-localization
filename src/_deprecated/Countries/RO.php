@@ -10,6 +10,7 @@ namespace AppLocalize;
 
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryRO;
+use AppLocalize\Localization\Currency\CurrencyRON;
 
 /**
  * Country class with the definitions for Romania.
@@ -46,6 +47,6 @@ class Localization_Country_RO extends BaseCountry
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_RON::ISO_CODE;
+        return CurrencyRON::ISO_CODE;
     }
 }
