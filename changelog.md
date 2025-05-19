@@ -8,6 +8,9 @@
 - Currencies: Now using dynamic class loading.
 - Currencies: Renamed and namespaced all currency classes.
 - Currencies: Added the Singapore Dollar (SGD).
+- Locales: Renamed and namespaced all locale classes.
+- Locales: Added `getLabelInvariant()` to get the label in the invariant locale.
+- Locales: Normalized the labels that were not consistently showing the country name.
 - Tests: Namespaced and organized all test classes.
 - Editor: Better path display for files with warnings.
 - Parser: Replaced the obsolete JTokenizer with [Peast](https://github.com/mck89/peast).
