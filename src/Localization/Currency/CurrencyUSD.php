@@ -1,15 +1,26 @@
 <?php
+/**
+ * @package Localization
+ * @subpackage Currencies
+ */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Currency;
 
 use AppLocalize\Localization\Countries\CountryInterface;
-use AppLocalize\Localization\Currencies\BaseCurrency;
+use AppLocalize\Localization_Currency_USD;
+use function AppLocalize\t;
 
-class Localization_Currency_SGD extends BaseCurrency
+/**
+ * Currency: Dollar (USD)
+ *
+ * @package Localization
+ * @subpackage Currencies
+ */
+class CurrencyUSD extends Localization_Currency_USD
 {
-    public const ISO_CODE = 'SGD';
+    public const ISO_CODE = 'USD';
 
     public function getSingular() : string
     {
@@ -18,14 +29,14 @@ class Localization_Currency_SGD extends BaseCurrency
 
     public function getSymbol() : string
     {
-        return 'S$';
+        return '$';
     }
 
     public function getPlural() : string
     {
         return t('Dollars');
     }
-
+    
     public function getISO() : string
     {
         return self::ISO_CODE;

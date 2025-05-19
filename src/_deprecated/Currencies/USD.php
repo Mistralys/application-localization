@@ -4,7 +4,11 @@ namespace AppLocalize;
 
 use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\BaseCurrency;
+use AppLocalize\Localization\Currency\CurrencyUSD;
 
+/**
+ * @deprecated Use {@see CurrencyUSD}
+ */
 class Localization_Currency_USD extends BaseCurrency
 {
     public const ISO_CODE = 'USD';
@@ -23,7 +27,7 @@ class Localization_Currency_USD extends BaseCurrency
     {
         return t('Dollars');
     }
-    
+
     public function getISO() : string
     {
         return self::ISO_CODE;

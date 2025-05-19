@@ -1,29 +1,40 @@
 <?php
+/**
+ * @package Localization
+ * @subpackage Currencies
+ */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Currency;
 
 use AppLocalize\Localization\Countries\CountryInterface;
-use AppLocalize\Localization\Currencies\BaseCurrency;
+use AppLocalize\Localization_Currency_RON;
+use function AppLocalize\t;
 
-class Localization_Currency_GBP extends BaseCurrency
+/**
+ * Currency: Leu (RON)
+ *
+ * @package Localization
+ * @subpackage Currencies
+ */
+class CurrencyRON extends Localization_Currency_RON
 {
-    public const ISO_CODE = 'GBP';
+    public const ISO_CODE = 'RON';
 
     public function getSingular() : string
     {
-        return t('Pound');
+        return t('Leu');
     }
 
     public function getSymbol() : string
     {
-        return '£';
+        return '';
     }
 
     public function getPlural() : string
     {
-        return t('Pounds');
+        return t('Lei');
     }
     
     public function getISO() : string
@@ -33,7 +44,7 @@ class Localization_Currency_GBP extends BaseCurrency
 
     public function isSymbolOnFront() : bool
     {
-        return true;
+        return false;
     }
 
     public function isNamePreferred() : bool
@@ -43,6 +54,6 @@ class Localization_Currency_GBP extends BaseCurrency
 
     public function getStructuralTemplate(?CountryInterface $country=null): string
     {
-        return '-{symbol}{amount}';
+        return '-{amount} {symbol}';
     }
 }

@@ -6,26 +6,30 @@ namespace AppLocalize;
 
 use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\BaseCurrency;
+use AppLocalize\Localization\Currency\CurrencyRON;
 
-class Localization_Currency_PLN extends BaseCurrency
+/**
+ * @deprecated Use {@see CurrencyRON}
+ */
+class Localization_Currency_RON extends BaseCurrency
 {
-    public const ISO_CODE = 'PLN';
+    public const ISO_CODE = 'RON';
 
     public function getSingular() : string
     {
-        return t('złoty');
+        return t('Leu');
     }
 
     public function getSymbol() : string
     {
-        return 'zł';
+        return '';
     }
 
     public function getPlural() : string
     {
-        return t('złotys');
+        return t('Lei');
     }
-    
+
     public function getISO() : string
     {
         return self::ISO_CODE;

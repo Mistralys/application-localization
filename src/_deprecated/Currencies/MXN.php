@@ -6,7 +6,11 @@ namespace AppLocalize;
 
 use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\BaseCurrency;
+use AppLocalize\Localization\Currency\CurrencyMXN;
 
+/**
+ * @deprecated Use {@see CurrencyMXN}
+ */
 class Localization_Currency_MXN extends BaseCurrency
 {
     public const ISO_CODE = 'MXN';
@@ -25,7 +29,7 @@ class Localization_Currency_MXN extends BaseCurrency
     {
         return t('Mexican peso');
     }
-    
+
     public function getISO() : string
     {
         return self::ISO_CODE;
