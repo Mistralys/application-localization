@@ -1,6 +1,8 @@
 <?php
 
-namespace AppLocalize\Locale;
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Locale;
 
 use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
@@ -16,6 +18,11 @@ class en_US extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('English (US)');
+        return t('English (America)');
+    }
+
+    public function getLabelInvariant() : string
+    {
+        return 'English (America)';
     }
 }

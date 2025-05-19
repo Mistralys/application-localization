@@ -51,11 +51,19 @@ interface LocaleInterface
     public function isNative() : bool;
 
     /**
-     * Returns the localized label for the locale, e.g. "German"
+     * Returns the localized label for the locale, e.g.
+     * "Deutsch" for German when the locale is "de_DE".
      *
      * @return string
      */
     public function getLabel() : string;
+
+    /**
+     * Returns the invariant label for the locale, e.g. "German"
+     *
+     * @return string
+     */
+    public function getLabelInvariant() : string;
 
     /**
      * Retrieves the country object for this locale

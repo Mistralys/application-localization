@@ -1,6 +1,8 @@
 <?php
 
-namespace AppLocalize\Locale;
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Locale;
 
 use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
@@ -17,5 +19,10 @@ class de_AT extends BaseLocale
     public function getLabel() : string
     {
         return t('German (Austria)');
+    }
+
+    public function getLabelInvariant() : string
+    {
+        return 'German (Austria)';
     }
 }

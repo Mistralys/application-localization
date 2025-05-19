@@ -1,6 +1,8 @@
 <?php
 
-namespace AppLocalize\Locale;
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Locale;
 
 use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
@@ -16,6 +18,11 @@ class es_MX extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Mexican Spanish');
+        return t('Spanish (Mexico)');
+    }
+
+    public function getLabelInvariant() : string
+    {
+        return 'Spanish (Mexico)';
     }
 }
