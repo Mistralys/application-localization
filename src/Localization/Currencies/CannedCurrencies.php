@@ -8,14 +8,15 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Currencies;
 
-use AppLocalize\Localization_Currency_CAD;
-use AppLocalize\Localization_Currency_CHF;
-use AppLocalize\Localization_Currency_EUR;
-use AppLocalize\Localization_Currency_GBP;
-use AppLocalize\Localization_Currency_MXN;
-use AppLocalize\Localization_Currency_PLN;
-use AppLocalize\Localization_Currency_RON;
-use AppLocalize\Localization_Currency_USD;
+use AppLocalize\Localization\Currency\CurrencyCAD;
+use AppLocalize\Localization\Currency\CurrencyCHF;
+use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Currency\CurrencyGBP;
+use AppLocalize\Localization\Currency\CurrencyMXN;
+use AppLocalize\Localization\Currency\CurrencyPLN;
+use AppLocalize\Localization\Currency\CurrencyRON;
+use AppLocalize\Localization\Currency\CurrencySGD;
+use AppLocalize\Localization\Currency\CurrencyUSD;
 use AppUtils\ClassHelper;
 
 /**
@@ -35,67 +36,75 @@ class CannedCurrencies
         $this->currencies = CurrencyCollection::getInstance();
     }
 
-    public function cad() : Localization_Currency_CAD
+    public function cad() : CurrencyCAD
     {
         return ClassHelper::requireObjectInstanceOf(
-            Localization_Currency_CAD::class,
-            $this->currencies->getByID(Localization_Currency_CAD::ISO_CODE)
+            CurrencyCAD::class,
+            $this->currencies->getByID(CurrencyCAD::ISO_CODE)
         );
     }
 
-    public function chf() : Localization_Currency_CHF
+    public function chf() : CurrencyCHF
     {
         return ClassHelper::requireObjectInstanceOf(
-            Localization_Currency_CHF::class,
-            $this->currencies->getByID(Localization_Currency_CHF::ISO_CODE)
+            CurrencyCHF::class,
+            $this->currencies->getByID(CurrencyCHF::ISO_CODE)
         );
     }
 
-    public function eur() : Localization_Currency_EUR
+    public function eur() : CurrencyEUR
     {
         return ClassHelper::requireObjectInstanceOf(
-            Localization_Currency_EUR::class,
-            $this->currencies->getByID(Localization_Currency_EUR::ISO_CODE)
+            CurrencyEUR::class,
+            $this->currencies->getByID(CurrencyEUR::ISO_CODE)
         );
     }
 
-    public function gbp() : Localization_Currency_GBP
+    public function gbp() : CurrencyGBP
     {
         return ClassHelper::requireObjectInstanceOf(
-            Localization_Currency_GBP::class,
-            $this->currencies->getByID(Localization_Currency_GBP::ISO_CODE)
+            CurrencyGBP::class,
+            $this->currencies->getByID(CurrencyGBP::ISO_CODE)
         );
     }
 
-    public function mxn() : Localization_Currency_MXN
+    public function mxn() : CurrencyMXN
     {
         return ClassHelper::requireObjectInstanceOf(
-            Localization_Currency_MXN::class,
-            $this->currencies->getByID(Localization_Currency_MXN::ISO_CODE)
+            CurrencyMXN::class,
+            $this->currencies->getByID(CurrencyMXN::ISO_CODE)
         );
     }
 
-    public function pln() : Localization_Currency_PLN
+    public function pln() : CurrencyPLN
     {
         return ClassHelper::requireObjectInstanceOf(
-            Localization_Currency_PLN::class,
-            $this->currencies->getByID(Localization_Currency_PLN::ISO_CODE)
+            CurrencyPLN::class,
+            $this->currencies->getByID(CurrencyPLN::ISO_CODE)
         );
     }
 
-    public function ron() : Localization_Currency_RON
+    public function ron() : CurrencyRON
     {
         return ClassHelper::requireObjectInstanceOf(
-            Localization_Currency_RON::class,
-            $this->currencies->getByID(Localization_Currency_RON::ISO_CODE)
+            CurrencyRON::class,
+            $this->currencies->getByID(CurrencyRON::ISO_CODE)
         );
     }
 
-    public function usd() : Localization_Currency_USD
+    public function usd() : CurrencyUSD
     {
         return ClassHelper::requireObjectInstanceOf(
-            Localization_Currency_USD::class,
-            $this->currencies->getByID(Localization_Currency_USD::ISO_CODE)
+            CurrencyUSD::class,
+            $this->currencies->getByID(CurrencyUSD::ISO_CODE)
+        );
+    }
+
+    public function sgd() : CurrencySGD
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CurrencySGD::class,
+            $this->currencies->getByID(CurrencySGD::ISO_CODE)
         );
     }
 }

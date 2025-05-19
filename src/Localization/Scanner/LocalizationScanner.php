@@ -1,16 +1,20 @@
 <?php
 /**
- * File containing the {@see \AppLocalize\Localization_Scanner} class.
+ * File containing the {@see \AppLocalize\Localization\Scanner\LocalizationScanner} class.
  *
  * @package AppLocalize
  * @subpackage Scanner
- * @see \AppLocalize\Localization_Scanner
+ * @see \AppLocalize\Localization\Scanner\LocalizationScanner
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Scanner;
 
+use AppLocalize\Localization;
+use AppLocalize\Localization\Parser\LocalizationParser;
+use AppLocalize\Localization_Scanner_StringsCollection;
+use AppLocalize\Localization_Scanner_StringsCollection_Warning;
 use AppUtils\FileHelper;
 
 /**
@@ -22,7 +26,7 @@ use AppUtils\FileHelper;
  * @subpackage Scanner
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Localization_Scanner
+class LocalizationScanner
 {
    /**
     * @var float
@@ -51,12 +55,12 @@ class Localization_Scanner
 
     /**
      * @var Localization_Scanner_StringsCollection|NULL
-     * @see Localization_Scanner::getCollection()
+     * @see LocalizationScanner::getCollection()
      */
     protected $collection;
 
     /**
-     * @var Localization_Parser
+     * @var LocalizationParser
      */
     protected $parser;
 
@@ -119,10 +123,10 @@ class Localization_Scanner
         FileHelper::saveAsJSON($data, $this->storageFile);
     }
     
-    public function getParser() : Localization_Parser
+    public function getParser() : LocalizationParser
     {
         if(!isset($this->parser)) {
-            $this->parser = new Localization_Parser($this);
+            $this->parser = new LocalizationParser($this);
         }
         
         return $this->parser;

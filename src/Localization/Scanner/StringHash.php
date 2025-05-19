@@ -2,7 +2,7 @@
 
 namespace AppLocalize;
 
-use AppLocalize\Parser\Text;
+use AppLocalize\Localization\Parser\Text;
 
 /**
  * Container for a single string hash: collects all instances

@@ -10,7 +10,7 @@ namespace AppLocalize\Localization\Countries;
 
 use AppLocalize\Localization\Currencies\CurrencyInterface;
 use AppLocalize\Localization\Currencies\CurrencyNumberInfo;
-use AppLocalize\Localization_Exception;
+use AppLocalize\Localization\LocalizationException;
 
 /**
  * @package Localization
@@ -93,12 +93,12 @@ class CountryCurrency implements CurrencyInterface
 
     /**
      * @return string
-     * @throws Localization_Exception
+     * @throws \AppLocalize\Localization\LocalizationException
      */
     protected function getRegex() : string
     {
         if (!isset($this->regex)) {
-            throw new Localization_Exception(
+            throw new LocalizationException(
                 'No regex defined',
                 sprintf(
                     'To use this method, set the regex class property for currency %1$s.',
@@ -228,7 +228,7 @@ class CountryCurrency implements CurrencyInterface
             return $parsed;
         }
 
-        throw new Localization_Exception(
+        throw new LocalizationException(
             'Could not parse number',
             sprintf(
                 'The number [%1$s] did not yield a currency number object.',

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Currencies;
 
+use AppLocalize\Localization\Currency\CurrencyUSD;
 use AppLocalize\Localization;
 use AppLocalize\Localization\Countries\CountryInterface;
 
@@ -63,7 +64,7 @@ abstract class BaseCurrency implements CurrencyInterface
      * Checks whether the specified currency name is known
      * (supported by the application)
      *
-     * @param string $currencyName Currency code, e.g. {@see Localization_Currency_USD::ISO_CODE}.
+     * @param string $currencyName Currency code, e.g. {@see \AppLocalize\Localization\Currency\CurrencyUSD::ISO_CODE}.
      * @return boolean
      * @deprecated Use {@see CurrencyCollection::idExists()} instead.
      */

@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Locales;
 
 use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
+use AppLocalize\Localization\LocalizationException;
 
 interface LocaleInterface
 {
@@ -58,16 +60,16 @@ interface LocaleInterface
     /**
      * Retrieves the country object for this locale
      *
-     * @return BaseCountry
+     * @return CountryInterface
      */
-    public function getCountry() : BaseCountry;
+    public function getCountry() : CountryInterface;
 
     /**
      * Retrieves the currency object for this locale
      *
      * @return CurrencyInterface
      *
-     * @throws Localization_Exception
+     * @throws LocalizationException
      * @see Localization::ERROR_COUNTRY_NOT_FOUND
      */
     public function getCurrency() : CurrencyInterface;

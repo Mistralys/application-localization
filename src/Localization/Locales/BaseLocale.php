@@ -1,14 +1,15 @@
 <?php
 /**
- * File containing the {@link Localization_Locale} class.
  * @package Localization
  * @subpackage Core
- * @see Localization_Locale
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
-use AppLocalize\Localization\Countries\BaseCountry;
+namespace AppLocalize\Localization\Locales;
+
+use AppLocalize\Localization\Countries\CountryInterface;
+use AppLocalize\Localization;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
 
 /**
@@ -19,41 +20,20 @@ use AppLocalize\Localization\Currencies\CurrencyInterface;
  * @subpackage Core
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class Localization_Locale implements LocaleInterface
+abstract class BaseLocale implements LocaleInterface
 {
-    public const ERROR_LOCALE_LABEL_MISSING = 39102;
-    
-    /**
-     * @var string
-     */
-    private $localeName;
-
-    /**
-     * @var BaseCountry
-     */
-    protected $country;
-    
-   /**
-    * @var string
-    */
-    protected $countryCode;
-    
-   /**
-    * @var string
-    */
-    protected $languageCode;
+    protected CountryInterface $country;
+    protected string $countryCode;
+    protected string $languageCode;
 
     public function __construct()
     {
-        $localeName = explode('\\', get_class($this));
-        $localeName = array_pop($localeName);
-        $tokens = explode('_', $localeName);
+        $tokens = explode('_', $this->getName());
 
-        $this->localeName = $localeName;
         $this->countryCode = strtolower($tokens[1]);
         $this->languageCode = strtolower($tokens[0]);
     }
-    
+
     public function getLanguageCode() : string
     {
         return $this->languageCode;
@@ -70,7 +50,7 @@ abstract class Localization_Locale implements LocaleInterface
     *
     * @return string
     * @deprecated
-    * @see Localization_Locale::getLanguageCode()
+    * @see BaseLocale::getLanguageCode()
     */
     public function getShortName() : string
     {
@@ -100,7 +80,7 @@ abstract class Localization_Locale implements LocaleInterface
         return $this->getName() === Localization::BUILTIN_LOCALE_NAME;
     }
 
-    public function getCountry() : BaseCountry
+    public function getCountry() : CountryInterface
     {
         if(!isset($this->country)) {
             $this->country = Localization::createCountries()->getByID($this->getCountryCode());

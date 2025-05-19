@@ -1,14 +1,12 @@
 <?php
 /**
- * File containing the {@link Localization_Event} class.
  * @package Localization
  * @subpackage Events
- * @see Localization_Event
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Event;
 
 /**
  * Base class for triggered event instances.
@@ -18,12 +16,12 @@ namespace AppLocalize;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @see Localization::triggerEvent()
  */
-abstract class Localization_Event
+abstract class BaseLocalizationEvent implements LocalizationEventInterface
 {
    /**
-    * @var array
+    * @var array<int,mixed>
     */
-    protected $args;
+    protected array $args;
     
     public function __construct(array $args)
     {
@@ -32,7 +30,7 @@ abstract class Localization_Event
 
    /**
     * Fetches the argument at the specified index in the 
-    * event's arguments list, if it exists. 
+    * event's argument list if it exists.
     * 
     * @param int $index Zero-based index number.
     * @return mixed|NULL

@@ -1,14 +1,14 @@
 <?php
 /**
- * File containing the {@link Localization_Writer} class.
- * 
  * @package Localization
  * @subpackage Translator
- * @see Localization_Writer
  */
 
-namespace AppLocalize;
+declare(strict_types=1);
 
+namespace AppLocalize\Localization\Translator;
+
+use AppLocalize\Localization\Locales\LocaleInterface;
 use AppUtils\FileHelper;
 
 /**
@@ -18,7 +18,7 @@ use AppUtils\FileHelper;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Localization_Writer
+class LocalizationWriter
 {
    /**
     * @var array<string,string>
@@ -26,12 +26,12 @@ class Localization_Writer
     private array $hashes = array();
 
     private bool $editable = false;
-    private Localization_Locale $locale;
+    private LocaleInterface $locale;
     private string $fileType;
     private string $filePath;
     private string $hashFilePath;
     
-    public function __construct(Localization_Locale $locale, string $fileType, string $filePath)
+    public function __construct(LocaleInterface $locale, string $fileType, string $filePath)
     {
         $this->locale = $locale;
         $this->fileType = $fileType;
@@ -39,21 +39,21 @@ class Localization_Writer
         $this->hashFilePath = $filePath.'.hash';
     }
     
-    public function makeEditable() : Localization_Writer
+    public function makeEditable() : LocalizationWriter
     {
         $this->editable = true;
         
         return $this;
     }
     
-    public function addHash(string $hash, string $text) : Localization_Writer
+    public function addHash(string $hash, string $text) : LocalizationWriter
     {
         $this->hashes[$hash] = $text;
         
         return $this;
     }
     
-    public function addHashes(array $hashes) : Localization_Writer
+    public function addHashes(array $hashes) : LocalizationWriter
     {
         foreach($hashes as $hash => $text)
         {

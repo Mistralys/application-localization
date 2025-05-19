@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Countries;
 
+use AppLocalize\Localization\Currency\CurrencyEUR;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
 /**
@@ -27,7 +28,7 @@ interface CountryInterface extends StringPrimaryRecordInterface
 
     /**
      * Retrieves the ISO code of the currency used by this country,
-     * e.g. {@see Localization_Currency_EUR::ISO_CODE}.
+     * e.g. {@see CurrencyEUR::ISO_CODE}.
      *
      * @return string
      */

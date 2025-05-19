@@ -1,23 +1,27 @@
 <?php
 /**
- * File containing the {@link Localization_Editor} class.
- *
  * @package Localization
  * @subpackage Editor
- * @see Localization_Translator
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Editor\Template;
 
-use AppLocalize\Editor\EditorException;
+use AppLocalize\Localization\Editor\EditorException;
+use AppLocalize\Localization\Editor\LocalizationEditor;
+use AppLocalize\Localization_Scanner_StringHash;
 use AppUtils\ConvertHelper;
 use AppUtils\JSHelper;
 use AppUtils\OutputBuffering;
 use AppUtils\OutputBuffering_Exception;
 use AppUtils\PaginationHelper;
 use AppUtils\FileHelper;
+use function AppLocalize\pt;
+use function AppLocalize\ptex;
+use function AppLocalize\pts;
+use function AppLocalize\t;
+use function AppLocalize\tex;
 use function AppUtils\sb;
 
 /**
@@ -27,13 +31,11 @@ use function AppUtils\sb;
  * @subpackage Editor
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Localization_Editor_Template_PageScaffold
+class PageScaffold
 {
-/**
- * @var Localization_Editor
- */private $editor;
+    private LocalizationEditor $editor;
 
-    public function __construct(Localization_Editor $editor)
+    public function __construct(LocalizationEditor $editor)
     {
         $this->editor = $editor;
     }
@@ -112,7 +114,7 @@ class Localization_Editor_Template_PageScaffold
             foreach($warnings as $warning)
             {
                 ?>
-                <dt><?php echo FileHelper::relativizePathByDepth($warning->getFile(), 3) ?>:<?php echo $warning->getLine() ?></dt>
+                <dt><?php echo FileHelper::relativizePath((string)realpath($warning->getFile()), (string)realpath(__DIR__.'/../../../../')) ?>:<?php echo $warning->getLine() ?></dt>
                 <dd><?php echo $warning->getMessage() ?></dd>
                 <?php
             }
@@ -234,7 +236,7 @@ class Localization_Editor_Template_PageScaffold
             throw new EditorException(
                 'String hash has no text',
                 '',
-                Localization_Editor::ERROR_STRING_HASH_WITHOUT_TEXT
+                LocalizationEditor::ERROR_STRING_HASH_WITHOUT_TEXT
             );
         }
 

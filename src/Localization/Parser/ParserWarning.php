@@ -2,38 +2,30 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Parser;
 
-class Localization_Parser_Warning
+use function AppLocalize\t;
+use function AppLocalize\tex;
+
+class ParserWarning
 {
-    /**
-     * @var Localization_Parser_Language
-     */
-    protected $language;
-
-    /**
-     * @var Localization_Parser_Token
-     */
-    protected $token;
-
-    /**
-     * @var string
-     */
-    protected $message;
+    protected BaseLanguage $language;
+    protected BaseParsedToken $token;
+    protected string $message;
     
-    public function __construct(Localization_Parser_Language $language, Localization_Parser_Token $token, string $message)
+    public function __construct(BaseLanguage $language, BaseParsedToken $token, string $message)
     {
         $this->language = $language;
         $this->token = $token;
         $this->message = $message;
     }
     
-    public function getLanguage() : Localization_Parser_Language
+    public function getLanguage() : BaseLanguage
     {
         return $this->language;
     }
     
-    public function getToken() : Localization_Parser_Token
+    public function getToken() : BaseParsedToken
     {
         return $this->token;
     }
@@ -63,6 +55,18 @@ class Localization_Parser_Warning
             'file' => $this->getFile(),
             'line' => $this->getLine(),
             'message' => $this->getMessage()
+        );
+    }
+
+    public function toString() : string
+    {
+        return tex(
+            '%1$s Translation warning: %2$s. In file %3$s on line %4$d.',
+            'Placeholders: #1 = Language ID (e.g. "PHP") #2 = Message #3 = File #4 = Line',
+            $this->language->getID(),
+            rtrim($this->getMessage(), '.'),
+            basename($this->getFile()),
+            $this->getLine()
         );
     }
 }

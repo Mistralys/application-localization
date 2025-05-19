@@ -1,20 +1,26 @@
 <?php
 /**
- * File containing the {@link Localization_Editor} class.
- * 
  * @package Localization
  * @subpackage Editor
- * @see Localization_Translator
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Editor;
 
+use AppLocalize\Localization;
+use AppLocalize\Localization\Editor\Template\PageScaffold;
+use AppLocalize\Localization\LocalizationException;
+use AppLocalize\Localization\Locales\BaseLocale;
+use AppLocalize\Localization\Scanner\LocalizationScanner;
+use AppLocalize\Localization_Scanner_StringHash;
+use AppLocalize\Localization_Scanner_StringsCollection_Warning;
+use AppLocalize\Localization\Source\BaseLocalizationSource;
+use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\OutputBuffering_Exception;
-use AppUtils\Traits_Optionable;
-use AppUtils\Interface_Optionable;
+use AppUtils\Traits\OptionableTrait;
 use AppUtils\Request;
+use function AppLocalize\t;
 
 /**
  * User Interface handler for editing localization files.
@@ -23,9 +29,9 @@ use AppUtils\Request;
  * @subpackage Editor
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Localization_Editor implements Interface_Optionable
+class LocalizationEditor implements OptionableInterface
 {
-    use Traits_Optionable;
+    use OptionableTrait;
     
     const MESSAGE_INFO = 'info';
     const MESSAGE_ERROR = 'danger';
@@ -40,71 +46,40 @@ class Localization_Editor implements Interface_Optionable
     const VARIABLE_SCAN = 'scan';
     const VARIABLE_WARNINGS = 'warnings';
 
+    protected string $installPath;
+    protected Request $request;
+    protected BaseLocalizationSource $activeSource;
+    protected LocalizationScanner $scanner;
+    protected BaseLocale $activeAppLocale;
+    protected EditorFilters $filters;
+    protected string $varPrefix = 'applocalize_';
+    protected int $perPage = 20;
+
     /**
-    * @var string
-    */
-    protected $installPath;
-    
-   /**
-    * @var Localization_Source[]
-    */
-    protected $sources;
-    
-   /**
-    * @var Request
-    */
-    protected $request;
-    
-   /**
-    * @var Localization_Source
-    */
-    protected $activeSource;
-    
-   /**
-    * @var Localization_Scanner
-    */
-    protected $scanner;
-    
-   /**
-    * @var Localization_Locale[]
+     * @var BaseLocalizationSource[]
+     */
+    protected array $sources;
+
+    /**
+    * @var \AppLocalize\Localization\Locales\BaseLocale[]
     */
     protected array $appLocales = array();
-    
-   /**
-    * @var Localization_Locale
-    */
-    protected $activeAppLocale;
-    
-   /**
-    * @var Localization_Editor_Filters
-    */
-    protected $filters;
 
    /**
     * @var array<string,string>
     */
-    protected $requestParams = array();
-    
-   /**
-    * @var string
-    */
-    protected $varPrefix = 'applocalize_';
+    protected array $requestParams = array();
 
     /**
-     * @var int
-     */
-    protected $perPage = 20;
-
-    /**
-     * @throws Localization_Exception
-     * @see \AppLocalize\Localization_Editor::ERROR_LOCAL_PATH_NOT_FOUND
+     * @throws LocalizationException
+     * @see \AppLocalize\LocalizationEditor::ERROR_LOCAL_PATH_NOT_FOUND
      */
     public function __construct()
     {
-        $path = realpath(__DIR__.'/../');
-        if($path === false)
+        $path = __DIR__.'/../../';
+        if(!is_dir($path.'/js'))
         {
-            throw new Localization_Exception(
+            throw new LocalizationException(
                 'Local path not found',
                 sprintf(
                     'Could not get the parent folder\'s real path from [%s].',
@@ -135,15 +110,15 @@ class Localization_Editor implements Interface_Optionable
     * 
     * @param string $name
     * @param string $value
-    * @return Localization_Editor
+    * @return LocalizationEditor
     */
-    public function addRequestParam(string $name, string $value) : Localization_Editor
+    public function addRequestParam(string $name, string $value) : LocalizationEditor
     {
         $this->requestParams[$name] = $value;
         return $this;
     }
     
-    public function getActiveSource() : Localization_Source
+    public function getActiveSource() : BaseLocalizationSource
     {
         return $this->activeSource;
     }
@@ -165,7 +140,7 @@ class Localization_Editor implements Interface_Optionable
     }
 
     /**
-     * @throws Localization_Exception
+     * @throws LocalizationException
      */
     protected function initSources() : void
     {
@@ -173,7 +148,7 @@ class Localization_Editor implements Interface_Optionable
         
         if(empty($this->sources)) 
         {
-            throw new Localization_Exception(
+            throw new LocalizationException(
                 'Cannot start editor: no sources defined.',
                 null,
                 self::ERROR_NO_SOURCES_AVAILABLE
@@ -227,7 +202,7 @@ class Localization_Editor implements Interface_Optionable
     }
 
     /**
-     * @return Localization_Locale[]
+     * @return \AppLocalize\Localization\Locales\BaseLocale[]
      */
     public function getAppLocales() : array
     {
@@ -235,7 +210,7 @@ class Localization_Editor implements Interface_Optionable
     }
 
     /**
-     * @return Localization_Source[]
+     * @return BaseLocalizationSource[]
      */
     public function getSources() : array
     {
@@ -266,7 +241,7 @@ class Localization_Editor implements Interface_Optionable
     {
         $this->initSources();
         
-        $this->filters = new Localization_Editor_Filters($this);
+        $this->filters = new EditorFilters($this);
         
         if($this->request->getBool($this->getVarName(self::VARIABLE_SCAN)))
         {
@@ -278,7 +253,7 @@ class Localization_Editor implements Interface_Optionable
         }
     }
     
-    public function getScanner() : Localization_Scanner
+    public function getScanner() : LocalizationScanner
     {
         return $this->scanner;
     }
@@ -291,7 +266,7 @@ class Localization_Editor implements Interface_Optionable
     {
         $this->handleActions();
         
-        return (new Localization_Editor_Template_PageScaffold($this))->render();
+        return (new PageScaffold($this))->render();
     }
 
     /**
@@ -312,7 +287,7 @@ class Localization_Editor implements Interface_Optionable
         return $this->request->getBool($this->getVarName(self::VARIABLE_WARNINGS));
     }
 
-    public function getFilters() : Localization_Editor_Filters
+    public function getFilters() : EditorFilters
     {
         return $this->filters;
     }
@@ -360,7 +335,7 @@ class Localization_Editor implements Interface_Optionable
         );
     }
     
-    public function getActiveLocale() : Localization_Locale
+    public function getActiveLocale() : BaseLocale
     {
         return $this->activeAppLocale;
     }
@@ -389,14 +364,14 @@ class Localization_Editor implements Interface_Optionable
         echo $this->render();
     }
     
-    public function getSourceURL(Localization_Source $source, array $params=array()) : string
+    public function getSourceURL(BaseLocalizationSource $source, array $params=array()) : string
     {
         $params[$this->getVarName('source')] = $source->getID();
         
         return $this->getURL($params);
     }
     
-    public function getLocaleURL(Localization_Locale $locale, array $params=array()) : string
+    public function getLocaleURL(BaseLocale $locale, array $params=array()) : string
     {
         $params[$this->getVarName('locale')] = $locale->getName();
         
@@ -505,9 +480,9 @@ class Localization_Editor implements Interface_Optionable
     * in the user interface.
     * 
     * @param string $name
-    * @return Localization_Editor
+    * @return LocalizationEditor
     */
-    public function setAppName(string $name) : Localization_Editor
+    public function setAppName(string $name) : LocalizationEditor
     {
         $this->setOption('appname', $name);
         return $this;
@@ -528,9 +503,9 @@ class Localization_Editor implements Interface_Optionable
      * explicitly selected.
      *
      * @param string $sourceID
-     * @return Localization_Editor
+     * @return LocalizationEditor
      */
-    public function selectDefaultSource(string $sourceID) : Localization_Editor
+    public function selectDefaultSource(string $sourceID) : LocalizationEditor
     {
         $this->setOption('default-source', $sourceID);
         return $this;
@@ -543,9 +518,9 @@ class Localization_Editor implements Interface_Optionable
     * 
     * @param string $url The URL to use for the link
     * @param string $label Label of the link
-    * @return Localization_Editor
+    * @return LocalizationEditor
     */
-    public function setBackURL(string $url, string $label) : Localization_Editor
+    public function setBackURL(string $url, string $label) : LocalizationEditor
     {
         $this->setOption('back-url', $url);
         $this->setOption('back-label', $label);

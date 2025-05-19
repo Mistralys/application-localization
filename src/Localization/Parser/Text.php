@@ -2,32 +2,18 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize\Parser;
+namespace AppLocalize\Localization\Parser;
 
 class Text
 {
     const SERIALIZED_TEXT = 'text';
     const SERIALIZED_LINE = 'line';
     const SERIALIZED_EXPLANATION = 'explanation';
-    /**
-     * @var string
-     */
-    private $text;
 
-    /**
-     * @var int
-     */
-    private $line;
-
-    /**
-     * @var string
-     */
-    private $explanation;
-
-    /**
-     * @var string
-     */
-    private $hash;
+    private string $text;
+    private int $line;
+    private string $explanation;
+    private string $hash;
 
     public function __construct(string $text, int $line, string $explanation='')
     {

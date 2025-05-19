@@ -1,16 +1,14 @@
 <?php
 /**
- * File containing the class {@see \AppLocalize\Localization_Source_Folder}.
- *
  * @package Localization
  * @subpackage Parser
- * @see \AppLocalize\Localization_Source_Folder
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Source;
 
+use AppLocalize\Localization\LocalizationException;
 use DirectoryIterator;
 
 /**
@@ -21,18 +19,15 @@ use DirectoryIterator;
  * @subpackage Parser
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Localization_Source_Folder extends Localization_Source
+class FolderLocalizationSource extends BaseLocalizationSource
 {
    /**
     * The folder under which all translatable files are kept.
     * @var string
     */
-    protected $sourcesFolder;
+    protected string $sourcesFolder;
     
-   /**
-    * @var string
-    */
-    protected $id;
+    protected string $id;
 
    /**
     * @param string $alias An alias for this source, to recognize it by.
@@ -62,12 +57,12 @@ class Localization_Source_Folder extends Localization_Source
     /**
      * @var array<string,string[]>
      */
-    protected $excludes = array(
+    protected array $excludes = array(
         'folders' => array(),
         'files' => array()
     );
     
-    public function excludeFolder(string $folder) : Localization_Source_Folder
+    public function excludeFolder(string $folder) : FolderLocalizationSource
     {
         if(!in_array($folder, $this->excludes['folders'])) {
             $this->excludes['folders'][] = $folder;
@@ -76,7 +71,7 @@ class Localization_Source_Folder extends Localization_Source
         return $this;
     }
     
-    public function excludeFolders(array $folders) : Localization_Source_Folder
+    public function excludeFolders(array $folders) : FolderLocalizationSource
     {
         foreach($folders as $folder) {
             $this->excludeFolder($folder);
@@ -85,24 +80,24 @@ class Localization_Source_Folder extends Localization_Source
         return $this;
     }
     
-    public function excludeFiles(array $files) : Localization_Source_Folder
+    public function excludeFiles(array $files) : FolderLocalizationSource
     {
         $this->excludes['files'] = array_merge($this->excludes['files'], $files);
         return $this;
     }
     
-    protected function _scan(Localization_Source_Scanner $scanner) : void
+    protected function _scan(SourceScanner $scanner) : void
     {
         $this->processFolder($this->getSourcesFolder(), $scanner);
     }
 
     /**
-     * Processes the target folder, and recurses into sub folders.
+     * Processes the target folder, and recurses into subfolders.
      * @param string $folder
-     * @param Localization_Source_Scanner $scanner
-     * @throws Localization_Exception
+     * @param SourceScanner $scanner
+     * @throws LocalizationException
      */
-    protected function processFolder(string $folder, Localization_Source_Scanner $scanner) : void
+    protected function processFolder(string $folder, SourceScanner $scanner) : void
     {
         $parser = $scanner->getParser();
         $d = new DirectoryIterator($folder);

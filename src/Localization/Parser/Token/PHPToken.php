@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Parser\Token;
 
-class Localization_Parser_Token_PHP extends Localization_Parser_Token
+use AppLocalize\Localization\Parser\BaseParsedToken;
+
+class PHPToken extends BaseParsedToken
 {
     /**
      * @var array<string,bool>
      */
-    private static $explanationFunctions = array(
+    private static array $explanationFunctions = array(
         'tex' => true,
         'ptex' => true,
         'ptexs' => true

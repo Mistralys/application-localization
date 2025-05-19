@@ -1,54 +1,54 @@
 <?php
 /**
- * File containing the class {@see \AppLocalize\Localization_Source}.
- *
  * @package Localization
  * @subpackage Parser
- * @see \AppLocalize\Localization_Source
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Source;
+
+use AppLocalize\Localization;
+use AppLocalize\Localization\Scanner\LocalizationScanner;
 
 /**
  * Base source class for a location that stores texts to translate.
- * This can be from the file system, as well as a database for example.
+ * This can be from the file system, as well as a database, for example.
  * Each source type must extend this class.
  *
  * Sources are added manually when configuring the localization layer.
- * See for example {@see Localization::addSourceFolder()}.
+ * For example, see {@see Localization::addSourceFolder()}.
  *
  * @package Localization
  * @subpackage Parser
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @see Localization_Source_Folder
+ * @see FolderLocalizationSource
  */
-abstract class Localization_Source
+abstract class BaseLocalizationSource
 {
    /**
     * Human-readable label for the source.
     * @var string
     */
-    protected $label;
+    protected string $label;
     
    /**
     * Human-readable group name to categorize the source.
     * @var string
     */
-    protected $group;
+    protected string $group;
     
    /**
     * The folder in which the localization files are stored
     * @var string
     */
-    protected $storageFolder;
+    protected string $storageFolder;
     
    /**
     * @var string
     */
-    protected $alias;
+    protected string $alias;
 
     public function __construct(string $alias, string $label, string $group, string $storageFolder)
     {
@@ -80,7 +80,7 @@ abstract class Localization_Source
         return $this->storageFolder;
     }
     
-    public function scan(Localization_Scanner $scanner) : void
+    public function scan(LocalizationScanner $scanner) : void
     {
         $this->_scan($this->getSourceScanner($scanner));
     }
@@ -89,15 +89,15 @@ abstract class Localization_Source
      * Retrieves the scanner instance that can access this
      * source's string hashes and parsing methods.
      *
-     * @param Localization_Scanner $scanner
-     * @return Localization_Source_Scanner
+     * @param LocalizationScanner $scanner
+     * @return SourceScanner
      */
-    public function getSourceScanner(Localization_Scanner $scanner) : Localization_Source_Scanner
+    public function getSourceScanner(LocalizationScanner $scanner) : SourceScanner
     {
-        return new Localization_Source_Scanner($this, $scanner);
+        return new SourceScanner($this, $scanner);
     }
     
-    abstract protected function _scan(Localization_Source_Scanner $scanner) : void;
+    abstract protected function _scan(SourceScanner $scanner) : void;
 
     protected function log(string $message) : void
     {

@@ -1,9 +1,7 @@
 <?php
 /**
- * File containing the {@link \AppLocalize\Localization\Event\LocaleChanged} class.
  * @package Localization
  * @subpackage Events
- * @see \AppLocalize\Localization\Event\LocaleChanged
  */
 
 declare(strict_types=1);
@@ -11,9 +9,8 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Event;
 
 use AppLocalize\Localization;
-use AppLocalize\Localization_Event;
-use AppLocalize\Localization_Exception;
-use AppLocalize\Localization_Locale;
+use AppLocalize\Localization\LocalizationException;
+use AppLocalize\Localization\Locales\BaseLocale;
 
 /**
  * Event class: used for the "LocaleChanged" event. Provides
@@ -25,18 +22,18 @@ use AppLocalize\Localization_Locale;
  *
  * @see Localization::selectLocaleByNS()
  */
-class LocaleChanged extends Localization_Event
+class LocaleChanged extends BaseLocalizationEvent
 {
     public const ERROR_NO_CURRENT_LOCALE_SPECIFIED = 91401;
 
     /**
     * The locale that was used before the change, if any.
-    * @return Localization_Locale|NULL
+    * @return BaseLocale|NULL
     */
-    public function getPrevious() : ?Localization_Locale
+    public function getPrevious() : ?BaseLocale
     {
         $arg = $this->getArgument(1);
-        if($arg instanceof Localization_Locale) {
+        if($arg instanceof BaseLocale) {
             return $arg;
         }
         
@@ -46,18 +43,18 @@ class LocaleChanged extends Localization_Event
     /**
      * The locale that is used now after the change.
      *
-     * @return Localization_Locale
-     * @throws Localization_Exception
+     * @return BaseLocale
+     * @throws LocalizationException
      */
-    public function getCurrent() : Localization_Locale
+    public function getCurrent() : BaseLocale
     {
         $arg = $this->getArgument(2);
 
-        if($arg instanceof Localization_Locale) {
+        if($arg instanceof BaseLocale) {
             return $arg;
         }
 
-        throw new Localization_Exception(
+        throw new LocalizationException(
             'No current locale available in event',
             'The current locale parameter was not a locale instance.',
             self::ERROR_NO_CURRENT_LOCALE_SPECIFIED

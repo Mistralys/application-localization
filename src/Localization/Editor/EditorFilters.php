@@ -1,19 +1,21 @@
 <?php
 /**
- * File containing the {@link Localization_Editor_Filters} class.
- *
  * @package Localization
  * @subpackage Editor
- * @see Localization_Editor_Filters
  */
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Editor;
 
+use AppLocalize\Localization\Editor\LocalizationEditor;
+use AppLocalize\Localization_Scanner_StringHash;
 use AppUtils\OutputBuffering;
 use AppUtils\OutputBuffering_Exception;
 use AppUtils\Request;
+use function AppLocalize\pt;
+use function AppLocalize\pts;
+use function AppLocalize\t;
 
 /**
  * Handles the list filters in the editor UI.
@@ -22,28 +24,16 @@ use AppUtils\Request;
  * @subpackage Editor
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Localization_Editor_Filters
+class EditorFilters
 {
-   /**
-    * @var Localization_Editor
-    */
-    protected $editor;
-    
-   /**
-    * @var Request
-    */
-    
-    protected $request; 
-     
-   /**
-    * @var string
-    */
-    protected $sessionName = 'localize_filters';
+    protected LocalizationEditor $editor;
+    protected Request $request;
+    protected string $sessionName = 'localize_filters';
     
    /**
     * @var string[]
     */
-    protected $vars = array(
+    protected array $vars = array(
         'resetfilter' => '',
         'filter' => '',
         'search' => '',
@@ -51,7 +41,7 @@ class Localization_Editor_Filters
         'location' => ''
     );
     
-    public function __construct(Localization_Editor $editor)
+    public function __construct(LocalizationEditor $editor)
     {
         $this->editor = $editor;
         $this->request = $editor->getRequest();
@@ -122,12 +112,9 @@ class Localization_Editor_Filters
     /**
      * @var string[]
      */
-    protected $searchTerms = array();
+    protected array $searchTerms = array();
 
-    /**
-     * @var string
-     */
-    protected $searchString = '';
+    protected string $searchString = '';
     
     protected function parseSearchTerms(string $searchString) : void
     {

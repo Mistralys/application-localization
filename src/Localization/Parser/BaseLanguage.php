@@ -2,76 +2,68 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Parser;
 
-use AppLocalize\Parser\Text;
+use AppLocalize\Localization;
+use AppLocalize\Localization\LocalizationException;
+use AppLocalize\Localization\Parser\ParserWarning;
+use AppLocalize\Localization\Parser\Text;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
+use function AppLocalize\t;
 
-abstract class Localization_Parser_Language
+abstract class BaseLanguage
 {
     const ERROR_SOURCE_FILE_NOT_FOUND = 40501;
     const ERROR_FAILED_READING_SOURCE_FILE = 40502;
 
-    /**
-     * @var bool
-     */
-    protected $debug = false;
-    
-    /**
-     * @var Localization_Parser
-     */
-    protected $parser;
+    protected bool $debug = false;
+    protected LocalizationParser $parser;
 
    /**
     * The function names that are included in the search.
     * @var array
     */
-    protected $functionNames = array();
+    protected array $functionNames = array();
     
    /**
-    * The tokens definitions.
+    * The token definitions.
     * @var array
     */
-    protected $tokens = array();
+    protected array $tokens = array();
     
    /**
-    * The total amount of tokens found in the content.
+    * The total number of tokens found in the content.
     * @var integer
     */
-    protected $totalTokens = 0;
+    protected int $totalTokens = 0;
     
    /**
     * All texts that have been collected.
     * @var Text[]
     */
-    protected $texts = array();
+    protected array $texts = array();
     
    /**
     * @var string
     */
-    protected $content = '';
+    protected string $content = '';
 
    /**
-    * @var string|NULL
+    * @var ParserWarning[]
     */
-    protected $id;
-    
-   /**
-    * @var Localization_Parser_Warning[]
-    */
-    protected $warnings = array();
+    protected array $warnings = array();
     
    /**
     * The source file that was parsed (if any)
     * @var string
     */
-    protected $sourceFile = '';
+    protected string $sourceFile = '';
 
     /**
      * @var string[]
      */
-    private static $allowedContextTags = array(
+    private static array $allowedContextTags = array(
         'br',
         'p',
         'strong',
@@ -83,7 +75,7 @@ abstract class Localization_Parser_Language
         'pre'
     );
 
-    public function __construct(Localization_Parser $parser)
+    public function __construct(LocalizationParser $parser)
     {
         $this->parser = $parser;
         $this->functionNames = $this->getFunctionNames();
@@ -95,15 +87,13 @@ abstract class Localization_Parser_Language
     * Retrieves the ID of the language.
     * @return string E.g. "PHP", "Javascript"
     */
-    public function getID() : string
-    {
-        if(!isset($this->id)) {
-            $this->id = str_replace(Localization_Parser_Language::class.'_', '', get_class($this));
-        }
-        
-        return $this->id;
-    }
-    
+    abstract public function getID() : string;
+
+    /**
+     * @return class-string<BaseParsedToken>
+     */
+    abstract public function getTokenClass() : string;
+
     public function hasSourceFile() : bool
     {
         return !empty($this->sourceFile);
@@ -118,13 +108,13 @@ abstract class Localization_Parser_Language
     * Parses the code from a file.
     * 
     * @param string $path
-    * @throws Localization_Exception
+    * @throws LocalizationException
     */
     public function parseFile(string $path) : void
     {
         if(!file_exists($path)) 
         {
-            throw new Localization_Exception(
+            throw new LocalizationException(
                 sprintf('Source code file [%s] not found', basename($path)),
                 sprintf(
                     'Tried looking for the file in path [%s].',
@@ -142,7 +132,7 @@ abstract class Localization_Parser_Language
         }
         catch (FileHelper_Exception $e)
         {
-            throw new Localization_Exception(
+            throw new LocalizationException(
                 sprintf('Source code file [%s] could not be read', basename($path)),
                 sprintf(
                     'Tried opening the file located at [%s].',
@@ -232,13 +222,13 @@ abstract class Localization_Parser_Language
    /**
     * Adds a warning message when a text cannot be parsed correctly for some reason.
     * 
-    * @param Localization_Parser_Token $token
+    * @param BaseParsedToken $token
     * @param string $message
-    * @return Localization_Parser_Warning
+    * @return ParserWarning
     */
-    protected function addWarning(Localization_Parser_Token $token, string $message) : Localization_Parser_Warning
+    protected function addWarning(BaseParsedToken $token, string $message) : ParserWarning
     {
-        $warning = new Localization_Parser_Warning($this, $token, $message);
+        $warning = new ParserWarning($this, $token, $message);
         
         $this->warnings[] = $warning;
         
@@ -255,28 +245,38 @@ abstract class Localization_Parser_Language
     }
     
    /**
-    * Retrieves all warnings that were generated during parsing,
+    * Retrieves all warnings generated during parsing,
     * if any.
     * 
-    * @return Localization_Parser_Warning[]
+    * @return ParserWarning[]
     */
     public function getWarnings() : array
     {
         return $this->warnings;
     }
-    
+
+    public function getWarningsAsString() : string
+    {
+        $result = '';
+        foreach($this->warnings as $warning)
+        {
+            $result .= $warning->toString().PHP_EOL;
+        }
+
+        return $result;
+    }
+
    /**
     * Creates a token instance: this retrieves information on
     * the language token being parsed.
     * 
     * @param array|string $definition The token definition.
-    * @param Localization_Parser_Token|NULL $parentToken
-    * @return Localization_Parser_Token
+    * @param BaseParsedToken|NULL $parentToken
+    * @return BaseParsedToken
     */
-    protected function createToken($definition, Localization_Parser_Token $parentToken=null) : Localization_Parser_Token
+    protected function createToken($definition, BaseParsedToken $parentToken=null) : BaseParsedToken
     {
-        $class = Localization_Parser_Token::class.'_'.$this->getID();
-        
+        $class = $this->getTokenClass();
         return new $class($definition, $parentToken);
     }
 
@@ -284,9 +284,9 @@ abstract class Localization_Parser_Language
     * Parses a translation function token.
     * 
     * @param int $number
-    * @param Localization_Parser_Token $token
+    * @param BaseParsedToken $token
     */
-    protected function parseToken(int $number, Localization_Parser_Token $token) : void
+    protected function parseToken(int $number, BaseParsedToken $token) : void
     {
         $textParts = array();
         $max = $number + 200;
@@ -343,7 +343,7 @@ abstract class Localization_Parser_Language
         $this->addResult($text, $token->getLine(), $explanation);
     }
 
-    private function parseExplanation(Localization_Parser_Token $token, array $tokens) : string
+    private function parseExplanation(BaseParsedToken $token, array $tokens) : string
     {
         $textParts = array();
         $max = 200;

@@ -2,47 +2,32 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Parser;
 
 use AppUtils\ConvertHelper;
 
-abstract class Localization_Parser_Token
+abstract class BaseParsedToken
 {
    /**
     * @var array|string
     */
     protected $definition;
     
-   /**
-    * @var Localization_Parser_Token|NULL
-    */
-    protected $parentToken;
-
-    /**
-     * @var string
-     */
-    protected $token = '';
-
-    /**
-     * @var string|NULL
-     */
-    protected $value = null;
-
-    /**
-     * @var int
-     */
-    protected $line = 0;
+    protected ?BaseParsedToken $parentToken = null;
+    protected string $token = '';
+    protected ?string $value = null;
+    protected int $line = 0;
 
     /**
      * @var array<string,bool>
      */
-    protected $nameLookup = array();
+    protected array $nameLookup = array();
 
     /**
      * @param array|string $definition
-     * @param Localization_Parser_Token|null $parentToken
+     * @param BaseParsedToken|null $parentToken
      */
-    public function __construct($definition, ?Localization_Parser_Token $parentToken=null)
+    public function __construct($definition, ?BaseParsedToken $parentToken=null)
     {
         $this->definition = $definition;
         $this->parentToken = $parentToken;

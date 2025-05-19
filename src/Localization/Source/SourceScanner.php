@@ -2,31 +2,23 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Source;
 
-class Localization_Source_Scanner
+use AppLocalize\Localization;
+use AppLocalize\Localization\LocalizationException;
+use AppLocalize\Localization\Parser\LocalizationParser;
+use AppLocalize\Localization\Scanner\LocalizationScanner;
+use AppLocalize\Localization_Scanner_StringHash;
+use AppLocalize\Localization_Scanner_StringsCollection;
+
+class SourceScanner
 {
-    /**
-     * @var Localization_Scanner
-     */
-    private $scanner;
+    private LocalizationScanner $scanner;
+    private BaseLocalizationSource $source;
+    private Localization_Scanner_StringsCollection $collection;
+    private LocalizationParser $parser;
 
-    /**
-     * @var Localization_Source
-     */
-    private $source;
-
-    /**
-     * @var Localization_Scanner_StringsCollection
-     */
-    private $collection;
-
-    /**
-     * @var Localization_Parser
-     */
-    private $parser;
-
-    public function __construct(Localization_Source $source, Localization_Scanner $scanner)
+    public function __construct(BaseLocalizationSource $source, LocalizationScanner $scanner)
     {
         $this->scanner = $scanner;
         $this->source = $source;
@@ -35,9 +27,9 @@ class Localization_Source_Scanner
     }
 
     /**
-     * @return Localization_Parser
+     * @return LocalizationParser
      */
-    public function getParser() : Localization_Parser
+    public function getParser() : LocalizationParser
     {
         return $this->parser;
     }
@@ -49,7 +41,7 @@ class Localization_Source_Scanner
      * strings it finds to the results collection.
      *
      * @param string $file
-     * @throws Localization_Exception
+     * @throws LocalizationException
      */
     public function parseFile(string $file) : void
     {

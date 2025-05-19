@@ -2,20 +2,23 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Translator;
 
+use AppLocalize\Localization;
+use AppLocalize\Localization\LocalizationException;
+use AppLocalize\Localization\Locales\BaseLocale;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper\FolderInfo;
 use AppUtils\FileHelper_Exception;
 
-class Localization_ClientGenerator
+class ClientFilesGenerator
 {
     public const ERROR_JS_FOLDER_NOT_FOUND = 39302;
     public const ERROR_TARGET_FOLDER_NOT_WRITABLE = 39303;
 
-    protected Localization_Translator $translator;
+    protected LocalizationTranslator $translator;
     protected ?FolderInfo $targetFolder = null;
     protected ?FileInfo $cacheKeyFile = null;
     protected ?string $cacheKey = null;
@@ -114,7 +117,7 @@ class Localization_ClientGenerator
     }
 
     /**
-     * @throws Localization_Exception
+     * @throws \AppLocalize\Localization\LocalizationException
      * @throws FileHelper_Exception
      */
     public function writeFiles() : void
@@ -188,15 +191,15 @@ class Localization_ClientGenerator
 
     /**
      * @throws FileHelper_Exception
-     * @throws Localization_Exception
+     * @throws \AppLocalize\Localization\LocalizationException
      */
     protected function writeLibraryFiles() : void
     {
-        $sourceFolder = FolderInfo::factory(__DIR__.'/../js');
+        $sourceFolder = FolderInfo::factory(__DIR__.'/../../js');
 
         if(!$sourceFolder->exists())
         {
-            throw new Localization_Exception(
+            throw new LocalizationException(
                 'Unexpected folder structure encountered.',
                 sprintf(
                     'The [js] folder is not in the expected location at [%s].',
@@ -216,7 +219,7 @@ class Localization_ClientGenerator
     }
 
     /**
-     * @return Localization_Locale[]
+     * @return \AppLocalize\Localization\Locales\BaseLocale[]
      */
     protected static function getTargetLocales() : array
     {
@@ -249,7 +252,7 @@ class Localization_ClientGenerator
         return $this->getTargetFolder().'/'.$fileName;
     }
     
-    protected function getLocaleFilePath(Localization_Locale $locale) : string
+    protected function getLocaleFilePath(BaseLocale $locale) : string
     {
         return sprintf(
             '%s/locale-%s.js',
@@ -267,13 +270,13 @@ class Localization_ClientGenerator
      * content in its pages: There are two main ways to
      * do it:
      *
-     * 1) Save it to a Javascript file and include that
+     * 1) Save it to a JavaScript file and include that
      * 2) Serve it as application/javascript content via PHP
      *
      * NOTE: Caching has to be handled on the application
      * side. This method creates a fresh collection each time.
      */
-    protected function writeLocaleFile(Localization_Locale $locale) : void
+    protected function writeLocaleFile(BaseLocale $locale) : void
     {
         self::log('Write Files | Writing locale [%s].', $locale->getName());
 

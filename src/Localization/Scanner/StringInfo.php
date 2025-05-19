@@ -2,7 +2,7 @@
 
 namespace AppLocalize;
 
-use AppLocalize\Parser\Text;
+use AppLocalize\Localization\Parser\Text;
 
 class Localization_Scanner_StringInfo
 {

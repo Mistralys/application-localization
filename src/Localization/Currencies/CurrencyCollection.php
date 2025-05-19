@@ -8,19 +8,16 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Currencies;
 
-use AppLocalize\Localization\Countries\CountryInterface;
-use AppLocalize\Localization_Currency_CAD;
-use AppLocalize\Localization_Currency_CHF;
-use AppLocalize\Localization_Currency_EUR;
-use AppLocalize\Localization_Currency_GBP;
-use AppLocalize\Localization_Currency_MXN;
-use AppLocalize\Localization_Currency_PLN;
-use AppLocalize\Localization_Currency_RON;
-use AppLocalize\Localization_Currency_USD;
-use AppUtils\Collections\BaseStringPrimaryCollection;
+use AppLocalize\Localization\Currency\CurrencyUSD;
+use AppUtils\ClassHelper;
+use AppUtils\Collections\BaseClassLoaderCollection;
 use AppUtils\Collections\CollectionException;
+use AppUtils\FileHelper\FolderInfo;
+use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
 /**
+ * Collection of all available currencies.
+ *
  * @package Localization
  * @subpackage Currencies
  *
@@ -28,7 +25,7 @@ use AppUtils\Collections\CollectionException;
  * @method CurrencyInterface getDefault()
  * @method CurrencyInterface[] getAll()
  */
-class CurrencyCollection extends BaseStringPrimaryCollection
+class CurrencyCollection extends BaseClassLoaderCollection
 {
     private static ?CurrencyCollection $instance = null;
 
@@ -47,19 +44,7 @@ class CurrencyCollection extends BaseStringPrimaryCollection
 
     public function getDefaultID(): string
     {
-        return Localization_Currency_USD::ISO_CODE;
-    }
-
-    protected function registerItems(): void
-    {
-        $this->registerItem(new Localization_Currency_CAD());
-        $this->registerItem(new Localization_Currency_CHF());
-        $this->registerItem(new Localization_Currency_EUR());
-        $this->registerItem(new Localization_Currency_GBP());
-        $this->registerItem(new Localization_Currency_MXN());
-        $this->registerItem(new Localization_Currency_PLN());
-        $this->registerItem(new Localization_Currency_RON());
-        $this->registerItem(new Localization_Currency_USD());
+        return CurrencyUSD::ISO_CODE;
     }
 
     /**
@@ -91,5 +76,28 @@ class CurrencyCollection extends BaseStringPrimaryCollection
         }
 
         return $this->canned;
+    }
+
+    protected function createItemInstance(string $class): StringPrimaryRecordInterface
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CurrencyInterface::class,
+            new $class()
+        );
+    }
+
+    public function getInstanceOfClassName(): ?string
+    {
+        return CurrencyInterface::class;
+    }
+
+    public function isRecursive(): bool
+    {
+        return true;
+    }
+
+    public function getClassesFolder(): FolderInfo
+    {
+        return FolderInfo::factory(__DIR__.'/../Currency');
     }
 }

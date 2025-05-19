@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize;
+namespace AppLocalize\Localization\Parser\Token;
 
-use JTokenizer\JTokenizer;
+use AppLocalize\Localization\Parser\BaseParsedToken;
+use Peast\Syntax\Token;
 
-class Localization_Parser_Token_Javascript extends Localization_Parser_Token
+class JavaScriptToken extends BaseParsedToken
 {
     protected function parseDefinition() : void
     {
-        // some entries are strings, like parenthesises, semicolons and the like.
+        // some entries are strings, like parentheses, semicolons and the like.
         if(is_string($this->definition))
         {
             $this->token = $this->definition;
@@ -22,7 +23,7 @@ class Localization_Parser_Token_Javascript extends Localization_Parser_Token
         }
         else
         {
-            $this->token = JTokenizer::getTokenName($this->definition[0]);
+            $this->token = (string)$this->definition[0];
             $this->value = $this->definition[1];
             $this->line = $this->definition[2];
         }
@@ -37,17 +38,17 @@ class Localization_Parser_Token_Javascript extends Localization_Parser_Token
     
     public function isOpeningFuncParams() : bool
     {
-        return $this->getToken() === '(';
+        return $this->getValue() === '(';
     }
     
     public function isClosingFuncParams() : bool
     {
-        return $this->getToken() === ')';
+        return $this->getValue() === ')';
     }
     
     public function isEncapsedString() : bool
     {
-        return $this->token === 'J_STRING_LITERAL';
+        return $this->token === Token::TYPE_STRING_LITERAL;
     }
 
     public function isTranslationFunction() : bool
@@ -57,7 +58,7 @@ class Localization_Parser_Token_Javascript extends Localization_Parser_Token
     
     public function isVariableOrFunction() : bool
     {
-        return $this->token === 'J_IDENTIFIER' || $this->token === 'J_FUNCTION';
+        return $this->getToken() === Token::TYPE_IDENTIFIER;
     }
 
     public function isExplanationFunction() : bool
@@ -67,6 +68,6 @@ class Localization_Parser_Token_Javascript extends Localization_Parser_Token
 
     public function isArgumentSeparator() : bool
     {
-        return $this->getToken() === ',';
+        return $this->getValue() === ',';
     }
 }

@@ -1,21 +1,32 @@
 <?php
+/**
+ * @package Localization
+ * @subpackage Currencies
+ */
 
 declare(strict_types=1);
 
 namespace AppLocalize\Localization\Currencies;
 
 use AppLocalize\Localization\Countries\CountryInterface;
-use AppLocalize\Localization_Currency_EUR;
+use AppLocalize\Localization\Currency\CurrencyEUR;
 use AppUtils\Interfaces\StringableInterface;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
+/**
+ * Interface for currency objects.
+ * A base implementation is provided by {@see BaseCurrency}.
+ *
+ * @package Localization
+ * @subpackage Currencies
+ */
 interface CurrencyInterface
     extends
     StringableInterface,
     StringPrimaryRecordInterface
 {
     /**
-     * The currency ISO code, e.g. {@see Localization_Currency_EUR::ISO_CODE}.
+     * The currency ISO code, e.g. {@see CurrencyEUR::ISO_CODE}.
      */
     public function getID() : string;
 

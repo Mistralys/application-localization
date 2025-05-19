@@ -2,7 +2,10 @@
 
 namespace AppLocalize;
 
-use AppLocalize\Parser\Text;
+use AppLocalize\Localization\LocalizationException;
+use AppLocalize\Localization\Parser\ParserWarning;
+use AppLocalize\Localization\Scanner\LocalizationScanner;
+use AppLocalize\Localization\Parser\Text;
 
 class Localization_Scanner_StringsCollection
 {
@@ -13,7 +16,7 @@ class Localization_Scanner_StringsCollection
     const STORAGE_FORMAT_VERSION = 2;
     
    /**
-    * @var Localization_Scanner
+    * @var LocalizationScanner
     */
     protected $scanner;
     
@@ -27,7 +30,7 @@ class Localization_Scanner_StringsCollection
     */
     protected $warnings = array();
     
-    public function __construct(Localization_Scanner $scanner)
+    public function __construct(LocalizationScanner $scanner)
     {
         $this->scanner = $scanner;
     }
@@ -42,7 +45,7 @@ class Localization_Scanner_StringsCollection
         $this->add($string);
     }
     
-    public function addWarning(Localization_Parser_Warning $warning) : void
+    public function addWarning(ParserWarning $warning) : void
     {
         $this->warnings[] = $warning->toArray();
     }
@@ -89,7 +92,7 @@ class Localization_Scanner_StringsCollection
     /**
      * @param string $hash
      * @return Localization_Scanner_StringHash
-     * @throws Localization_Exception
+     * @throws LocalizationException
      */
     public function getHash(string $hash) : Localization_Scanner_StringHash
     {
@@ -97,7 +100,7 @@ class Localization_Scanner_StringsCollection
             return $this->hashes[$hash];
         }
         
-        throw new Localization_Exception(
+        throw new LocalizationException(
             'Unknown string hash',
             sprintf('Could not find string by hash [%s].', $hash),
             self::ERROR_UNKNOWN_STRING_HASH
