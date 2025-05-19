@@ -1,4 +1,4 @@
-## v1.6.0 - Added new countries (Breaking-S, Deprecation)
+## v1.6.0 - Namespacing and new countries (Breaking-S, Deprecation)
 - Countries: Added Finland (FI).
 - Countries: Added Belgium (BE).
 - Countries: Added Singapore (SG). 
