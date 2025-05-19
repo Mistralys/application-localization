@@ -8,8 +8,8 @@ use AppLocalize\Localization\Countries\CountryCollection;
 use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\CurrencyCollection;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
-use AppLocalize\Localization_Currency_EUR;
-use AppLocalize\Localization_Currency_USD;
+use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Currency\CurrencyUSD;
 use PHPUnit\Framework\TestCase;
 
 class CurrencyTests extends TestCase
@@ -24,8 +24,8 @@ class CurrencyTests extends TestCase
 
     public function test_getByISO() : void
     {
-        $this->assertInstanceOf(Localization_Currency_USD::class, CurrencyCollection::getInstance()->getByISO('USD'));
-        $this->assertInstanceOf(Localization_Currency_USD::class, CurrencyCollection::getInstance()->getByISO('usd'));
+        $this->assertInstanceOf(CurrencyUSD::class, CurrencyCollection::getInstance()->getByISO('USD'));
+        $this->assertInstanceOf(CurrencyUSD::class, CurrencyCollection::getInstance()->getByISO('usd'));
     }
 
     public function test_isoExists() : void
