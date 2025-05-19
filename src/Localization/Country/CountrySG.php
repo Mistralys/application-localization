@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
-use AppLocalize\Localization_Currency_SGD;
+use AppLocalize\Localization\Currency\CurrencySGD;
 use function AppLocalize\t;
 
 /**
@@ -46,6 +46,6 @@ class CountrySG extends BaseCountry
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_SGD::ISO_CODE;
+        return CurrencySGD::ISO_CODE;
     }
 }

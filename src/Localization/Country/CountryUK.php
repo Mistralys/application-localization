@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization_Country_UK;
-use AppLocalize\Localization_Currency_GBP;
+use AppLocalize\Localization\Currency\CurrencyGBP;
 use function AppLocalize\t;
 
 /**
@@ -46,6 +46,6 @@ class CountryUK extends Localization_Country_UK
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_GBP::ISO_CODE;
+        return CurrencyGBP::ISO_CODE;
     }
 }

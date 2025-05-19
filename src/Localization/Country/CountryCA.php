@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization_Country_CA;
-use AppLocalize\Localization_Currency_CAD;
+use AppLocalize\Localization\Currency\CurrencyCAD;
 use function AppLocalize\t;
 
 /**
@@ -46,6 +46,6 @@ class CountryCA extends Localization_Country_CA
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_CAD::ISO_CODE;
+        return CurrencyCAD::ISO_CODE;
     }
 }

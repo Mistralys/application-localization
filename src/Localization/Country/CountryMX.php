@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization_Country_MX;
-use AppLocalize\Localization_Currency_MXN;
+use AppLocalize\Localization\Currency\CurrencyMXN;
 use function AppLocalize\t;
 
 /**
@@ -46,6 +46,6 @@ class CountryMX extends Localization_Country_MX
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_MXN::ISO_CODE;
+        return CurrencyMXN::ISO_CODE;
     }
 }

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization_Country_RO;
-use AppLocalize\Localization_Currency_RON;
+use AppLocalize\Localization\Currency\CurrencyRON;
 use function AppLocalize\t;
 
 /**
@@ -46,6 +46,6 @@ class CountryRO extends Localization_Country_RO
 
     public function getCurrencyISO() : string
     {
-        return Localization_Currency_RON::ISO_CODE;
+        return CurrencyRON::ISO_CODE;
     }
 }
