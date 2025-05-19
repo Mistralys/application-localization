@@ -409,7 +409,7 @@ To work with currencies, use the factory method:
 
 ```php
 use AppLocalize\Localization;
-use AppLocalize\Localization_Currency_EUR;
+use AppLocalize\Localization\Currency\CurrencyEUR;
 
 $currencies = Localization::createCurrencies();
 
@@ -417,7 +417,7 @@ $currencies = Localization::createCurrencies();
 $dollar = $currencies->getByISO('USD');
 
 // Every currency has a constant for its ISO code
-$euro = $currencies->getByISO(Localization_Currency_EUR::ISO_CODE);
+$euro = $currencies->getByISO(CurrencyEUR::ISO_CODE);
 
 // Or use the predefined list using choose():
 $pound = $currencies->choose()->gbp();
