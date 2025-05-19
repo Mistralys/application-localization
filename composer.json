@@ -37,7 +37,8 @@
 		"mistralys/html_quickform2": ">=2.3.5",
 		"mistralys/application-utils-collections": ">=1.1.2",
 		"mistralys/changelog-parser": ">=1.0.2",
-		"php": ">=7.4",
+		"mck89/peast": ">=v1.17.0",
+		"php": "^7.4|^8.0",
 		"ext-json": "*",
       	"ext-mbstring": "*"
     },
@@ -45,6 +46,12 @@
 	{
 		"phpunit/phpunit" : ">=9.6",
         "phpstan/phpstan" : ">=0.12"
+	},
+	"config": {
+		"platform" :
+		{
+			"php" : "7.4"
+		}
 	},
 	"scripts": {
 		"post-autoload-dump": "@php tests/clear-class-cache.php",
