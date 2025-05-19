@@ -274,7 +274,7 @@ abstract class BaseLanguage
     * @param BaseParsedToken|NULL $parentToken
     * @return BaseParsedToken
     */
-    protected function createToken($definition, BaseParsedToken $parentToken=null) : BaseParsedToken
+    protected function createToken($definition, ?BaseParsedToken $parentToken=null) : BaseParsedToken
     {
         $class = $this->getTokenClass();
         return new $class($definition, $parentToken);
