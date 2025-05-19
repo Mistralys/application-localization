@@ -1,14 +1,15 @@
+"use strict";
 
-var text = t('Global context');
+const text1 = t('Global context');
 
-var text = t("With double quotes");
+const text2 = t("With double quotes");
 
 function bothWorlds()
 {
 	return t('Within function');
 }
 
-var multiline = t(
+const multiline = t(
 	'Multiline ' +
 	'text '+
 	'over '+
@@ -17,22 +18,30 @@ var multiline = t(
 	'lines'
 );
 
-var someVariable = '';
+const someVariable = '';
 
-var withVar = t('With variable'+someVariable);
+const withVar = t('With variable'+someVariable);
 
-var withClosure = t(function() {
+const withClosure = t(function() {
 	return t('Within a closure');
 });
 
-function JS_Class()
+const OldJSClass = function()
 {
 	this.translateMe = function()
 	{
-		return t('Within class method.');
+		return t('Within old class method.');
 	}
 }
 
-var withPlaceholders = t('This is %1$sbold%2$s text.', '<b>', '</b>');
+class NewJSClass
+{
+	translateMe()
+	{
+		return t('Within new class method.');
+	}
+}
 
-var inception = t('A %1$s text within a translated text.', t('translated text'));
+const withPlaceholders = t('This is %1$sbold%2$s text.', '<b>', '</b>');
+
+const inception = t('A %1$s text within a translated text.', t('translated text'));
