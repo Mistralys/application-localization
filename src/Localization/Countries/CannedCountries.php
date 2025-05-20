@@ -11,18 +11,20 @@ namespace AppLocalize\Localization\Countries;
 use AppLocalize\Localization\Country\CountryAT;
 use AppLocalize\Localization\Country\CountryBE;
 use AppLocalize\Localization\Country\CountryCA;
-use AppLocalize\Localization\Country\CountryFI;
-use AppLocalize\Localization\Country\CountryIE;
-use AppLocalize\Localization\Country\CountrySG;
 use AppLocalize\Localization\Country\CountryCH;
 use AppLocalize\Localization\Country\CountryDE;
 use AppLocalize\Localization\Country\CountryES;
+use AppLocalize\Localization\Country\CountryFI;
 use AppLocalize\Localization\Country\CountryFR;
+use AppLocalize\Localization\Country\CountryUK;
+use AppLocalize\Localization\Country\CountryIE;
 use AppLocalize\Localization\Country\CountryIT;
 use AppLocalize\Localization\Country\CountryMX;
 use AppLocalize\Localization\Country\CountryPL;
-use AppLocalize\Localization\Country\CountryUK;
+use AppLocalize\Localization\Country\CountryRO;
+use AppLocalize\Localization\Country\CountrySG;
 use AppLocalize\Localization\Country\CountryUS;
+use AppLocalize\Localization\Country\CountryZZ;
 use AppUtils\ClassHelper;
 
 /**
@@ -42,19 +44,19 @@ class CannedCountries
         $this->collection = CountryCollection::getInstance();
     }
 
-    public function de() : CountryDE
+    public function at() : CountryAT
     {
         return ClassHelper::requireObjectInstanceOf(
-            CountryDE::class,
-            $this->collection->getByID(CountryDE::ISO_CODE)
+            CountryAT::class,
+            $this->collection->getByID(CountryAT::ISO_CODE)
         );
     }
 
-    public function us() : CountryUS
+    public function be() : CountryBE
     {
         return ClassHelper::requireObjectInstanceOf(
-            CountryUS::class,
-            $this->collection->getByID(CountryUS::ISO_CODE)
+            CountryBE::class,
+            $this->collection->getByID(CountryBE::ISO_CODE)
         );
     }
 
@@ -66,6 +68,22 @@ class CannedCountries
         );
     }
 
+    public function ch() : CountryCH
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryCH::class,
+            $this->collection->getByID(CountryCH::ISO_CODE)
+        );
+    }
+
+    public function de() : CountryDE
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryDE::class,
+            $this->collection->getByID(CountryDE::ISO_CODE)
+        );
+    }
+
     public function es() : CountryES
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -74,11 +92,27 @@ class CannedCountries
         );
     }
 
+    public function fi() : CountryFI
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryFI::class,
+            $this->collection->getByID(CountryFI::ISO_CODE)
+        );
+    }
+
     public function fr() : CountryFR
     {
         return ClassHelper::requireObjectInstanceOf(
             CountryFR::class,
             $this->collection->getByID(CountryFR::ISO_CODE)
+        );
+    }
+
+    public function gb() : CountryUK
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryUK::class,
+            $this->collection->getByID(CountryUK::ISO_CODE)
         );
     }
 
@@ -98,27 +132,11 @@ class CannedCountries
         );
     }
 
-    public function uk() : CountryUK
-    {
-        return ClassHelper::requireObjectInstanceOf(
-            CountryUK::class,
-            $this->collection->getByID(CountryUK::ISO_CODE)
-        );
-    }
-
     public function mx() : CountryMX
     {
         return ClassHelper::requireObjectInstanceOf(
             CountryMX::class,
             $this->collection->getByID(CountryMX::ISO_CODE)
-        );
-    }
-
-    public function at() : CountryAT
-    {
-        return ClassHelper::requireObjectInstanceOf(
-            CountryAT::class,
-            $this->collection->getByID(CountryAT::ISO_CODE)
         );
     }
 
@@ -130,27 +148,11 @@ class CannedCountries
         );
     }
 
-    public function fi() : CountryFI
+    public function ro() : CountryRO
     {
         return ClassHelper::requireObjectInstanceOf(
-            CountryFI::class,
-            $this->collection->getByID(CountryFI::ISO_CODE)
-        );
-    }
-
-    public function be() : CountryBE
-    {
-        return ClassHelper::requireObjectInstanceOf(
-            CountryBE::class,
-            $this->collection->getByID(CountryBE::ISO_CODE)
-        );
-    }
-
-    public function ch() : CountryCH
-    {
-        return ClassHelper::requireObjectInstanceOf(
-            CountryCH::class,
-            $this->collection->getByID(CountryCH::ISO_CODE)
+            CountryRO::class,
+            $this->collection->getByID(CountryRO::ISO_CODE)
         );
     }
 
@@ -159,6 +161,22 @@ class CannedCountries
         return ClassHelper::requireObjectInstanceOf(
             CountrySG::class,
             $this->collection->getByID(CountrySG::ISO_CODE)
+        );
+    }
+
+    public function us() : CountryUS
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryUS::class,
+            $this->collection->getByID(CountryUS::ISO_CODE)
+        );
+    }
+
+    public function zz() : CountryZZ
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryZZ::class,
+            $this->collection->getByID(CountryZZ::ISO_CODE)
         );
     }
 }
