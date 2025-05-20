@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppLocalize\Tools;
 
 use AppLocalize\Localization\Countries\CountryCollection;
+use AppLocalize\Localization\Currencies\CurrencyCollection;
 use AppUtils\ClassHelper;
 
 class ReleaseBuilder
@@ -14,6 +15,25 @@ class ReleaseBuilder
         require_once __DIR__.'/../../vendor/autoload.php';
 
         self::generateCannedCountries();
+        self::generateCannedCurrencies();
+    }
+
+    private static function logHeader(string $header) : void
+    {
+         self::logLine(str_repeat('-', 70));
+         self::logLine(mb_strtoupper($header));
+         self::logLine(str_repeat('-', 70));
+
+    }
+
+    private static function logLine(string $line) : void
+    {
+        echo $line.PHP_EOL;
+    }
+
+    private static function logNL() : void
+    {
+        echo PHP_EOL;
     }
 
     private const CODE_COUNTRY = <<<'PHP'
@@ -28,9 +48,14 @@ PHP;
 
     private static function generateCannedCountries() : void
     {
+        self::logHeader('Generating canned countries');
+
         $imports = array();
         $methods = array();
-        foreach(CountryCollection::getInstance()->getAll() as $country) {
+        foreach(CountryCollection::getInstance()->getAll() as $country)
+        {
+            self::logLine(' - '.$country->getCode());
+
             $imports[] = 'use '.get_class($country).';';
             $methods[] = sprintf(
                 self::CODE_COUNTRY,
@@ -50,6 +75,61 @@ PHP;
             file_get_contents(__DIR__.'/Templates/CannedCountriesTemplate.php.spf')
         );
 
-        file_put_contents(__DIR__.'/../Localization/Countries/CannedCountries.php', $code);
+        $outputFile = __DIR__.'/../Localization/Countries/CannedCountries.php';
+
+        file_put_contents($outputFile, $code);
+
+        self::logLine(' - Written to '.basename($outputFile));
+        self::logLine(' - DONE.');
+        self::logNL();
+    }
+
+    private const CODE_CURRENCY = <<<'PHP'
+    public function %1$s() : %2$s
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            %2$s::class,
+            $this->currencies->getByID(%2$s::ISO_CODE)
+        );
+    }
+PHP;
+
+
+    private static function generateCannedCurrencies() : void
+    {
+        self::logHeader('Generating canned currencies');
+
+        $imports = array();
+        $methods = array();
+        foreach(CurrencyCollection::getInstance()->getAll() as $currency)
+        {
+            self::logLine(' - '.$currency->getISO());
+
+            $imports[] = 'use '.get_class($currency).';';
+            $methods[] = sprintf(
+                self::CODE_CURRENCY,
+                strtolower($currency->getISO()),
+                ClassHelper::getClassTypeName($currency)
+            );
+        }
+
+        $placeholders = array(
+            '{IMPORTS}' => implode("\n", $imports),
+            '{METHODS}' => implode("\n\n", $methods),
+        );
+
+        $code = str_replace(
+            array_keys($placeholders),
+            array_values($placeholders),
+            file_get_contents(__DIR__.'/Templates/CannedCurrenciesTemplate.php.spf')
+        );
+
+        $outputFile = __DIR__.'/../Localization/Currencies/CannedCurrencies.php';
+
+        file_put_contents($outputFile, $code);
+
+        self::logLine(' - Written to '.basename($outputFile));
+        self::logLine(' - DONE.');
+        self::logNL();
     }
 }

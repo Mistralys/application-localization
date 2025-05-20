@@ -1,0 +1,32 @@
+<?php
+/**
+ * @package Localization
+ * @subpackage Currencies
+ */
+
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Currencies;
+
+{IMPORTS}
+use AppUtils\ClassHelper;
+
+/**
+ * Canned list of known currencies for easy access.
+ *
+ * Use {@see CurrencyCollection::choose()} to access this.
+ *
+ * @package Localization
+ * @subpackage Currencies
+ */
+class CannedCurrencies
+{
+    private CurrencyCollection $currencies;
+
+    public function __construct()
+    {
+        $this->currencies = CurrencyCollection::getInstance();
+    }
+
+{METHODS}
+}
