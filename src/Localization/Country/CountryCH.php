@@ -34,6 +34,11 @@ class CountryCH extends Localization_Country_CH
         return t('Switzerland');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Switzerland';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;

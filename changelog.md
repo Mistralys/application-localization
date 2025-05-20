@@ -3,6 +3,7 @@
 - Countries: Added Belgium (BE).
 - Countries: Added Singapore (SG). 
 - Countries: Added Ireland (IE).
+- Countries: Added `getLabelInvariant()` to get the label in invariant locale.
 - Countries: Now using dynamic class loading.
 - Countries: Renamed and namespaced all country classes.
 - Currencies: Now using dynamic class loading.

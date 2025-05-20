@@ -44,6 +44,11 @@ class CountryUS extends Localization_Country_US
         return t('United States');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'United States';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyUSD::ISO_CODE;

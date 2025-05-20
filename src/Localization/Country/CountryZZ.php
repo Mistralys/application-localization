@@ -43,6 +43,11 @@ class CountryZZ extends Localization_Country_ZZ
     {
         return t('Country-independent');
     }
+
+    public function getLabelInvariant(): string
+    {
+        return 'Country-independent';
+    }
     
     public function getCurrencyISO() : string
     {

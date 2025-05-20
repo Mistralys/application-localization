@@ -44,6 +44,11 @@ class CountryBE extends BaseCountry
         return t('Belgium');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Belgium';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;

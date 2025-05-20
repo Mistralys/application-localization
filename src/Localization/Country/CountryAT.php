@@ -42,6 +42,11 @@ class CountryAT extends Localization_Country_AT
         return t('Austria');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Austria';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;

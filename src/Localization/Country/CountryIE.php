@@ -44,6 +44,11 @@ class CountryIE extends BaseCountry
         return t('Ireland');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Ireland';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;

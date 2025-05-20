@@ -45,6 +45,11 @@ class Localization_Country_ZZ extends BaseCountry
         return t('Country-independent');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Country-independent';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyUSD::ISO_CODE;

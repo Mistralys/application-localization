@@ -45,6 +45,11 @@ class Localization_Country_RO extends BaseCountry
         return t('Romania');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Romania';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyRON::ISO_CODE;

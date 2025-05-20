@@ -44,6 +44,11 @@ class CountryMX extends Localization_Country_MX
         return t('Mexico');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Mexico';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyMXN::ISO_CODE;

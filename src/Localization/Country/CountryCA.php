@@ -44,6 +44,11 @@ class CountryCA extends Localization_Country_CA
         return t('Canada');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Canada';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyCAD::ISO_CODE;

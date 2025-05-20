@@ -45,6 +45,11 @@ class Localization_Country_DE extends BaseCountry
         return t('Germany');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Germany';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;

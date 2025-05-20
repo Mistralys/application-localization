@@ -44,6 +44,11 @@ class CountrySG extends BaseCountry
         return t('Singapore');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Singapore';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencySGD::ISO_CODE;

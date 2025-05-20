@@ -44,6 +44,11 @@ class CountryUK extends Localization_Country_UK
         return t('United Kingdom');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'United Kingdom';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyGBP::ISO_CODE;

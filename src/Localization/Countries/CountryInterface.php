@@ -44,10 +44,19 @@ interface CountryInterface extends StringPrimaryRecordInterface
     public function getCurrency() : CountryCurrency;
     
     /**
-     * Human-readable label for the locale, e.g. "United States"
+     * Human-readable label for the locale, translated for the
+     * current locale, e.g. "Schweiz" for Germany when the locale
+     * is set to "de_DE".
+     *
      * @return string
      */
     public function getLabel() : string;
+
+    /**
+     * Label for the country, which is invariant to the locale (=english).
+     * @return string
+     */
+    public function getLabelInvariant() : string;
     
     /**
      * Returns the country's two-letter ISO code, e.g. "uk", "en", "de".

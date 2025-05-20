@@ -44,6 +44,11 @@ class Localization_Country_PL extends BaseCountry
         return t('Poland');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Poland';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyPLN::ISO_CODE;

@@ -44,6 +44,11 @@ class CountryFI extends BaseCountry
         return t('Finland');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Finland';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;

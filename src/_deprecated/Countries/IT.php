@@ -45,6 +45,11 @@ class Localization_Country_IT extends BaseCountry
         return t('Italy');
     }
 
+    public function getLabelInvariant(): string
+    {
+        return 'Italy';
+    }
+
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;
