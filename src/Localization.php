@@ -18,6 +18,7 @@ use AppLocalize\Localization\Event\ClientFolderChanged;
 use AppLocalize\Localization\Event\LocaleChanged;
 use AppLocalize\Localization\Event\BaseLocalizationEvent;
 use AppLocalize\Localization\Event\LocalizationEventInterface;
+use AppLocalize\Localization\Locale\en_GB;
 use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\Locales\LocalesCollection;
 use AppLocalize\Localization\LocalizationException;
@@ -65,10 +66,10 @@ class Localization
      *
      * @var string
      */
-    const BUILTIN_LOCALE_NAME = 'en_UK';
+    public const BUILTIN_LOCALE_NAME = en_GB::LOCALE_NAME;
 
-    const NAMESPACE_APPLICATION = '__application';
-    const NAMESPACE_CONTENT = '__content';
+    public const NAMESPACE_APPLICATION = '__application';
+    public const NAMESPACE_CONTENT = '__content';
 
     public const EVENT_LOCALE_CHANGED = 'LocaleChanged';
     public const EVENT_CLIENT_FOLDER_CHANGED = 'ClientFolderChanged';
@@ -271,6 +272,8 @@ class Localization
         if(!isset(self::$locales[$namespace])) {
             self::$locales[$namespace] = array();
         }
+
+        $localeName = LocalesCollection::getInstance()->filterName($localeName);
         
         if(!isset(self::$locales[$namespace][$localeName])) 
         {
@@ -486,7 +489,9 @@ class Localization
     public static function selectLocaleByNS(string $localeName, string $namespace) : LocaleInterface
     {
         self::requireNamespace($namespace);
-        
+
+        $localeName = LocalesCollection::getInstance()->filterName($localeName);
+
         $locale = self::addLocaleByNS($localeName, $namespace);
         $previous = null;
         
