@@ -34,6 +34,11 @@ abstract class BaseLocale implements LocaleInterface
         $this->languageCode = strtolower($tokens[0]);
     }
 
+    public function getID(): string
+    {
+        return $this->getName();
+    }
+
     public function getLanguageCode() : string
     {
         return $this->languageCode;
