@@ -82,4 +82,10 @@ interface LocaleInterface extends StringPrimaryRecordInterface
      * @see Localization::ERROR_COUNTRY_NOT_FOUND
      */
     public function getCurrency() : CurrencyInterface;
+
+    /**
+     * List of locale aliases that can be used to refer to this locale.
+     * @return string[]
+     */
+    public function getAliases() : array;
 }
