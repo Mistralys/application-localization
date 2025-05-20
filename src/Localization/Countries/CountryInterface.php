@@ -70,4 +70,10 @@ interface CountryInterface extends StringPrimaryRecordInterface
     public function getMainLocaleCode() : string;
 
     public function getMainLocale() : LocaleInterface;
+
+    /**
+     * ISO code aliases that can be used to refer to this country.
+     * @return string[]
+     */
+    public function getAliases() : array;
 }

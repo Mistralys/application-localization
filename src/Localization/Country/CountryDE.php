@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\de_DE;
-use AppLocalize\Localization_Country_DE;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use function AppLocalize\t;
 
@@ -21,7 +21,7 @@ use function AppLocalize\t;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryDE extends Localization_Country_DE
+class CountryDE extends BaseCountry
 {
     public const ISO_CODE = 'de';
 

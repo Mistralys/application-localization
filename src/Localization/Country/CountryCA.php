@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\en_CA;
-use AppLocalize\Localization_Country_CA;
 use AppLocalize\Localization\Currency\CurrencyCAD;
 use function AppLocalize\t;
 
@@ -21,7 +21,7 @@ use function AppLocalize\t;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryCA extends Localization_Country_CA
+class CountryCA extends BaseCountry
 {
     public const ISO_CODE = 'ca';
 

@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\es_MX;
-use AppLocalize\Localization_Country_MX;
 use AppLocalize\Localization\Currency\CurrencyMXN;
 use function AppLocalize\t;
 
@@ -21,7 +21,7 @@ use function AppLocalize\t;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryMX extends Localization_Country_MX
+class CountryMX extends BaseCountry
 {
     public const ISO_CODE = 'mx';
 

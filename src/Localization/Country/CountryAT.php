@@ -6,8 +6,8 @@
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\de_AT;
-use AppLocalize\Localization_Country_AT;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use function AppLocalize\t;
 
@@ -19,7 +19,7 @@ use function AppLocalize\t;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryAT extends Localization_Country_AT
+class CountryAT extends BaseCountry
 {
     public const ISO_CODE = 'at';
 

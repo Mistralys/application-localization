@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
-use AppLocalize\Localization\Locale\en_UK;
-use AppLocalize\Localization_Country_UK;
+use AppLocalize\Localization\Countries\BaseCountry;
+use AppLocalize\Localization\Locale\en_GB;
 use AppLocalize\Localization\Currency\CurrencyGBP;
 use function AppLocalize\t;
 
@@ -21,9 +21,9 @@ use function AppLocalize\t;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryUK extends Localization_Country_UK
+class CountryUK extends BaseCountry
 {
-    public const ISO_CODE = 'uk';
+    public const ISO_CODE = 'gb';
 
     public function getCode(): string
     {
@@ -57,6 +57,6 @@ class CountryUK extends Localization_Country_UK
 
     public function getMainLocaleCode(): string
     {
-        return en_UK::LOCALE_NAME;
+        return en_GB::LOCALE_NAME;
     }
 }

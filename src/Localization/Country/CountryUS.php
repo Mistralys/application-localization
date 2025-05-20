@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\en_US;
-use AppLocalize\Localization_Country_US;
 use AppLocalize\Localization\Currency\CurrencyUSD;
 use function AppLocalize\t;
 
@@ -21,7 +21,7 @@ use function AppLocalize\t;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryUS extends Localization_Country_US
+class CountryUS extends BaseCountry
 {
     public const ISO_CODE = 'us';
 

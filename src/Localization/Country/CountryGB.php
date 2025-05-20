@@ -9,54 +9,63 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
-use AppLocalize\Localization\Locale\pl_PL;
-use AppLocalize\Localization\Currency\CurrencyPLN;
+use AppLocalize\Localization\Locale\en_GB;
+use AppLocalize\Localization\Locale\en_UK;
+use AppLocalize\Localization\Currency\CurrencyGBP;
 use function AppLocalize\t;
 
 /**
- * Country class with the definitions for Poland.
+ * Country class with the definitions for England.
  *
  * @package Localization
  * @subpackage Countries
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryPL extends BaseCountry
+class CountryGB extends BaseCountry
 {
-    public const ISO_CODE = 'pl';
+    public const ISO_CODE = 'gb';
+    public const ISO_ALIAS_UK = 'uk';
 
     public function getCode(): string
     {
         return self::ISO_CODE;
     }
 
-    public function getNumberThousandsSeparator() : string
+    public function getAliases() : array
     {
-        return '.';
+        return array(
+            self::ISO_ALIAS_UK
+        );
     }
 
-    public function getNumberDecimalsSeparator() : string
+    public function getNumberThousandsSeparator() : string
     {
         return ',';
     }
 
+    public function getNumberDecimalsSeparator() : string
+    {
+        return '.';
+    }
+
     public function getLabel() : string
     {
-        return t('Poland');
+        return t('Great Britain');
     }
 
     public function getLabelInvariant(): string
     {
-        return 'Poland';
+        return 'Great Britain';
     }
 
     public function getCurrencyISO() : string
     {
-        return CurrencyPLN::ISO_CODE;
+        return CurrencyGBP::ISO_CODE;
     }
 
     public function getMainLocaleCode(): string
     {
-        return pl_PL::LOCALE_NAME;
+        return en_GB::LOCALE_NAME;
     }
 }

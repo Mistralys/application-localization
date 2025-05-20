@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\de_CH;
-use AppLocalize\Localization_Country_CH;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use function AppLocalize\t;
 
@@ -21,7 +21,7 @@ use function AppLocalize\t;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryCH extends Localization_Country_CH
+class CountryCH extends BaseCountry
 {
     public const ISO_CODE = 'ch';
 
@@ -48,6 +48,11 @@ class CountryCH extends Localization_Country_CH
     public function getNumberThousandsSeparator(): string
     {
         return "'";
+    }
+
+    public function getNumberDecimalsSeparator(): string
+    {
+        return ".";
     }
 
     public function getMainLocaleCode(): string

@@ -22,6 +22,11 @@ use AppLocalize\Localization\Locales\LocalesCollection;
  */
 abstract class BaseCountry implements CountryInterface
 {
+    public function getAliases() : array
+    {
+        return array();
+    }
+
     protected ?CountryCurrency $currency;
 
     public function getCurrency() : CountryCurrency

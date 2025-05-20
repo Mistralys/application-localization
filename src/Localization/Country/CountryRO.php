@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\ro_RO;
-use AppLocalize\Localization_Country_RO;
 use AppLocalize\Localization\Currency\CurrencyRON;
 use function AppLocalize\t;
 
@@ -21,7 +21,7 @@ use function AppLocalize\t;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * @link http://www.mistralys.com
  */
-class CountryRO extends Localization_Country_RO
+class CountryRO extends BaseCountry
 {
     public const ISO_CODE = 'ro';
 
