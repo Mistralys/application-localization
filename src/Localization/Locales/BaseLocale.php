@@ -50,19 +50,6 @@ abstract class BaseLocale implements LocaleInterface
     }
 
    /**
-    * Retrieves the shortened version of the locale name,
-    * e.g. "en" or "de".
-    *
-    * @return string
-    * @deprecated
-    * @see BaseLocale::getLanguageCode()
-    */
-    public function getShortName() : string
-    {
-        return $this->getLanguageCode();
-    }
-    
-   /**
     * Retrieves the two-letter country code of
     * the locale.
     * 

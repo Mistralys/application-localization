@@ -22,12 +22,6 @@ interface CountryInterface extends StringPrimaryRecordInterface
     public function getNumberDecimalsSeparator() : string;
 
     /**
-     * @return string
-     * @deprecated Use {@see self::getCurrencyISO()} instead.
-     */
-    public function getCurrencyID() : string;
-
-    /**
      * Retrieves the ISO code of the currency used by this country,
      * e.g. {@see CurrencyEUR::ISO_CODE}.
      *

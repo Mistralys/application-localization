@@ -21,18 +21,6 @@ use AppLocalize\Localization\Countries\CountryInterface;
  */
 abstract class BaseCurrency implements CurrencyInterface
 {
-    /**
-     * Creates a new currency object.
-     *
-     * @param string $id
-     * @return CurrencyInterface
-     * @deprecated Use the collection {@see Localization::createCurrencies()} instead.
-     */
-    public static function create(string $id) : CurrencyInterface
-    {
-        return Localization::createCurrencies()->getByID($id);
-    }
-
     public function __construct()
     {
     }
@@ -58,19 +46,6 @@ abstract class BaseCurrency implements CurrencyInterface
         }
 
         return $countries;
-    }
-
-    /**
-     * Checks whether the specified currency name is known
-     * (supported by the application)
-     *
-     * @param string $currencyName Currency code, e.g. {@see \AppLocalize\Localization\Currency\CurrencyUSD::ISO_CODE}.
-     * @return boolean
-     * @deprecated Use {@see CurrencyCollection::idExists()} instead.
-     */
-    public static function isCurrencyKnown(string $currencyName) : bool
-    {
-        return Localization::createCurrencies()->idExists($currencyName);
     }
 
     /**
