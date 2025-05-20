@@ -1,4 +1,4 @@
-## v1.6.0 - Namespacing and new countries (Breaking-S, Deprecation)
+## v2.0.0 - Namespacing and new countries (Breaking-XL)
 - Countries: Added Finland (FI).
 - Countries: Added Belgium (BE).
 - Countries: Added Singapore (SG). 
@@ -7,12 +7,14 @@
 - Countries: Now using dynamic class loading.
 - Countries: Renamed and namespaced all country classes.
 - Countries: Added `getMainLocale()`.
+- Countries: Now handling ISO code aliases like `uk` for `gb`.
 - Currencies: Now using dynamic class loading.
 - Currencies: Renamed and namespaced all currency classes.
 - Currencies: Added the Singapore Dollar (SGD).
 - Locales: Renamed and namespaced all locale classes.
 - Locales: Added `getLabelInvariant()` to get the label in the invariant locale.
 - Locales: Normalized the labels that were not consistently showing the country name.
+- Locales: Now handling locale code aliases like `en_UK` for `en_GB`.
 - Tests: Namespaced and organized all test classes.
 - Editor: Better path display for files with warnings.
 - Parser: Replaced the obsolete JTokenizer with [Peast](https://github.com/mck89/peast).
@@ -21,27 +23,10 @@
 
 ### Breaking changes
 
-No breaking changes to the class APIs, but a hard requirement
-is now to configure a cache folder for the dynamic class loading.
-See the [README](./README.md) file for details.
-
-### Deprecations
-
-#### Countries
-
-All country classes have been renamed and namespaced from
-`Localization_Country_*` to `Localization\Country\Country*`. 
-The old classes are still available, but deprecated. Existing
-instance checks will still work even with the new classes
-until the deprecated classes are phased out.
-
-#### Currencies
-
-All currency classes have been renamed and namespaced from
-`Localization_Currency_*` to `Localization\Currency\Currency*`.
-The old classes are still available, but deprecated. Existing
-instance checks will still work even with the new classes
-until the deprecated classes are phased out.
+Virtually all classes have been renamed and namespaced, and any
+references to them must be updated in your applications. 
+I recommend using a static code analysis tool like [PHPStan](https://phpstan.org/)
+to find all references to the old class names.
 
 -----
 
