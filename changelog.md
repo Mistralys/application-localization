@@ -29,6 +29,8 @@ references to them must be updated in your applications.
 I recommend using a static code analysis tool like [PHPStan](https://phpstan.org/)
 to find all references to the old class names.
 
+All deprecated methods have been removed.
+
 -----
 
 Older change log entries can be found under `docs/changelog-history`.
