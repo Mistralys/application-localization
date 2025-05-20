@@ -19,6 +19,7 @@ use AppLocalize\Localization\Event\LocaleChanged;
 use AppLocalize\Localization\Event\BaseLocalizationEvent;
 use AppLocalize\Localization\Event\LocalizationEventInterface;
 use AppLocalize\Localization\Locales\LocaleInterface;
+use AppLocalize\Localization\Locales\LocalesCollection;
 use AppLocalize\Localization\LocalizationException;
 use AppLocalize\Localization\Scanner\LocalizationScanner;
 use AppLocalize\Localization\Source\BaseLocalizationSource;
@@ -26,6 +27,7 @@ use AppLocalize\Localization\Source\FolderLocalizationSource;
 use AppLocalize\Localization\Translator\ClientFilesGenerator;
 use AppLocalize\Localization\Translator\LocalizationTranslator;
 use AppUtils\ClassHelper;
+use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper_Exception;
@@ -145,22 +147,56 @@ class Localization
 
         self::reset();
         
-        $installFolder = realpath(__DIR__.'/../');
+        $installFolder = __DIR__.'/../';
         
         // add the localization package's own sources,
         // so the bundled localized strings can
         // always be translated.
-        Localization::addSourceFolder(
+        self::addSourceFolder(
             'application-localization',
             'Application Localization Package',
             'Composer packages',
             $installFolder.'/localization',
             $installFolder.'/src'
         )
-        ->excludeFiles(array('jtokenizer', 'functions.php'))
-        ->excludeFolder('css');
+            ->excludeFiles(array('functions.php'))
+            ->excludeFolder('css');
         
         self::$initDone = true;
+    }
+
+    private static ?string $cacheFolder = null;
+
+    public static function getCacheFolder() : string
+    {
+        if(isset(self::$cacheFolder)) {
+            return self::$cacheFolder;
+        }
+
+        // Is a cache folder present in the constant?
+        if(defined('LOCALIZATION_CACHE_FOLDER')) {
+            $value = constant('LOCALIZATION_CACHE_FOLDER');
+            if(is_string($value)) {
+                self::$cacheFolder = $value;
+            }
+        }
+
+        if(!isset(self::$cacheFolder)) {
+            self::$cacheFolder = __DIR__.'/../cache';
+        }
+
+        return self::$cacheFolder;
+    }
+
+    private static ?ClassRepositoryManager $classRepository = null;
+
+    public static function getClassRepository() : ClassRepositoryManager
+    {
+        if(!isset(self::$classRepository)) {
+            self::$classRepository = ClassRepositoryManager::create(self::getCacheFolder());
+        }
+
+        return self::$classRepository;
     }
 
     /**
@@ -197,36 +233,39 @@ class Localization
             self::ERROR_NO_LOCALES_IN_NAMESPACE
         );
     }
-    
-   /**
-    * Adds an application locale to use in the application.
-    * 
-    * @param string $localeName
-    * @return LocaleInterface
-    */
+
+    /**
+     * Adds an application locale to use in the application.
+     *
+     * @param string $localeName
+     * @return LocaleInterface
+     * @throws LocalizationException
+     */
     public static function addAppLocale(string $localeName) : LocaleInterface
     {
         return self::addLocaleByNS($localeName, self::NAMESPACE_APPLICATION);
     }
-    
-   /**
-    * Adds a content locale to use for content in the application.
-    * 
-    * @param string $localeName
-    * @return LocaleInterface
-    */
+
+    /**
+     * Adds a content locale to use for content in the application.
+     *
+     * @param string $localeName
+     * @return LocaleInterface
+     * @throws LocalizationException
+     */
     public static function addContentLocale(string $localeName) : LocaleInterface
     {
         return self::addLocaleByNS($localeName, self::NAMESPACE_CONTENT);
     }
-    
-   /**
-    * Adds a locale to the specified namespace.
-    * 
-    * @param string $localeName
-    * @param string $namespace
-    * @return LocaleInterface
-    */
+
+    /**
+     * Adds a locale to the specified namespace.
+     *
+     * @param string $localeName
+     * @param string $namespace
+     * @return LocaleInterface
+     * @throws LocalizationException
+     */
     public static function addLocaleByNS(string $localeName, string $namespace) : LocaleInterface
     {
         if(!isset(self::$locales[$namespace])) {
@@ -239,7 +278,7 @@ class Localization
             
             // sort the locales on add: less resource intensive
             // than doing it on getting locales.
-            uasort(self::$locales[$namespace], function(LocaleInterface $a, LocaleInterface $b) {
+            uasort(self::$locales[$namespace], static function(LocaleInterface $a, LocaleInterface $b) : int {
                 return strnatcasecmp($a->getLabel(), $b->getLabel());
             });
         }
@@ -256,27 +295,17 @@ class Localization
      */
     protected static function createLocale(string $localeName) : LocaleInterface
     {
-        $class = '\AppLocalize\Locale\\'.$localeName;
-
-        try
-        {
-            $locale = new $class();
-
-            if ($locale instanceof LocaleInterface)
-            {
-                return $locale;
-            }
-        }
-        catch (Throwable $e)
-        {
-
+        $collection = LocalesCollection::getInstance();
+        if($collection->idExists($localeName)) {
+            return $collection->getByID($localeName);
         }
 
         throw new LocalizationException(
             'Locale not supported.',
             sprintf(
-                'The locale class [%s] does not exist.',
-                $localeName
+                'The locale class [%s] does not exist. Known locales are: [%s].',
+                $localeName,
+                implode(', ', $collection->getIDs())
             ),
             self::ERROR_LOCALE_NOT_FOUND
         );
