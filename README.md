@@ -10,6 +10,8 @@ localization layer that stores translated strings in ini files.
 * Built-in translator UI that can be integrated into an existing UI
 * Clientside translations with auto-generated include files
 * Translations with or without translation context information for translators
+* Classes for working with countries, locales, languages and currencies
+* Handles mistaking `uk` for `gb` and `en_UK` for `en_GB`.
 
 ## Installation
 
