@@ -30,12 +30,12 @@
 	"prefer-stable" : true,
 	"require" : 
 	{
-		"mistralys/application-utils-core" : ">=2.3.1",
+		"mistralys/application-utils-core" : ">=2.3.11",
 		"mistralys/application-utils": ">=3.0.5",
 		"mistralys/jtokenizer" : ">=1.0.1",
 		"mistralys/php-sprintf-parser" : "^1.0",
 		"mistralys/html_quickform2": ">=2.3.5",
-		"mistralys/application-utils-collections": ">=1.1.2",
+		"mistralys/application-utils-collections": ">=1.1.5",
 		"mistralys/changelog-parser": ">=1.0.2",
 		"mck89/peast": ">=v1.17.0",
 		"php": "^7.4|^8.0",

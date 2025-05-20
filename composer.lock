@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d76569950a577f073474cdefd85183f",
+    "content-hash": "4c0168ea03ac32a0000bbcd685d0b8d2",
     "packages": [
         {
             "name": "geshi/geshi",
@@ -166,20 +166,20 @@
         },
         {
             "name": "mistralys/application-utils-collections",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils-collections.git",
-                "reference": "8c5e88b0f6f367cbde34d16ac1720516611968f4"
+                "reference": "9836bbbae87304a7993dfa23df1d7ce982a6af16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils-collections/zipball/8c5e88b0f6f367cbde34d16ac1720516611968f4",
-                "reference": "8c5e88b0f6f367cbde34d16ac1720516611968f4",
+                "url": "https://api.github.com/repos/Mistralys/application-utils-collections/zipball/9836bbbae87304a7993dfa23df1d7ce982a6af16",
+                "reference": "9836bbbae87304a7993dfa23df1d7ce982a6af16",
                 "shasum": ""
             },
             "require": {
-                "mistralys/application-utils-core": ">=2.3.7",
+                "mistralys/application-utils-core": ">=2.3.11",
                 "php": ">=7.4"
             },
             "require-dev": {
@@ -207,22 +207,22 @@
             "description": "Interfaces, traits and classes for handling static item collections, similar to Enums and with useful getter methods.",
             "support": {
                 "issues": "https://github.com/Mistralys/application-utils-collections/issues",
-                "source": "https://github.com/Mistralys/application-utils-collections/tree/1.1.4"
+                "source": "https://github.com/Mistralys/application-utils-collections/tree/1.1.5"
             },
-            "time": "2025-04-18T13:25:07+00:00"
+            "time": "2025-05-20T05:53:17+00:00"
         },
         {
             "name": "mistralys/application-utils-core",
-            "version": "2.3.10",
+            "version": "2.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils-core.git",
-                "reference": "e037db9098e51b791a1c26f8f426fb9f37b482d9"
+                "reference": "6c02738d04e410f370db7081f88896d2a4e96410"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils-core/zipball/e037db9098e51b791a1c26f8f426fb9f37b482d9",
-                "reference": "e037db9098e51b791a1c26f8f426fb9f37b482d9",
+                "url": "https://api.github.com/repos/Mistralys/application-utils-core/zipball/6c02738d04e410f370db7081f88896d2a4e96410",
+                "reference": "6c02738d04e410f370db7081f88896d2a4e96410",
                 "shasum": ""
             },
             "require": {
@@ -269,9 +269,9 @@
             "description": "Drop-in utilities for PHP applications.",
             "support": {
                 "issues": "https://github.com/Mistralys/application-utils-core/issues",
-                "source": "https://github.com/Mistralys/application-utils-core/tree/2.3.10"
+                "source": "https://github.com/Mistralys/application-utils-core/tree/2.3.11"
             },
-            "time": "2025-03-28T11:28:28+00:00"
+            "time": "2025-05-20T05:40:36+00:00"
         },
         {
             "name": "mistralys/application-utils-image",
