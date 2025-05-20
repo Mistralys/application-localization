@@ -8,8 +8,9 @@ use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
 use AppLocalize\Localization\LocalizationException;
+use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
-interface LocaleInterface
+interface LocaleInterface extends StringPrimaryRecordInterface
 {
     /**
      * Retrieves the two-letter language code of the locale.
