@@ -92,19 +92,19 @@ class CannedCurrencies
         );
     }
 
-    public function usd() : CurrencyUSD
-    {
-        return ClassHelper::requireObjectInstanceOf(
-            CurrencyUSD::class,
-            $this->currencies->getByID(CurrencyUSD::ISO_CODE)
-        );
-    }
-
     public function sgd() : CurrencySGD
     {
         return ClassHelper::requireObjectInstanceOf(
             CurrencySGD::class,
             $this->currencies->getByID(CurrencySGD::ISO_CODE)
+        );
+    }
+
+    public function usd() : CurrencyUSD
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CurrencyUSD::class,
+            $this->currencies->getByID(CurrencyUSD::ISO_CODE)
         );
     }
 }
