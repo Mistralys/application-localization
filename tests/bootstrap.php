@@ -10,23 +10,13 @@
 declare(strict_types=1);
 
 use AppLocalize\Localization;
-use AppUtils\ClassHelper;
 
 const TESTS_ROOT = __DIR__;
-
-$autoloader = __DIR__.'/../vendor/autoload.php';
-if(!file_exists($autoloader)) {
-    die('Cannot run tests: the autoload is not present. Please run composer update first.');
-}
 
 $sourcesPath = __DIR__.'/../example/sources';
 if(!is_dir($sourcesPath)) {
     die('Cannot run tests: the example sources could not be found.');
 }
-
-require_once $autoloader;
-
-ClassHelper::setCacheFolder(__DIR__.'/cache');
 
 // where the test files are stored
 $storageFolder = TESTS_ROOT.'/storage';
