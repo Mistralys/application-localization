@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 use AppLocalize\Localization;
 use AppLocalize\Localization\LocalizationException;
+use function AppLocalize\t;
 
 final class LocalizationCoreTests extends TestCase
 {
@@ -25,9 +26,9 @@ final class LocalizationCoreTests extends TestCase
             'Default app locale should match'
         );
 
-        $this->assertEquals(
+        $this->assertCount(
             1,
-            count(Localization::getAppLocales()),
+            Localization::getAppLocales(),
             'By default a single app locale should be present.'
         );
     }
@@ -40,9 +41,9 @@ final class LocalizationCoreTests extends TestCase
             'Default content locale should match'
         );
 
-        $this->assertEquals(
+        $this->assertCount(
             1,
-            count(Localization::getContentLocales()),
+            Localization::getContentLocales(),
             'By default a single content locale should be present.'
         );
     }
@@ -234,7 +235,7 @@ final class LocalizationCoreTests extends TestCase
         $select = Localization::injectAppLocalesSelector('select-app-locale', $form);
 
         $this->assertEquals('select-app-locale', $select->getName());
-        $this->assertEquals(\AppLocalize\t('Language'), $select->getLabel());
+        $this->assertEquals(t('Language'), $select->getLabel());
         $this->assertEquals(2, $select->countOptions());
     }
 
@@ -247,7 +248,7 @@ final class LocalizationCoreTests extends TestCase
         $select = Localization::injectContentLocalesSelector('select-content-locale', $form);
 
         $this->assertEquals('select-content-locale', $select->getName());
-        $this->assertEquals(\AppLocalize\t('Language'), $select->getLabel());
+        $this->assertEquals(t('Language'), $select->getLabel());
         $this->assertEquals(2, $select->countOptions());
     }
 
