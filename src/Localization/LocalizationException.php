@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization;
 
-use AppLocalize\Localization_Exception;
+use AppUtils\BaseException;
 
-class LocalizationException extends Localization_Exception
+class LocalizationException extends BaseException
 {
 }
