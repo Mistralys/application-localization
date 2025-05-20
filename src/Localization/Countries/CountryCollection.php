@@ -25,13 +25,16 @@ use AppUtils\Interfaces\StringPrimaryRecordInterface;
  * @package Localization
  * @subpackage Countries
  *
- * @method BaseCountry getByID(string $id)
  * @method BaseCountry getDefault()
  * @method BaseCountry[] getAll()
  */
 class CountryCollection extends BaseClassLoaderCollection
 {
     private static ?CountryCollection $instance = null;
+    /**
+     * @var array<string, string>
+     */
+    private array $aliases = array();
 
     private function __construct()
     {
@@ -58,7 +61,35 @@ class CountryCollection extends BaseClassLoaderCollection
      */
     public function getByISO(string $iso) : CountryInterface
     {
-        return $this->getByID(strtolower($iso));
+        return $this->getByID($iso);
+    }
+
+    /**
+     * @param string $id
+     * @return CountryInterface
+     * @throws CollectionException
+     */
+    public function getByID(string $id): StringPrimaryRecordInterface
+    {
+        $this->initItems();
+
+        return parent::getByID($this->filterCode($id));
+    }
+
+    public function idExists(string $id): bool
+    {
+        $this->initItems();
+
+        $id = strtolower($id);
+
+        return isset($this->aliases[$id]) || parent::idExists($id);
+    }
+
+    public function filterCode(string $code) : string
+    {
+        $code = strtolower($code);
+
+        return $this->aliases[$code] ?? $code;
     }
 
     /**
@@ -68,7 +99,7 @@ class CountryCollection extends BaseClassLoaderCollection
      */
     public function isoExists(string $iso) : bool
     {
-        return $this->idExists(strtolower($iso));
+        return $this->idExists($iso);
     }
 
     public function getDefaultID(): string
@@ -94,10 +125,16 @@ class CountryCollection extends BaseClassLoaderCollection
      */
     protected function createItemInstance(string $class): StringPrimaryRecordInterface
     {
-        return ClassHelper::requireObjectInstanceOf(
+        $country = ClassHelper::requireObjectInstanceOf(
             CountryInterface::class,
             new $class()
         );
+
+        foreach($country->getAliases() as $alias) {
+            $this->aliases[$alias] = $country->getCode();
+        }
+
+        return $country;
     }
 
     public function getInstanceOfClassName(): ?string
