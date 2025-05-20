@@ -14,12 +14,16 @@ use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
 /**
  * @method LocaleInterface[] getAll()
- * @method LocaleInterface getByID(string $id)
  * @method LocaleInterface getDefault()
  */
 class LocalesCollection extends BaseClassLoaderCollection
 {
     private static ?self $instance = null;
+
+    /**
+     * @var array<string, string>
+     */
+    private array $aliases = array();
 
     public static function getInstance(): self
     {
@@ -37,10 +41,16 @@ class LocalesCollection extends BaseClassLoaderCollection
 
     protected function createItemInstance(string $class): StringPrimaryRecordInterface
     {
-        return ClassHelper::requireObjectInstanceOf(
+        $locale = ClassHelper::requireObjectInstanceOf(
             LocaleInterface::class,
             new $class()
         );
+
+        foreach($locale->getAliases() as $alias) {
+            $this->aliases[$alias] = $locale->getID();
+        }
+
+        return $locale;
     }
 
     public function getInstanceOfClassName(): ?string
@@ -61,5 +71,38 @@ class LocalesCollection extends BaseClassLoaderCollection
     public function getDefaultID(): string
     {
         return en_US::LOCALE_NAME;
+    }
+
+    public function idExists(string $id): bool
+    {
+        $this->initItems();
+
+        return isset($this->aliases[$id]) || parent::idExists($id);
+    }
+
+    public function getByName(string $name) : LocaleInterface
+    {
+        return $this->getByID($name);
+    }
+
+    public function nameExists(string $name): bool
+    {
+        return $this->idExists($name);
+    }
+
+    /**
+     * @param string $id
+     * @return LocaleInterface
+     */
+    public function getByID(string $id): StringPrimaryRecordInterface
+    {
+        return parent::getByID($this->filterName($id));
+    }
+
+    public function filterName(string $name) : string
+    {
+        $this->initItems();
+
+        return $this->aliases[$name] ?? $name;
     }
 }
