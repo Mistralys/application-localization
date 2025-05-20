@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Countries;
 
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locales\LocaleInterface;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
 /**
@@ -65,4 +66,8 @@ interface CountryInterface extends StringPrimaryRecordInterface
      * @return string
      */
     public function getCode() : string;
+
+    public function getMainLocaleCode() : string;
+
+    public function getMainLocale() : LocaleInterface;
 }

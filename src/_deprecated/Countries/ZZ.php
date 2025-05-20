@@ -11,6 +11,7 @@ namespace AppLocalize;
 use AppLocalize\Localization\Currency\CurrencyUSD;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryZZ;
+use AppLocalize\Localization\Locale\en_US;
 
 /**
  * Country class with the definitions for Germany.
@@ -53,5 +54,10 @@ class Localization_Country_ZZ extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyUSD::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return en_US::LOCALE_NAME;
     }
 }

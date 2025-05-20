@@ -11,6 +11,7 @@ namespace AppLocalize;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryUK;
 use AppLocalize\Localization\Currency\CurrencyGBP;
+use AppLocalize\Localization\Locale\en_UK;
 
 /**
  * Country class with the definitions for England.
@@ -53,5 +54,10 @@ class Localization_Country_UK extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyGBP::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return en_UK::LOCALE_NAME;
     }
 }

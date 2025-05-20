@@ -10,6 +10,7 @@ namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locale\en_IE;
 use function AppLocalize\t;
 
 /**
@@ -52,5 +53,10 @@ class CountryIE extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return en_IE::LOCALE_NAME;
     }
 }

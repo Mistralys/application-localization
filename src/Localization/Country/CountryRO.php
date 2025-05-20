@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Locale\ro_RO;
 use AppLocalize\Localization_Country_RO;
 use AppLocalize\Localization\Currency\CurrencyRON;
 use function AppLocalize\t;
@@ -52,5 +53,10 @@ class CountryRO extends Localization_Country_RO
     public function getCurrencyISO() : string
     {
         return CurrencyRON::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return ro_RO::LOCALE_NAME;
     }
 }

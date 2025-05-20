@@ -6,6 +6,7 @@
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Locale\de_AT;
 use AppLocalize\Localization_Country_AT;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use function AppLocalize\t;
@@ -50,5 +51,10 @@ class CountryAT extends Localization_Country_AT
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return de_AT::LOCALE_NAME;
     }
 }

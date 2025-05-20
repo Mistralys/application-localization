@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Locale\de_CH;
 use AppLocalize\Localization_Country_CH;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use function AppLocalize\t;
@@ -47,5 +48,10 @@ class CountryCH extends Localization_Country_CH
     public function getNumberThousandsSeparator(): string
     {
         return "'";
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return de_CH::LOCALE_NAME;
     }
 }

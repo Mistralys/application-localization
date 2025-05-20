@@ -11,6 +11,7 @@ namespace AppLocalize;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryFR;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locale\fr_FR;
 
 /**
  * Country class with the definitions for France.
@@ -53,5 +54,10 @@ class Localization_Country_FR extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return fr_FR::LOCALE_NAME;
     }
 }

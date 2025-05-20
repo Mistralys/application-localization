@@ -11,6 +11,7 @@ namespace AppLocalize;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryES;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locale\es_ES;
 
 /**
  * Country class with the definitions for Spain.
@@ -53,5 +54,10 @@ class Localization_Country_ES extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return es_ES::LOCALE_NAME;
     }
 }

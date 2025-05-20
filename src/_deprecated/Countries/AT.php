@@ -9,6 +9,7 @@ namespace AppLocalize;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryAT;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locale\de_AT;
 
 /**
  * Country class with the definitions for Austria.
@@ -51,5 +52,10 @@ class Localization_Country_AT extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return de_AT::LOCALE_NAME;
     }
 }

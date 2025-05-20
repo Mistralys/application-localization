@@ -10,6 +10,7 @@ namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locale\fi_FI;
 use function AppLocalize\t;
 
 /**
@@ -52,5 +53,10 @@ class CountryFI extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return fi_FI::LOCALE_NAME;
     }
 }

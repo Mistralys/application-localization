@@ -11,6 +11,7 @@ namespace AppLocalize;
 use AppLocalize\Localization\Country\CountryCH;
 use AppLocalize\Localization\Country\CountryDE;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locale\de_CH;
 
 /**
  * Country class with the definitions for Switzerland.
@@ -48,5 +49,10 @@ class Localization_Country_CH extends CountryDE
     public function getNumberThousandsSeparator(): string
     {
         return "'";
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return de_CH::LOCALE_NAME;
     }
 }

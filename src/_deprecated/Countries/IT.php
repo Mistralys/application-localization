@@ -11,6 +11,7 @@ namespace AppLocalize;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryIT;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locale\it_IT;
 
 /**
  * Country class with the definitions for Italy.
@@ -53,5 +54,10 @@ class Localization_Country_IT extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyEUR::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return it_IT::LOCALE_NAME;
     }
 }

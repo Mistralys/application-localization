@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Locale\pl_PL;
 use AppLocalize\Localization_Country_PL;
 use AppLocalize\Localization\Currency\CurrencyPLN;
 use function AppLocalize\t;
@@ -52,5 +53,10 @@ class CountryPL extends Localization_Country_PL
     public function getCurrencyISO() : string
     {
         return CurrencyPLN::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return pl_PL::LOCALE_NAME;
     }
 }

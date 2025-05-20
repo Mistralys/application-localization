@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Locale\en_US;
 use AppLocalize\Localization_Country_ZZ;
 use AppLocalize\Localization\Currency\CurrencyUSD;
 use function AppLocalize\t;
@@ -52,5 +53,10 @@ class CountryZZ extends Localization_Country_ZZ
     public function getCurrencyISO() : string
     {
         return CurrencyUSD::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return en_US::LOCALE_NAME;
     }
 }

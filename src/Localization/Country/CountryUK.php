@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Country;
 
+use AppLocalize\Localization\Locale\en_UK;
 use AppLocalize\Localization_Country_UK;
 use AppLocalize\Localization\Currency\CurrencyGBP;
 use function AppLocalize\t;
@@ -52,5 +53,10 @@ class CountryUK extends Localization_Country_UK
     public function getCurrencyISO() : string
     {
         return CurrencyGBP::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return en_UK::LOCALE_NAME;
     }
 }

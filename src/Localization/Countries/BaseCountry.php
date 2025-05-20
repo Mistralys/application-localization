@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Countries;
 
 use AppLocalize\Localization;
+use AppLocalize\Localization\Locales\LocaleInterface;
+use AppLocalize\Localization\Locales\LocalesCollection;
 
 /**
  * Individual country representation for handling country-related
@@ -52,5 +54,10 @@ abstract class BaseCountry implements CountryInterface
     public function __toString()
     {
         return $this->getLabel();
+    }
+
+    public function getMainLocale() : LocaleInterface
+    {
+        return LocalesCollection::getInstance()->getByID($this->getMainLocaleCode());
     }
 }

@@ -53,4 +53,9 @@ class CountrySG extends BaseCountry
     {
         return CurrencySGD::ISO_CODE;
     }
+
+    public function getMainLocaleCode(): string
+    {
+        return 'en_SG';
+    }
 }

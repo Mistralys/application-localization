@@ -11,6 +11,7 @@ namespace AppLocalize;
 use AppLocalize\Localization\Currency\CurrencyCAD;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Country\CountryCA;
+use AppLocalize\Localization\Locale\en_CA;
 
 /**
  * Country class with the definitions for Canada.
@@ -53,5 +54,10 @@ class Localization_Country_CA extends BaseCountry
     public function getCurrencyISO() : string
     {
         return CurrencyCAD::ISO_CODE;
+    }
+
+    public function getMainLocaleCode(): string
+    {
+        return en_CA::LOCALE_NAME;
     }
 }
