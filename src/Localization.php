@@ -349,19 +349,6 @@ class Localization
     }
 
     /**
-     * Creates a new country object for the specified country, e.g. "uk".
-     *
-     * @param string $id
-     * @return BaseCountry
-     *
-     * @deprecated Use the collection instead: {@see self::createCountries()}
-     */
-    public static function createCountry(string $id) : BaseCountry
-    {
-        return self::createCountries()->getByID($id);
-    }
-
-    /**
      * Retrieves the currency of the selected app locale.
      *
      * @return CurrencyInterface
@@ -664,6 +651,8 @@ class Localization
    
     public static function localeExistsInNS(string $localeName, string $namespace) : bool
     {
+        $localeName = LocalesCollection::getInstance()->filterName($localeName);
+
         return isset(self::$locales[$namespace][$localeName]);
     }
 
@@ -746,7 +735,9 @@ class Localization
     public static function getLocaleByNameNS(string $localeName, string $namespace) : LocaleInterface
     {
         self::requireNamespace($namespace);
-        
+
+        $localeName = LocalesCollection::getInstance()->filterName($localeName);
+
         if(isset(self::$locales[$namespace][$localeName])) {
             return self::$locales[$namespace][$localeName];
         }
