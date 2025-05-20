@@ -14,6 +14,8 @@
 - Tests: Namespaced and organized all test classes.
 - Editor: Better path display for files with warnings.
 - Parser: Replaced the obsolete JTokenizer with [Peast](https://github.com/mck89/peast).
+- Dependencies: Updated AppUtils Core to [v2.3.11](https://github.com/Mistralys/application-utils-core/releases/tag/2.3.11).
+- Dependencies: Updated AppUtils Collections to [v1.1.5](https://github.com/Mistralys/application-utils-collections/releases/tag/1.1.5).
 
 ### Breaking changes
 
