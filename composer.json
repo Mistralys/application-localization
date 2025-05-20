@@ -55,6 +55,7 @@
 	},
 	"scripts": {
 		"post-autoload-dump": "@php tests/clear-class-cache.php",
-		"clear-class-cache": "@php tests/clear-class-cache.php"
+		"clear-class-cache": "@php tests/clear-class-cache.php",
+		"build-release": "\\AppLocalize\\Tools\\ReleaseBuilder::build"
 	}
 }
