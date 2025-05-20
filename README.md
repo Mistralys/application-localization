@@ -56,18 +56,32 @@ $source = Localization::addSourceFolder(
 );
 ```
 
-### 3) Configure class loading
+### 3) Configure class loading (optional)
 
-Ensure that the cache folder for the class helper has been set:
+The package uses a class loader to load its classes dynamically. 
+This requires a cache folder to be set, whose default fallback
+location is `./cache` unless otherwise specified.
+
+> The default cache location is fine to use if this folder is
+> writable. 
+
+The default can be overridden with the constant `LOCALIZATION_CACHE_FOLDER`,
+which has to be present when the Composer autoload file is included.
+The advantage is being able to use the same cache folder for all 
+class loaders to avoid multiple cache files to be loaded.
 
 ```php
-use AppUtils\ClassHelper;
+// Must be defined before the autoloader
+const LOCALIZATION_CACHE_FOLDER = '/path/to/cache';
 
-ClassHelper::setCacheFolder('/path/to/cache');
+require_once __DIR__ . '/vendor/autoload.php';
 ```
 
-The cache must be invalidated when the package is updated.
-This can be easily done via the class helper:
+#### Managing cache contents
+
+The cache must be invalidated when the package is updated with new
+countries, locales or the like. This can be easily done via the 
+Class Helper:
 
 ```php
 use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
@@ -75,11 +89,10 @@ use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
 ClassRepositoryManager::create('/path/to/cache')->clearCache();
 ```
 
-> NOTE: A good way to handle this is with Composer scripts.
-> Look at the [composer.json](./composer.json) and the 
-> [clear-class-cache.php](./tests/clear-class-cache.php) files
-> for an example.
-
+A good way to handle this is with Composer scripts.
+Look at the [composer.json](./composer.json) and the 
+[clear-class-cache.php](./tests/clear-class-cache.php) files
+for an example.
 
 #### Excluding files and folders
 
@@ -97,7 +110,7 @@ $source->excludeFile('jquery-ui.min.js'); // by exact file name match
 
 > Note: No need to specify the absolute path or file name, as long as the name is unique.
 
-### 3) Main configuration settings
+### 4) Main configuration settings
 
 > Note: This must be done last, after the locales and sources have been defined.
 
@@ -112,7 +125,7 @@ Localization::configure(
 
 If no path is specified for the clientside includes, they will be disabled.
 
-### 4) Select the target locale
+### 5) Select the target locale
 
 The locale is english by default, and you can switch the locale anytime using this:
 
@@ -124,7 +137,7 @@ Localization::selectAppLocale('de_DE');
 
 > Note: Your application logic must handle the decision of which locale to use.
 
-### 5) Include the client libraries (optional)
+### 6) Include the client libraries (optional)
 
 The localization library automatically creates the necessary javascript include files
 in the folder you specified in step 3). In your application, include the following 
