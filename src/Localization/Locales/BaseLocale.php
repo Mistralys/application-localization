@@ -98,4 +98,9 @@ abstract class BaseLocale implements LocaleInterface
     {
         return $this->getCountry()->getCurrency();
     }
+
+    public function getAliases(): array
+    {
+        return array();
+    }
 }
