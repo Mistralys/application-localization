@@ -6,6 +6,7 @@
 - Countries: Added `getLabelInvariant()` to get the label in invariant locale.
 - Countries: Now using dynamic class loading.
 - Countries: Renamed and namespaced all country classes.
+- Countries: Added `getMainLocale()`.
 - Currencies: Now using dynamic class loading.
 - Currencies: Renamed and namespaced all currency classes.
 - Currencies: Added the Singapore Dollar (SGD).
