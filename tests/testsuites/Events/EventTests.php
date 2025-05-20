@@ -50,7 +50,7 @@ final class EventTests extends TestCase
         $this->assertInstanceOf(LocaleChanged::class, $this->changeEvent);
 
         $this->assertNotNull($this->changeEvent, 'No event triggered');
-        $this->assertEquals($this->changeEvent->getPrevious()->getName(), 'en_UK');
+        $this->assertEquals($this->changeEvent->getPrevious()->getName(), 'en_GB');
         $this->assertEquals($this->changeEvent->getCurrent()->getName(), 'de_DE');
 
         $this->changeEvent = null;
@@ -59,7 +59,7 @@ final class EventTests extends TestCase
 
         $this->assertInstanceOf(LocaleChanged::class, $this->changeEvent);
         $this->assertEquals($this->changeEvent->getPrevious()->getName(), 'de_DE');
-        $this->assertEquals($this->changeEvent->getCurrent()->getName(), 'en_UK');
+        $this->assertEquals($this->changeEvent->getCurrent()->getName(), 'en_GB');
     }
 
     /**

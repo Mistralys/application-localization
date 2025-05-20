@@ -38,7 +38,7 @@ final class LocaleTests extends TestCase
     {
         $tests = array(
             'de_DE' => 'de',
-            'en_UK' => 'uk',
+            'en_UK' => 'gb',
             'fr_FR' => 'fr',
             'en_CA' => 'ca'
         );
@@ -57,17 +57,17 @@ final class LocaleTests extends TestCase
     public function test_getName(): void
     {
         $tests = array(
-            'de_DE',
-            'en_UK',
-            'fr_FR',
-            'en_CA'
+            'de_DE' => 'de_DE',
+            'en_UK' => 'en_GB',
+            'fr_FR' => 'fr_FR',
+            'en_CA' => 'en_CA',
         );
 
-        foreach ($tests as $localeName) {
+        foreach ($tests as $localeName => $actualName) {
             $locale = Localization::addAppLocale($localeName);
 
             $this->assertEquals(
-                $localeName,
+                $actualName,
                 $locale->getName(),
                 'The locale name should match.'
             );
@@ -95,6 +95,6 @@ final class LocaleTests extends TestCase
 
     public function test_getLabel(): void
     {
-        $this->assertEquals('English (UK)', Localization::getAppLocale()->getLabel());
+        $this->assertEquals('English (Great Britain)', Localization::getAppLocale()->getLabel());
     }
 }
