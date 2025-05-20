@@ -10,7 +10,7 @@ namespace AppLocalize\Localization\Currency;
 
 use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Country\CountryFR;
-use AppLocalize\Localization_Currency_EUR;
+use AppLocalize\Localization\Currencies\BaseCurrency;
 use function AppLocalize\t;
 
 /**
@@ -19,7 +19,7 @@ use function AppLocalize\t;
  * @package Localization
  * @subpackage Currencies
  */
-class CurrencyEUR extends Localization_Currency_EUR
+class CurrencyEUR extends BaseCurrency
 {
     public const ISO_CODE = 'EUR';
 

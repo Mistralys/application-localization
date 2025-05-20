@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Currency;
 
 use AppLocalize\Localization\Countries\CountryInterface;
-use AppLocalize\Localization_Currency_MXN;
+use AppLocalize\Localization\Currencies\BaseCurrency;
 use function AppLocalize\t;
 
 /**
@@ -18,7 +18,7 @@ use function AppLocalize\t;
  * @package Localization
  * @subpackage Currencies
  */
-class CurrencyMXN extends Localization_Currency_MXN
+class CurrencyMXN extends BaseCurrency
 {
     public const ISO_CODE = 'MXN';
 

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Currency;
 
 use AppLocalize\Localization\Countries\CountryInterface;
-use AppLocalize\Localization_Currency_USD;
+use AppLocalize\Localization\Currencies\BaseCurrency;
 use function AppLocalize\t;
 
 /**
@@ -18,7 +18,7 @@ use function AppLocalize\t;
  * @package Localization
  * @subpackage Currencies
  */
-class CurrencyUSD extends Localization_Currency_USD
+class CurrencyUSD extends BaseCurrency
 {
     public const ISO_CODE = 'USD';
 
