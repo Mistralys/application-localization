@@ -25,3 +25,4 @@ example/client-libraries/cachekey.txt
 version.txt
 tests/storage/trywrite.ini.hash
 tests/cache/*.php
+cache/*.php
