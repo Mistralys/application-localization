@@ -8,9 +8,11 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Countries;
 
+use AppLocalize\Localization;
 use AppLocalize\Localization\Country\CountryUS;
 use AppUtils\ClassHelper;
 use AppUtils\ClassHelper\BaseClassHelperException;
+use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
 use AppUtils\Collections\BaseClassLoaderCollection;
 use AppUtils\Collections\CollectionException;
 use AppUtils\FileHelper\FolderInfo;
@@ -42,6 +44,11 @@ class CountryCollection extends BaseClassLoaderCollection
         }
 
         return self::$instance;
+    }
+
+    protected function getClassRepository() : ClassRepositoryManager
+    {
+        return Localization::getClassRepository();
     }
 
     /**

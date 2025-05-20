@@ -8,8 +8,10 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Currencies;
 
+use AppLocalize\Localization;
 use AppLocalize\Localization\Currency\CurrencyUSD;
 use AppUtils\ClassHelper;
+use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
 use AppUtils\Collections\BaseClassLoaderCollection;
 use AppUtils\Collections\CollectionException;
 use AppUtils\FileHelper\FolderInfo;
@@ -55,6 +57,11 @@ class CurrencyCollection extends BaseClassLoaderCollection
     public function getByISO(string $iso) : CurrencyInterface
     {
         return $this->getByID(strtoupper($iso));
+    }
+
+    protected function getClassRepository() : ClassRepositoryManager
+    {
+        return Localization::getClassRepository();
     }
 
     /**
