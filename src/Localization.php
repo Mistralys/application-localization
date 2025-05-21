@@ -565,6 +565,17 @@ class Localization
         return self::$listenersCounter;
     }
 
+    /**
+     * Clears the dynamic class loading cache of the localization package.
+     *
+     * @return void
+     * @throws ClassHelper\Repository\ClassRepositoryException
+     */
+    public static function clearClassCache() : void
+    {
+        ClassRepositoryManager::create(self::getCacheFolder())->clearCache();
+    }
+
     private static function resolveEventClass(string $eventName) : string
     {
         $className = ClassHelper::resolveClassName(
