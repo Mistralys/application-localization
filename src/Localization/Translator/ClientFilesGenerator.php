@@ -7,7 +7,6 @@ namespace AppLocalize\Localization\Translator;
 use AppLocalize\Localization;
 use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\LocalizationException;
-use AppLocalize\Localization\Locales\BaseLocale;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper\FileInfo;
@@ -167,7 +166,7 @@ class ClientFilesGenerator
             $files[] = $this->getLibraryFilePath($fileName);
         }
         
-        foreach($this->getTargetLocales() as $locale)
+        foreach(self::getTargetLocales() as $locale)
         {
             $files[] = $this->getLocaleFilePath($locale);
         }
@@ -256,7 +255,7 @@ class ClientFilesGenerator
         return $this->getTargetFolder().'/'.$fileName;
     }
     
-    protected function getLocaleFilePath(BaseLocale $locale) : string
+    protected function getLocaleFilePath(LocaleInterface $locale) : string
     {
         return sprintf(
             '%s/locale-%s.js',
@@ -277,10 +276,12 @@ class ClientFilesGenerator
      * 1) Save it to a JavaScript file and include that
      * 2) Serve it as application/javascript content via PHP
      *
-     * NOTE: Caching has to be handled on the application
-     * side. This method creates a fresh collection each time.
+     * > NOTE: Caching has to be handled on the application side.
+     * > This method creates a fresh collection each time.
+     *
+     * @param LocaleInterface $locale
      */
-    protected function writeLocaleFile(BaseLocale $locale) : void
+    protected function writeLocaleFile(LocaleInterface $locale) : void
     {
         self::log('Write Files | Writing locale [%s].', $locale->getName());
 
