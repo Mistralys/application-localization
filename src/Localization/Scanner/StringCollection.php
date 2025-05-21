@@ -1,34 +1,38 @@
 <?php
 
-namespace AppLocalize;
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Scanner;
 
 use AppLocalize\Localization\LocalizationException;
 use AppLocalize\Localization\Parser\ParserWarning;
-use AppLocalize\Localization\Scanner\LocalizationScanner;
 use AppLocalize\Localization\Parser\Text;
+use AppLocalize\Localization\Scanner\CollectionWarning;
 
-class Localization_Scanner_StringsCollection
+/**
+ * @phpstan-import-type SerializedWarning from ParserWarning
+ * @phpstan-import-type SerializedStringHash from StringHash
+ * @phpstan-type SerializedStringCollection array{formatVersion:int,hashes:array<int,SerializedStringHash>,warnings:array<int,SerializedWarning>}
+ */
+class StringCollection
 {
-    const ERROR_UNKNOWN_STRING_HASH = 39201;
+    public const ERROR_UNKNOWN_STRING_HASH = 39201;
     
-    const SOURCE_FILE = 'file';
+    public const SOURCE_FILE = 'file';
     
-    const STORAGE_FORMAT_VERSION = 2;
+    public const STORAGE_FORMAT_VERSION = 2;
     
-   /**
-    * @var LocalizationScanner
-    */
-    protected $scanner;
+    protected LocalizationScanner $scanner;
     
    /**
-    * @var Localization_Scanner_StringHash[]
+    * @var StringHash[]
     */
-    protected $hashes = array();
+    protected array $hashes = array();
     
    /**
-    * @var array
+    * @var array<int,SerializedWarning>
     */
-    protected $warnings = array();
+    protected array $warnings = array();
     
     public function __construct(LocalizationScanner $scanner)
     {
@@ -39,8 +43,8 @@ class Localization_Scanner_StringsCollection
     {
         $string = $this->createString($sourceID, self::SOURCE_FILE, $text);
         
-        $string->setProperty('languageType', $languageType);
-        $string->setProperty('relativePath', $relativePath);
+        $string->setProperty(StringInfo::PROPERTY_LANGUAGE_TYPE, $languageType);
+        $string->setProperty(StringInfo::PROPERTY_RELATIVE_PATH, $relativePath);
         
         $this->add($string);
     }
@@ -50,23 +54,23 @@ class Localization_Scanner_StringsCollection
         $this->warnings[] = $warning->toArray();
     }
     
-    protected function createString(string $sourceID, string $sourceType, Text $text) : Localization_Scanner_StringInfo
+    protected function createString(string $sourceID, string $sourceType, Text $text) : StringInfo
     {
-        return new Localization_Scanner_StringInfo($this, $sourceID, $sourceType, $text);
+        return new StringInfo($this, $sourceID, $sourceType, $text);
     }
     
    /**
     * Adds a single translatable string.
     * 
-    * @param Localization_Scanner_StringInfo $string
-    * @return Localization_Scanner_StringsCollection
+    * @param StringInfo $string
+    * @return StringCollection
     */
-    protected function add(Localization_Scanner_StringInfo $string) : Localization_Scanner_StringsCollection
+    protected function add(StringInfo $string) : StringCollection
     {
         $hash = $string->getHash();
         
         if(!isset($this->hashes[$hash])) {
-            $this->hashes[$hash] = new Localization_Scanner_StringHash($this, $hash);
+            $this->hashes[$hash] = new StringHash($this, $hash);
         }
         
         $this->hashes[$hash]->addString($string);
@@ -77,7 +81,7 @@ class Localization_Scanner_StringsCollection
     * Retrieves all available translatable strings,
     * grouped by their hash to identify unique strings.
     * 
-    * @return Localization_Scanner_StringHash[]
+    * @return StringHash[]
     */
     public function getHashes() : array
     {
@@ -91,10 +95,10 @@ class Localization_Scanner_StringsCollection
 
     /**
      * @param string $hash
-     * @return Localization_Scanner_StringHash
+     * @return StringHash
      * @throws LocalizationException
      */
-    public function getHash(string $hash) : Localization_Scanner_StringHash
+    public function getHash(string $hash) : StringHash
     {
         if(isset($this->hashes[$hash])) {
             return $this->hashes[$hash];
@@ -108,22 +112,20 @@ class Localization_Scanner_StringsCollection
     }
 
     /**
-     * @return array<string,mixed>
+     * @return SerializedStringCollection
      */
     public function toArray() : array
     {
         $data = array(
             'formatVersion' => self::STORAGE_FORMAT_VERSION,
             'hashes' => array(),
-            'warnings' => array()
+            'warnings' => $this->warnings
         );
         
         foreach($this->hashes as $hash)
         {
-            $data['hashes'] = array_merge($data['hashes'], $hash->toArray());
+            $data['hashes'][] = $hash->toArray();
         }
-        
-        $data['warnings'] = $this->warnings;
         
         return $data;
     }
@@ -134,13 +136,13 @@ class Localization_Scanner_StringsCollection
      */
     public function fromArray(array $array) : bool
     {
-        if(!isset($array['formatVersion']) || $array['formatVersion'] != self::STORAGE_FORMAT_VERSION) {
+        if(!isset($array['formatVersion']) || $array['formatVersion'] !== self::STORAGE_FORMAT_VERSION) {
             return false;
         }
         
         foreach($array['hashes'] as $entry) 
         {
-            $string = Localization_Scanner_StringInfo::fromArray($this, $entry);
+            $string = StringInfo::fromArray($this, $entry);
             $this->add($string);
         }
         
@@ -161,7 +163,7 @@ class Localization_Scanner_StringsCollection
     }
     
    /**
-    * Retrieves the amount of warnings.
+    * Retrieves the number of warnings.
     * @return int
     */
     public function countWarnings() : int
@@ -170,17 +172,17 @@ class Localization_Scanner_StringsCollection
     }
     
    /**
-    * Retrieves all warning messages that were added
-    * during the search for translatable texts, if any.
+    * Retrieves all warning messages added during
+    * the search for translatable texts, if any.
     * 
-    * @return Localization_Scanner_StringsCollection_Warning[]
+    * @return CollectionWarning[]
     */
     public function getWarnings() : array
     {
         $result = array();
         
         foreach($this->warnings as $def) {
-            $result[] = new Localization_Scanner_StringsCollection_Warning($def);
+            $result[] = new CollectionWarning($def);
         }
         
         return $result;
@@ -205,7 +207,7 @@ class Localization_Scanner_StringsCollection
     * Retrieves all string hashed for the specified source.
     * 
     * @param string $id
-    * @return Localization_Scanner_StringHash[]
+    * @return StringHash[]
     */
     public function getHashesBySourceID(string $id) : array
     {
@@ -224,7 +226,7 @@ class Localization_Scanner_StringsCollection
     * Retrieves all hashes for the specified language ID.
     * 
     * @param string $languageID The language ID, e.g. "PHP"
-    * @return Localization_Scanner_StringHash[]
+    * @return StringHash[]
     */
     public function getHashesByLanguageID(string $languageID) : array
     {
