@@ -1,8 +1,8 @@
 ## v2.0.0 - Namespacing and new countries (Breaking-XL)
-- Countries: Added Finland (FI).
-- Countries: Added Belgium (BE).
-- Countries: Added Singapore (SG). 
-- Countries: Added Ireland (IE).
+- Countries: Added Finland (`FI`).
+- Countries: Added Belgium (`BE`).
+- Countries: Added Singapore (`SG`). 
+- Countries: Added Ireland (`IE`).
 - Countries: Added `getLabelInvariant()` to get the label in invariant locale.
 - Countries: Now using dynamic class loading.
 - Countries: Renamed and namespaced all country classes.
@@ -18,6 +18,7 @@
 - Tests: Namespaced and organized all test classes.
 - Editor: Better path display for files with warnings.
 - Parser: Replaced the obsolete JTokenizer with [Peast](https://github.com/mck89/peast).
+- Translator: Improved exception message for mismatched placeholders, now also with error code.
 - Composer: Added the `build-release` command.
 - Composer: Added the `clear-class-cache` command.
 - Composer: The class cache is now automatically cleared on autoloader generation.
