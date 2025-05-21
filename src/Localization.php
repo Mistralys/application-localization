@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
-use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Countries\CountryCollection;
 use AppLocalize\Localization\Currencies\CurrencyCollection;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
@@ -16,7 +15,6 @@ use AppLocalize\Localization\Editor\LocalizationEditor;
 use AppLocalize\Localization\Event\CacheKeyChanged;
 use AppLocalize\Localization\Event\ClientFolderChanged;
 use AppLocalize\Localization\Event\LocaleChanged;
-use AppLocalize\Localization\Event\BaseLocalizationEvent;
 use AppLocalize\Localization\Event\LocalizationEventInterface;
 use AppLocalize\Localization\Locale\en_GB;
 use AppLocalize\Localization\Locales\LocaleInterface;
@@ -29,13 +27,10 @@ use AppLocalize\Localization\Translator\ClientFilesGenerator;
 use AppLocalize\Localization\Translator\LocalizationTranslator;
 use AppUtils\ClassHelper;
 use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
-use AppUtils\FileHelper;
 use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper_Exception;
 use HTML_QuickForm2_Container;
 use HTML_QuickForm2_Element_Select;
-use Mistralys\ChangelogParser\ChangelogParser;
-use Throwable;
 
 /**
  * Localization handling collection for both the
@@ -47,21 +42,8 @@ use Throwable;
  */
 class Localization
 {
-    const ERROR_UNKNOWN_CONTENT_LOCALE = 39001;
-    const ERROR_UNKNOWN_APPLICATION_LOCALE = 39002;
-    const ERROR_NO_STORAGE_FILE_SET = 39003;
-    const ERROR_CONFIGURE_NOT_CALLED = 39004;
-    const ERROR_NO_SOURCES_ADDED = 39005;
-    const ERROR_NO_LOCALE_SELECTED_IN_NS = 39006;
-    const ERROR_NO_LOCALES_IN_NAMESPACE = 39007;
-    const ERROR_UNKNOWN_NAMESPACE = 39008;
-    const ERROR_UNKNOWN_LOCALE_IN_NS = 39009;
-    const ERROR_UNKNOWN_EVENT_NAME = 39010;
-    const ERROR_LOCALE_NOT_FOUND = 39011;
-    const ERROR_COUNTRY_NOT_FOUND = 39012;
-    
     /**
-     * The name of the default application locale, i.e. the
+     * The name of the default application locale, i.e., the
      * locale in which application textual content is written.
      *
      * @var string
@@ -217,7 +199,7 @@ class Localization
     * 
     * @param string $namespace
     * @return LocaleInterface[]
-    * @throws LocalizationException {@see self::ERROR_NO_LOCALES_IN_NAMESPACE}
+    * @throws LocalizationException {@see LocalizationException::ERROR_NO_LOCALES_IN_NAMESPACE}
     */
     public static function getLocalesByNS(string $namespace) : array
     {
@@ -231,7 +213,7 @@ class Localization
                 'The namespace [%s] does not exist.',
                 $namespace
             ),
-            self::ERROR_NO_LOCALES_IN_NAMESPACE
+            LocalizationException::ERROR_NO_LOCALES_IN_NAMESPACE
         );
     }
 
@@ -294,7 +276,7 @@ class Localization
      * @return LocaleInterface
      *
      * @throws LocalizationException
-     * @see Localization::ERROR_LOCALE_NOT_FOUND
+     * @see LocalizationException::ERROR_LOCALE_NOT_FOUND
      */
     protected static function createLocale(string $localeName) : LocaleInterface
     {
@@ -310,7 +292,7 @@ class Localization
                 $localeName,
                 implode(', ', $collection->getIDs())
             ),
-            self::ERROR_LOCALE_NOT_FOUND
+            LocalizationException::ERROR_LOCALE_NOT_FOUND
         );
     }
 
@@ -354,7 +336,7 @@ class Localization
      * @return CurrencyInterface
      *
      * @throws LocalizationException
-     * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
+     * @see LocalizationException::ERROR_NO_LOCALE_SELECTED_IN_NS
      */
     public static function getAppCurrency() : CurrencyInterface
     {
@@ -367,7 +349,7 @@ class Localization
      * @return CurrencyInterface
      *
      * @throws LocalizationException
-     * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
+     * @see LocalizationException::ERROR_NO_LOCALE_SELECTED_IN_NS
      */
     public static function getContentCurrency() : CurrencyInterface
     {
@@ -381,7 +363,7 @@ class Localization
      * @return CurrencyInterface
      *
      * @throws LocalizationException
-     * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
+     * @see LocalizationException::ERROR_NO_LOCALE_SELECTED_IN_NS
      */
     public static function getCurrencyNS(string $namespace) : CurrencyInterface
     {
@@ -435,7 +417,7 @@ class Localization
     * @param string $namespace
     * @return LocaleInterface
     * @throws LocalizationException
-    * @see Localization::ERROR_NO_LOCALE_SELECTED_IN_NS
+    * @see LocalizationException::ERROR_NO_LOCALE_SELECTED_IN_NS
     */
     public static function getSelectedLocaleByNS(string $namespace) : LocaleInterface
     {
@@ -451,7 +433,7 @@ class Localization
                 'Cannot retrieve selected locale: no locale has been selected in the namespace [%s].',
                 $namespace
             ),
-            self::ERROR_NO_LOCALE_SELECTED_IN_NS
+            LocalizationException::ERROR_NO_LOCALE_SELECTED_IN_NS
         );
     }
     
@@ -513,7 +495,7 @@ class Localization
      *
      * @param string $name The event name.
      * @param array $argsList
-     * @param string<LocalizationEventInterface> $class The class name of the event to trigger.
+     * @param class-string<LocalizationEventInterface> $class The class name of the event to trigger.
      * @return LocalizationEventInterface
      */
     protected static function triggerEvent(string $name, array $argsList, string $class) : LocalizationEventInterface
@@ -546,7 +528,7 @@ class Localization
      * @param array $args Additional arguments to add to the event
      * @return int The listener number.
      *
-     * @see Localization::ERROR_UNKNOWN_EVENT_NAME
+     * @see LocalizationException::ERROR_UNKNOWN_EVENT_NAME
      */
     public static function addEventListener(string $eventName, callable $callback, array $args=array()) : int
     {
@@ -576,24 +558,6 @@ class Localization
         ClassRepositoryManager::create(self::getCacheFolder())->clearCache();
     }
 
-    private static function resolveEventClass(string $eventName) : string
-    {
-        $className = ClassHelper::resolveClassName(
-            BaseLocalizationEvent::class.'_'.$eventName,
-            'AppLocalize'
-        );
-
-        if(class_exists($className)) {
-            return $className;
-        }
-
-        throw new LocalizationException(
-            sprintf('Unknown localization event [%s].', $eventName),
-            sprintf('The required event class [%s] is not present.', $className),
-            self::ERROR_UNKNOWN_EVENT_NAME
-        );
-    }
-
     /**
      * Adds an event listener for the <code>LocaleChanged</code> event,
      * which is triggered every time a locale is changed in any of the
@@ -604,10 +568,9 @@ class Localization
      * @param callable $callback The listener function to call.
      * @param array $args Optional indexed array with additional arguments to pass on to the callback function.
      * @return int
-     * @throws LocalizationException
      * @see LocaleChanged
      */
-    public static function onLocaleChanged($callback, array $args=array()) : int
+    public static function onLocaleChanged(callable $callback, array $args=array()) : int
     {
         return self::addEventListener(self::EVENT_LOCALE_CHANGED, $callback, $args);
     }
@@ -741,7 +704,7 @@ class Localization
     * @param string $localeName
     * @param string $namespace
     * @return LocaleInterface
-    *@throws LocalizationException {@see self::ERROR_UNKNOWN_LOCALE_IN_NS}
+    *@throws LocalizationException {@see LocalizationException::ERROR_UNKNOWN_LOCALE_IN_NS}
     */
     public static function getLocaleByNameNS(string $localeName, string $namespace) : LocaleInterface
     {
@@ -760,7 +723,7 @@ class Localization
                 $localeName,
                 $namespace
             ),
-            self::ERROR_UNKNOWN_LOCALE_IN_NS
+            LocalizationException::ERROR_UNKNOWN_LOCALE_IN_NS
         );
     }
 
@@ -886,7 +849,7 @@ class Localization
                 'The namespace [%s] does not exist.',
                 $namespace
             ),
-            self::ERROR_UNKNOWN_NAMESPACE
+            LocalizationException::ERROR_UNKNOWN_NAMESPACE
         );
     }
     
@@ -905,7 +868,7 @@ class Localization
     }
     
    /**
-    * Injects an app locales selector element into the specified
+    * Injects an app locale selector element into the specified
      * HTML QuickForm2 container.
      * 
     * @param string $elementName
@@ -919,8 +882,8 @@ class Localization
     }
 
     /**
-     * Injects a locales selector element into the specified
-     * HTML QuickForm2 container, for the specified locales
+     * Injects a locale selector element into the specified
+     * HTML QuickForm2 container, for the specified locale
      * namespace.
      *
      * @param string $elementName
@@ -951,17 +914,17 @@ class Localization
    /**
     * @var BaseLocalizationSource[]
     */
-    protected static $sources = array();
+    protected static array $sources = array();
     
    /**
     * @var string[]
     */
-    protected static $excludeFolders = array();
+    protected static array $excludeFolders = array();
     
    /**
     * @var string[]
     */
-    protected static $excludeFiles = array();
+    protected static array $excludeFiles = array();
     
    /**
     * Retrieves all currently available sources.
@@ -992,7 +955,7 @@ class Localization
         $source = new FolderLocalizationSource($alias, $label, $group, $storageFolder, $path);
         self::$sources[] = $source;
 
-        usort(self::$sources, function(BaseLocalizationSource $a, BaseLocalizationSource $b) {
+        usort(self::$sources, static function(BaseLocalizationSource $a, BaseLocalizationSource $b) : int {
             return strnatcasecmp($a->getLabel(), $b->getLabel());
         });
         
@@ -1003,7 +966,7 @@ class Localization
     * Retrieves all sources grouped by their group name.
     * @return array
     */
-    public static function getSourcesGrouped()
+    public static function getSourcesGrouped() : array
     {
         $sources = self::getSources();
         
@@ -1032,7 +995,7 @@ class Localization
     {
         $sources = self::getSources();
         foreach($sources as $source) {
-            if($source->getID() == $sourceID) {
+            if($source->getID() === $sourceID) {
                 return true;
             }
         }
@@ -1049,7 +1012,7 @@ class Localization
     {
         $sources = self::getSources();
         foreach($sources as $source) {
-            if($source->getAlias() == $sourceAlias) {
+            if($source->getAlias() === $sourceAlias) {
                 return true;
             }
         }
@@ -1068,7 +1031,7 @@ class Localization
     {
         $sources = self::getSources();
         foreach($sources as $source) {
-            if($source->getID() == $sourceID) {
+            if($source->getID() === $sourceID) {
                 return $source;
             }
         }
@@ -1076,7 +1039,7 @@ class Localization
         throw new LocalizationException(
             'Unknown localization source',
             sprintf(
-                'The source [%s] has not been added. Available soources are: [%s].',
+                'The source [%s] has not been added. Available sources are: [%s].',
                 $sourceID,
                 implode(', ', self::getSourceIDs())
             )
@@ -1094,7 +1057,7 @@ class Localization
     {
         $sources = self::getSources();
         foreach($sources as $source) {
-            if($source->getAlias() == $sourceAlias) {
+            if($source->getAlias() === $sourceAlias) {
                 return $source;
             }
         }
@@ -1102,7 +1065,7 @@ class Localization
         throw new LocalizationException(
             'Unknown localization source',
             sprintf(
-                'The source [%s] has not been added. Available soources are: [%s].',
+                'The source [%s] has not been added. Available sources are: [%s].',
                 $sourceAlias,
                 implode(', ', self::getSourceAliases())
             )
@@ -1110,7 +1073,7 @@ class Localization
     }
 
     /**
-     * Creates the scanner instance that is used to find
+     * Creates the scanner instance used to find
      * all translatable strings in the application.
      *
      * @return LocalizationScanner
@@ -1154,7 +1117,7 @@ class Localization
     }
     
    /**
-    * Sets a key that is used to verify whether the client
+    * Sets a key used to verify whether the client
     * libraries have to be refreshed. A common use is to set
     * this to the application's version number to guarantee
     * new texts are automatically used with each release.
@@ -1193,7 +1156,7 @@ class Localization
     * Retrieves the path to the folder in which the client
     * libraries should be stored.
     * 
-    * NOTE: Can return an empty string, when this is disabled.
+    * > NOTE: Can return an empty string when this is disabled.
     * 
     * @return string
     */
@@ -1207,13 +1170,13 @@ class Localization
      * at the location specified in the {@link Localization::configure()}
      * method.
      *
-     * @param bool $force Whether to refresh the files, even if they exist.
+     * @param bool $force Whether to force the update of the files, even if they are not changed.
      * @throws LocalizationException|FileHelper_Exception
      * @see ClientFilesGenerator
      */
     public static function writeClientFiles(bool $force=false) : void
     {
-        self::createGenerator()->writeFiles();
+        self::createGenerator()->writeFiles($force);
     }
 
     private static ?ClientFilesGenerator $generator = null;
@@ -1255,7 +1218,7 @@ class Localization
             throw new LocalizationException(
                 'The localization configuration is incomplete.',
                 'The configure method has not been called.',
-                self::ERROR_CONFIGURE_NOT_CALLED
+                LocalizationException::ERROR_CONFIGURE_NOT_CALLED
             );
         }
 
@@ -1264,7 +1227,7 @@ class Localization
             throw new LocalizationException(
                 'No localization storage file set',
                 'To use the scanner, the storage file has to be set using the setStorageFile method.',
-                self::ERROR_NO_STORAGE_FILE_SET
+                LocalizationException::ERROR_NO_STORAGE_FILE_SET
             );
         }
         
@@ -1273,7 +1236,7 @@ class Localization
             throw new LocalizationException(
                 'No source folders have been defined.',
                 'At least one source folder has to be configured using the addSourceFolder method.',
-                self::ERROR_NO_SOURCES_ADDED
+                LocalizationException::ERROR_NO_SOURCES_ADDED
             );
         }
     }
@@ -1339,26 +1302,13 @@ class Localization
     }
     
     /**
-     * Indexed array with locale names supported by the application
-     * @var string[]
-     */
-    protected static $supportedLocales = array();
-
-    /**
      * Retrieves a list of all supported locales.
      *
      * @return string[]
-     * @throws FileHelper_Exception
      */
     public static function getSupportedLocaleNames() : array
     {
-        if(empty(self::$supportedLocales))
-        {
-            self::$supportedLocales = FileHelper::createFileFinder(__DIR__.'/Localization/Locale')
-                ->getPHPClassNames();
-        }
-
-        return self::$supportedLocales;
+        return LocalesCollection::getInstance()->getIDs();
     }
     
    /**
@@ -1369,7 +1319,7 @@ class Localization
     */
     public static function isLocaleSupported(string $localeName) : bool
     {
-        return file_exists(__DIR__.'/Localization/Locale/'.$localeName.'.php');
+        return LocalesCollection::getInstance()->idExists($localeName);
     }
 
     private static ?string $version = null;
@@ -1380,21 +1330,14 @@ class Localization
             return self::$version;
         }
 
-        $versionFile = FileInfo::factory(__DIR__.'/../version.txt');
-
-        if($versionFile->exists()) {
-            self::$version = $versionFile->getContents();
-            return self::$version;
-        }
-
-        self::$version = ChangelogParser::parseMarkdownFile(__DIR__.'/../changelog.md')
-            ->requireLatestVersion()
-            ->getVersionInfo()
-            ->getTagVersion();
-
-        $versionFile->putContents(self::$version);
+        self::$version = self::getVersionFile()->getContents();
 
         return self::$version;
+    }
+
+    public static function getVersionFile() : FileInfo
+    {
+        return FileInfo::factory(__DIR__.'/../version.txt');
     }
 }
 
