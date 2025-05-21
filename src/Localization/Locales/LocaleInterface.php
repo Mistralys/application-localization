@@ -79,7 +79,7 @@ interface LocaleInterface extends StringPrimaryRecordInterface
      * @return CurrencyInterface
      *
      * @throws LocalizationException
-     * @see Localization::ERROR_COUNTRY_NOT_FOUND
+     * @see LocalizationException::ERROR_COUNTRY_NOT_FOUND
      */
     public function getCurrency() : CurrencyInterface;
 
