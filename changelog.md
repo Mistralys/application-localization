@@ -26,6 +26,7 @@
 - Documentation: An overview of countries, locales and currencies is now generated.
 - Code: PHPStan analysis is now clean, up to level 6.
 - Code: PHP8.4 compatible.
+- Core: Switched license to MIT (was GPL3).
 - Dependencies: Updated AppUtils Core to [v2.3.11](https://github.com/Mistralys/application-utils-core/releases/tag/2.3.11).
 - Dependencies: Updated AppUtils Collections to [v1.1.5](https://github.com/Mistralys/application-utils-collections/releases/tag/1.1.5).
 
