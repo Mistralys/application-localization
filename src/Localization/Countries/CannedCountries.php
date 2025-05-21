@@ -164,6 +164,14 @@ class CannedCountries
         );
     }
 
+    public function uk() : CountryGB
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryGB::class,
+            $this->collection->getByID(CountryGB::ISO_CODE)
+        );
+    }
+
     public function us() : CountryUS
     {
         return ClassHelper::requireObjectInstanceOf(
