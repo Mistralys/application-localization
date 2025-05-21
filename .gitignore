@@ -26,3 +26,4 @@ version.txt
 tests/storage/trywrite.ini.hash
 tests/cache/*.php
 cache/*.php
+tests/phpstan/result.txt

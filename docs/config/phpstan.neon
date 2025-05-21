@@ -1,9 +1,0 @@
-parameters:
-    excludes_analyse:
-        - vendor/*
-        - css/*
-    paths:
-        - ../../src
-        - ../../example
-        - ../../tests
-    checkMissingIterableValueType: false
