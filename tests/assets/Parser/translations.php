@@ -34,14 +34,25 @@ $withClosure = static function() {
 
 class PHPTranslationsTestClass
 {
+    use PHPTranslationsTestTrait;
+
     public function __construct()
     {
         echo $this->translateMe();
+        echo $this->translateMeToo();
     }
 
     private function translateMe() : string
     {
         return t('Within class method.');
+    }
+}
+
+trait PHPTranslationsTestTrait
+{
+    public function translateMeToo() : string
+    {
+        return t('Within trait method.');
     }
 }
 
