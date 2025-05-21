@@ -50,6 +50,7 @@ final class ParserPHPTest extends TestCase
             'Within function',
             'Multiline text over several concatenated lines',
             'Within class method.',
+            'Within trait method.',
             'This is %1$sbold%2$s text.',
             'A %1$s text within a translated text.',
             'translated text',
