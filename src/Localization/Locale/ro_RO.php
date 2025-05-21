@@ -18,11 +18,11 @@ class ro_RO extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Romanian');
+        return t('Romanian (Romania)');
     }
 
     public function getLabelInvariant() : string
     {
-        return 'Romanian';
+        return 'Romanian (Romania)';
     }
 }

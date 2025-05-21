@@ -18,11 +18,11 @@ class pl_PL extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Polish');
+        return t('Polish (Poland)');
     }
 
     public function getLabelInvariant() : string
     {
-        return 'Polish';
+        return 'Polish (Poland)';
     }
 }

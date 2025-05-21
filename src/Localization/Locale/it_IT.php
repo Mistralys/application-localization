@@ -18,11 +18,11 @@ class it_IT extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Italian');
+        return t('Italian (Italy)');
     }
 
     public function getLabelInvariant() : string
     {
-        return 'Italian';
+        return 'Italian (Italy)';
     }
 }

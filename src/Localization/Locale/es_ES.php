@@ -18,11 +18,11 @@ class es_ES extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Spanish');
+        return t('Spanish (Spain)');
     }
 
     public function getLabelInvariant() : string
     {
-        return 'Spanish';
+        return 'Spanish (Spain)';
     }
 }

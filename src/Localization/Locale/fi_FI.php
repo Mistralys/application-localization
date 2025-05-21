@@ -18,11 +18,11 @@ class fi_FI extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Finnish');
+        return t('Finnish (Finland)');
     }
 
     public function getLabelInvariant() : string
     {
-        return 'Finnish';
+        return 'Finnish (Finland)';
     }
 }

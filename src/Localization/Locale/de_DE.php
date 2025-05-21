@@ -18,11 +18,11 @@ class de_DE extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('German');
+        return t('German (Germany)');
     }
 
     public function getLabelInvariant() : string
     {
-        return 'German';
+        return 'German (Germany)';
     }
 }

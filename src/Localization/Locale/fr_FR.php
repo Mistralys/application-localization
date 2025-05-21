@@ -18,11 +18,11 @@ class fr_FR extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('French');
+        return t('French (France)');
     }
 
     public function getLabelInvariant() : string
     {
-        return 'French';
+        return 'French (France)';
     }
 }
