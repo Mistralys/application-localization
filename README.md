@@ -13,6 +13,8 @@ localization layer that stores translated strings in ini files.
 * Classes for working with countries, locales, languages and currencies
 * Handles mistaking `uk` for `gb` and `en_UK` for `en_GB`.
 
+[List of countries and locales][]
+
 ## Installation
 
 Require the package via composer:
@@ -86,9 +88,9 @@ countries, locales or the like. This can be easily done via the
 Class Helper:
 
 ```php
-use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
+use AppLocalize\Localization;
 
-ClassRepositoryManager::create('/path/to/cache')->clearCache();
+Localization::clearClassCache();
 ```
 
 A good way to handle this is with Composer scripts.
@@ -477,3 +479,4 @@ it easier. It has no pretension of rivalry with any of the established i18n libr
 [Packagist page]: https://packagist.org/packages/mistralys/application-localization
 [sprintf]: https://www.php.net/manual/en/function.sprintf.php
 [Application Utils]: https://github.com/Mistralys/application-utils
+[List of countries and locales]: ./docs/overview.md
