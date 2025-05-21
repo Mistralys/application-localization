@@ -6,6 +6,7 @@ namespace AppLocalize\Tools;
 
 use AppLocalize\Localization\Countries\CountryCollection;
 use AppLocalize\Localization\Currencies\CurrencyCollection;
+use AppLocalize\Localization\Locales\LocalesCollection;
 use AppUtils\ClassHelper;
 
 class ReleaseBuilder
@@ -16,6 +17,7 @@ class ReleaseBuilder
 
         self::generateCannedCountries();
         self::generateCannedCurrencies();
+        self::generateOverviewMarkdown();
     }
 
     private static function logHeader(string $header) : void
@@ -127,6 +129,79 @@ PHP;
         $outputFile = __DIR__.'/../Localization/Currencies/CannedCurrencies.php';
 
         file_put_contents($outputFile, $code);
+
+        self::logLine(' - Written to '.basename($outputFile));
+        self::logLine(' - DONE.');
+        self::logNL();
+    }
+
+    private static function generateOverviewMarkdown() : void
+    {
+        self::logHeader('Generating markdown documentation');
+
+        $lines = array();
+        $lines[] = '# Supported countries and locales';
+        $lines[] = '';
+        $lines[] = '## Countries';
+        $lines[] = '';
+
+        foreach(CountryCollection::getInstance()->getAll() as $country)
+        {
+            $aliases = $country->getAliases();
+
+            if(!empty($aliases)) {
+                $lines[] = sprintf(
+                    '- `%s` %s (aka %s)',
+                    $country->getCode(),
+                    $country->getLabel(),
+                    '`'.implode('`, `', $aliases).'`'
+                );
+            } else {
+                $lines[] = sprintf(
+                    '- `%s` %s',
+                    $country->getCode(),
+                    $country->getLabel()
+                );
+            }
+        }
+
+        $lines[] = '';
+        $lines[] = '## Locales';
+        $lines[] = '';
+
+        foreach(LocalesCollection::getInstance()->getAll() as $locale) {
+            $lines[] = sprintf(
+                '- `%s` %s',
+                $locale->getName(),
+                $locale->getLabel()
+            );
+        }
+
+        $lines[] = '';
+        $lines[] = '## Currencies';
+        $lines[] = '';
+
+        foreach (CurrencyCollection::getInstance()->getAll() as $currency)
+        {
+            $symbol = $currency->getSymbol();
+
+            if (empty($symbol)) {
+                $symbol = $currency->getPlural();
+            }
+
+            $lines[] = sprintf(
+                '- `%s` %s (%s)',
+                $currency->getISO(),
+                $currency->getPlural(),
+                $symbol
+            );
+        }
+
+        $lines[] = '';
+
+        $outputFile = __DIR__.'/../../docs/overview.md';
+
+        file_put_contents($outputFile, implode("\n", $lines));
 
         self::logLine(' - Written to '.basename($outputFile));
         self::logLine(' - DONE.');
