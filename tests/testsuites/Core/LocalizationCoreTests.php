@@ -18,6 +18,11 @@ final class LocalizationCoreTests extends TestCase
         Localization::reset();
     }
 
+    public function test_versionCanBeLoaded() : void
+    {
+        $this->assertTrue(Localization::getVersionFile()->exists());
+    }
+
     public function test_defaultLocale_app(): void
     {
         $this->assertEquals(
