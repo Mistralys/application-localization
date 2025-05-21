@@ -84,7 +84,7 @@ final class LocalizationCoreTests extends TestCase
         try {
             Localization::addAppLocale('invalid_locale');
         } catch (LocalizationException $e) {
-            $this->assertSame(Localization::ERROR_LOCALE_NOT_FOUND, $e->getCode());
+            $this->assertSame(LocalizationException::ERROR_LOCALE_NOT_FOUND, $e->getCode());
             return;
         }
 
