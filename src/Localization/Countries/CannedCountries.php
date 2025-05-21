@@ -16,7 +16,7 @@ use AppLocalize\Localization\Country\CountryDE;
 use AppLocalize\Localization\Country\CountryES;
 use AppLocalize\Localization\Country\CountryFI;
 use AppLocalize\Localization\Country\CountryFR;
-use AppLocalize\Localization\Country\CountryUK;
+use AppLocalize\Localization\Country\CountryGB;
 use AppLocalize\Localization\Country\CountryIE;
 use AppLocalize\Localization\Country\CountryIT;
 use AppLocalize\Localization\Country\CountryMX;
@@ -108,11 +108,11 @@ class CannedCountries
         );
     }
 
-    public function gb() : CountryUK
+    public function gb() : CountryGB
     {
         return ClassHelper::requireObjectInstanceOf(
-            CountryUK::class,
-            $this->collection->getByID(CountryUK::ISO_CODE)
+            CountryGB::class,
+            $this->collection->getByID(CountryGB::ISO_CODE)
         );
     }
 
