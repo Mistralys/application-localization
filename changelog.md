@@ -10,7 +10,7 @@
 - Countries: Now handling ISO code aliases like `uk` for `gb`.
 - Currencies: Now using dynamic class loading.
 - Currencies: Renamed and namespaced all currency classes.
-- Currencies: Added the Singapore Dollar (SGD).
+- Currencies: Added the Singapore Dollar (`SGD`).
 - Locales: Renamed and namespaced all locale classes.
 - Locales: Added `getLabelInvariant()` to get the label in the invariant locale.
 - Locales: Normalized the labels that were not consistently showing the country name.
@@ -25,6 +25,7 @@
 - Composer: The class cache is now automatically cleared on autoloader generation.
 - Documentation: An overview of countries, locales and currencies is now generated.
 - Code: PHPStan analysis is now clean, up to level 6.
+- Code: PHP8.4 compatible.
 - Dependencies: Updated AppUtils Core to [v2.3.11](https://github.com/Mistralys/application-utils-core/releases/tag/2.3.11).
 - Dependencies: Updated AppUtils Collections to [v1.1.5](https://github.com/Mistralys/application-utils-collections/releases/tag/1.1.5).
 
