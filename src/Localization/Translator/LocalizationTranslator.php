@@ -14,7 +14,9 @@ use AppLocalize\Localization\LocalizationException;
 use AppLocalize\Localization_Scanner_StringHash;
 use AppLocalize\Localization_Scanner_StringsCollection;
 use AppLocalize\Localization\Source\BaseLocalizationSource;
+use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\IniHelper;
+use Throwable;
 
 /**
  * Application translation manager used to handle translating
@@ -107,7 +109,7 @@ class LocalizationTranslator
      *
      * @param \AppLocalize\Localization\Locales\LocaleInterface $locale
      * @return boolean
-     * @throws \AppLocalize\Localization\LocalizationException
+     * @throws LocalizationException
      */
     protected function load(LocaleInterface $locale) : bool
     {
@@ -329,7 +331,7 @@ class LocalizationTranslator
      * @param string $text
      * @param array $args
      * @return string
-     * @throws \AppLocalize\Localization\LocalizationException
+     * @throws LocalizationException
      */
     public function translate(string $text, array $args) : string
     {
@@ -343,25 +345,34 @@ class LocalizationTranslator
         }
 
         // replace the text with the one we have on record, otherwise
-        // simply leave the original unchanged.
+        // leave the original unchanged.
         if (isset($this->strings[$this->targetLocaleName][$hash])) {
             $text = $this->strings[$this->targetLocaleName][$hash];
         }
 
         array_unshift($args, $text);
 
-        $result = call_user_func('sprintf', ...$args);
-        if (is_string($result)) {
-            return $result;
+        try
+        {
+            return sprintf(...$args);
         }
+        catch (Throwable $e)
+        {
+            array_shift($args);
 
-        throw new LocalizationException(
-            'Incorrectly translated string or erroneous localized string',
-            sprintf(
-                'The string %1$s seems to have too many or too few arguments.',
-                $text
-            )
-        );
+            throw new LocalizationException(
+                'Incorrectly translated string or erroneous localized string',
+                sprintf(
+                    'The string [%1$s] does not have the correct amount of placeholders. '.PHP_EOL.
+                    'Values given: '.PHP_EOL.
+                    '%2$s',
+                    $text,
+                    JSONConverter::var2json($args, JSON_PRETTY_PRINT)
+                ),
+                LocalizationException::ERROR_INCORRECTLY_TRANSLATED_STRING,
+                $e
+            );
+        }
     }
 
     /**
