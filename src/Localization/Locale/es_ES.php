@@ -6,6 +6,7 @@ namespace AppLocalize\Localization\Locale;
 
 use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
+use function AppUtils\sb;
 
 class es_ES extends BaseLocale
 {
@@ -18,7 +19,7 @@ class es_ES extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Spanish (Spain)');
+        return (string)sb()->t('Spanish')->add('('.t('Spain').')');
     }
 
     public function getLabelInvariant() : string

@@ -6,6 +6,7 @@ namespace AppLocalize\Localization\Locale;
 
 use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
+use function AppUtils\sb;
 
 class pl_PL extends BaseLocale
 {
@@ -18,7 +19,7 @@ class pl_PL extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Polish (Poland)');
+        return (string)sb()->t('Polish')->add('('.t('Poland').')');
     }
 
     public function getLabelInvariant() : string

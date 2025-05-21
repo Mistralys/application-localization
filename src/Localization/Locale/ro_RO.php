@@ -6,6 +6,7 @@ namespace AppLocalize\Localization\Locale;
 
 use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
+use function AppUtils\sb;
 
 class ro_RO extends BaseLocale
 {
@@ -18,7 +19,7 @@ class ro_RO extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('Romanian (Romania)');
+        return (string)sb()->t('Romanian')->add('('.t('Romania').')');
     }
 
     public function getLabelInvariant() : string

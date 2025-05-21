@@ -6,6 +6,7 @@ namespace AppLocalize\Localization\Locale;
 
 use AppLocalize\Localization\Locales\BaseLocale;
 use function AppLocalize\t;
+use function AppUtils\sb;
 
 class en_IE extends BaseLocale
 {
@@ -18,7 +19,7 @@ class en_IE extends BaseLocale
 
     public function getLabel() : string
     {
-        return t('English (Ireland)');
+        return (string)sb()->t('English')->add('('.t('Ireland').')');
     }
 
     public function getLabelInvariant() : string
