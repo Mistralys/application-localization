@@ -15,6 +15,14 @@ localization layer that stores translated strings in ini files.
 
 [List of countries and locales][]
 
+## Requirements
+
+- PHP 7.4 or higher (PHP 8.4 compatible)
+- [Composer](https://getcomposer.org/) 
+
+> Note: The target platform is currently still PHP 7.4, but the package
+> is tested compatible up to PHP 8.4. 
+
 ## Installation
 
 Require the package via composer:
