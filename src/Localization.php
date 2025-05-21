@@ -26,6 +26,7 @@ use AppLocalize\Localization\Source\FolderLocalizationSource;
 use AppLocalize\Localization\Translator\ClientFilesGenerator;
 use AppLocalize\Localization\Translator\LocalizationTranslator;
 use AppUtils\ClassHelper;
+use AppUtils\ClassHelper\Repository\ClassRepositoryException;
 use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
 use AppUtils\FileHelper\FileInfo;
 use AppUtils\FileHelper_Exception;
@@ -101,7 +102,7 @@ class Localization
     
    /**
     * Stores event listener instances.
-    * @var array
+    * @var array<string,array{callback:callable,args:array<int,mixed>,id:int}>
     */
     protected static array $listeners = array();
     
@@ -494,7 +495,7 @@ class Localization
      * Triggers the specified event, with the provided arguments.
      *
      * @param string $name The event name.
-     * @param array $argsList
+     * @param array<int,mixed> $argsList
      * @param class-string<LocalizationEventInterface> $class The class name of the event to trigger.
      * @return LocalizationEventInterface
      */
@@ -525,7 +526,7 @@ class Localization
      *
      * @param string $eventName
      * @param callable $callback
-     * @param array $args Additional arguments to add to the event
+     * @param array<int,mixed> $args Additional arguments to add to the event
      * @return int The listener number.
      *
      * @see LocalizationException::ERROR_UNKNOWN_EVENT_NAME
@@ -551,7 +552,7 @@ class Localization
      * Clears the dynamic class loading cache of the localization package.
      *
      * @return void
-     * @throws ClassHelper\Repository\ClassRepositoryException
+     * @throws ClassRepositoryException
      */
     public static function clearClassCache() : void
     {
@@ -566,7 +567,7 @@ class Localization
      * The first parameter of the callback is always the event instance.
      *
      * @param callable $callback The listener function to call.
-     * @param array $args Optional indexed array with additional arguments to pass on to the callback function.
+     * @param array<int,mixed> $args Optional indexed array with additional arguments to pass on to the callback function.
      * @return int
      * @see LocaleChanged
      */
@@ -575,11 +576,24 @@ class Localization
         return self::addEventListener(self::EVENT_LOCALE_CHANGED, $callback, $args);
     }
 
+    /**
+     * @param callable $callback
+     * @param array<int,mixed> $args
+     * @return int
+     */
     public static function onClientFolderChanged(callable $callback, array $args=array()) : int
     {
         return self::addEventListener(self::EVENT_CLIENT_FOLDER_CHANGED, $callback, $args);
     }
 
+    /**
+     * Add a listener tp the cache key change event, when the cache files
+     * must be rewritten.
+     *
+     * @param callable $callback
+     * @param array<int,mixed> $args
+     * @return int
+     */
     public static function onCacheKeyChanged(callable $callback, array $args=array()) : int
     {
         return self::addEventListener(self::EVENT_CACHE_KEY_CHANGED, $callback, $args);
@@ -964,7 +978,7 @@ class Localization
     
    /**
     * Retrieves all sources grouped by their group name.
-    * @return array
+    * @return array<string,BaseLocalizationSource[]>
     */
     public static function getSourcesGrouped() : array
     {
