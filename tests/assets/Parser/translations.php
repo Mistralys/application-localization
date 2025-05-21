@@ -13,6 +13,8 @@ function bothWorlds() : string
     return t('Within function');
 }
 
+bothWorlds();
+
 $multiline = t(
     'Multiline '.
     'text '.
@@ -26,17 +28,24 @@ $someVariable = '';
 
 $withVar = t('With variable '.$someVariable);
 
-$withClosure = function() {
+$withClosure = static function() {
     return t('Within a closure');
 };
 
-class PHP_Translations_Testfile
+class PHPTranslationsTestClass
 {
+    public function __construct()
+    {
+        echo $this->translateMe();
+    }
+
     private function translateMe() : string
     {
         return t('Within class method.');
     }
 }
+
+$class = new PHPTranslationsTestClass();
 
 $withPlaceholders = t('This is %1$sbold%2$s text.', '<b>', '</b>');
 
