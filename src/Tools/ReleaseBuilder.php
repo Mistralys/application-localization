@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace AppLocalize\Tools;
 
+use AppLocalize\Localization;
 use AppLocalize\Localization\Countries\CountryCollection;
 use AppLocalize\Localization\Currencies\CurrencyCollection;
 use AppLocalize\Localization\Locales\LocalesCollection;
 use AppUtils\ClassHelper;
+use Mistralys\ChangelogParser\ChangelogParser;
 
 class ReleaseBuilder
 {
@@ -18,6 +20,22 @@ class ReleaseBuilder
         self::generateCannedCountries();
         self::generateCannedCurrencies();
         self::generateOverviewMarkdown();
+        self::generateVersionFile();
+    }
+
+    private static function generateVersionFile() : void
+    {
+        self::logHeader('Generating version file');
+
+        Localization::getVersionFile()
+            ->putContents(ChangelogParser::parseMarkdownFile(__DIR__.'/../../changelog.md')
+            ->requireLatestVersion()
+            ->getVersionInfo()
+            ->getTagVersion());
+
+        self::logLine(' - Written to '.Localization::getVersionFile()->getBaseName());
+        self::logLine(' - DONE.');
+        self::logNL();
     }
 
     private static function logHeader(string $header) : void
