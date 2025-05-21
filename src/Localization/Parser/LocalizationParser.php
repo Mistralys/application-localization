@@ -12,7 +12,7 @@ use AppLocalize\Localization\LocalizationException;
 use AppLocalize\Localization\Parser\Language\JavaScriptLanguage;
 use AppLocalize\Localization\Parser\Language\PHPLanguage;
 use AppLocalize\Localization\Scanner\LocalizationScanner;
-use AppLocalize\Localization_Scanner_StringsCollection;
+use AppLocalize\Localization\Scanner\StringCollection;
 use AppUtils\ClassHelper;
 use AppUtils\ClassHelper\BaseClassHelperException;
 use AppUtils\FileHelper;
@@ -36,7 +36,7 @@ class LocalizationParser
     public const ERROR_INVALID_LANGUAGE_CLASS = 40603;
     
     protected LocalizationScanner $scanner;
-    protected Localization_Scanner_StringsCollection $collection;
+    protected StringCollection $collection;
 
     /**
      * @var array<string,class-string<BaseLanguage>>

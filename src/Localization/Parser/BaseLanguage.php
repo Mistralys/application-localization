@@ -10,6 +10,9 @@ use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
 use function AppLocalize\t;
 
+/**
+ * @phpstan-type RawParsedToken array{0:int|string, 1:string, 2:int}|string
+ */
 abstract class BaseLanguage
 {
     public const ERROR_SOURCE_FILE_NOT_FOUND = 40501;
@@ -20,13 +23,13 @@ abstract class BaseLanguage
 
    /**
     * The function names that are included in the search.
-    * @var array
+    * @var string[]
     */
     protected array $functionNames = array();
     
    /**
     * The token definitions.
-    * @var array
+    * @var array<int,RawParsedToken>
     */
     protected array $tokens = array();
     
@@ -78,7 +81,10 @@ abstract class BaseLanguage
         $this->parser = $parser;
         $this->functionNames = $this->getFunctionNames();
     }
-    
+
+    /**
+     * @return array<int,RawParsedToken>
+     */
     abstract protected function getTokens() : array;
     
    /**
@@ -182,7 +188,7 @@ abstract class BaseLanguage
     }
 
     /**
-     * Retrieves a list of the names of all tags that may be used
+     * Retrieves a list of all tag names that may be used
      * in the translation context strings.
      *
      * @return string[]
@@ -205,7 +211,7 @@ abstract class BaseLanguage
    /**
     * Retrieves a list of all the function names that are
     * used as translation functions in the language.
-    * @return array
+    * @return string[]
     */
     public function getFunctionNames() : array
     {
@@ -268,7 +274,7 @@ abstract class BaseLanguage
     * Creates a token instance: this retrieves information on
     * the language token being parsed.
     * 
-    * @param array|string $definition The token definition.
+    * @param RawParsedToken $definition The token definition.
     * @param BaseParsedToken|NULL $parentToken
     * @return BaseParsedToken
     */
@@ -341,6 +347,11 @@ abstract class BaseLanguage
         $this->addResult($text, $token->getLine(), $explanation);
     }
 
+    /**
+     * @param BaseParsedToken $token
+     * @param array<int,RawParsedToken> $tokens
+     * @return string
+     */
     private function parseExplanation(BaseParsedToken $token, array $tokens) : string
     {
         $textParts = array();
@@ -366,7 +377,7 @@ abstract class BaseLanguage
 
             if($subToken->isEncapsedString())
             {
-                $textParts[] = $this->trimText(strval($subToken->getValue()));
+                $textParts[] = $this->trimText((string)$subToken->getValue());
                 continue;
             }
 

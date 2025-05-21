@@ -31,7 +31,7 @@ class PHPToken extends BaseParsedToken
         }
         else
         {
-            $this->token = token_name($this->definition[0]);
+            $this->token = token_name((int)$this->definition[0]);
             $this->value = $this->definition[1];
             $this->line = $this->definition[2];
         }

@@ -10,7 +10,7 @@ namespace AppLocalize\Localization\Editor\Template;
 
 use AppLocalize\Localization\Editor\EditorException;
 use AppLocalize\Localization\Editor\LocalizationEditor;
-use AppLocalize\Localization_Scanner_StringHash;
+use AppLocalize\Localization\Scanner\StringHash;
 use AppUtils\ConvertHelper;
 use AppUtils\JSHelper;
 use AppUtils\OutputBuffering;
@@ -226,7 +226,7 @@ class PageScaffold
         <?php
     }
 
-    protected function renderTextEditorEntry(Localization_Scanner_StringHash $string) : void
+    protected function renderTextEditorEntry(StringHash $string) : void
     {
         $hash = $string->getHash();
         $text = $string->getText();
@@ -565,7 +565,7 @@ class PageScaffold
         }
     }
 
-    protected function renderFileNames(Localization_Scanner_StringHash $hash) : string
+    protected function renderFileNames(StringHash $hash) : string
     {
         $max = 2;
         $total = $hash->countFiles();
@@ -588,7 +588,7 @@ class PageScaffold
         return implode(', ', $keep);
     }
 
-    protected function renderStatus(Localization_Scanner_StringHash $hash) : string
+    protected function renderStatus(StringHash $hash) : string
     {
         if($hash->isTranslated()) {
             return '<i class="fa fa-check text-success"></i>';
@@ -597,7 +597,7 @@ class PageScaffold
         return '<i class="fa fa-ban text-danger"></i>';
     }
 
-    protected function renderTypes(Localization_Scanner_StringHash $hash) : string
+    protected function renderTypes(StringHash $hash) : string
     {
         $types = array();
 

@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Parser;
 
+/**
+ * @phpstan-type SerializedText array{text:string, line:int, explanation:string}
+ */
 class Text
 {
-    const SERIALIZED_TEXT = 'text';
-    const SERIALIZED_LINE = 'line';
-    const SERIALIZED_EXPLANATION = 'explanation';
+    public const SERIALIZED_TEXT = 'text';
+    public const SERIALIZED_LINE = 'line';
+    public const SERIALIZED_EXPLANATION = 'explanation';
 
     private string $text;
     private int $line;
@@ -61,7 +64,7 @@ class Text
     }
 
     /**
-     * @return array<string,mixed>
+     * @return SerializedText
      */
     public function toArray() : array
     {
@@ -73,7 +76,7 @@ class Text
     }
 
     /**
-     * @param array<string,mixed> $array
+     * @param SerializedText $array
      * @return Text
      */
     public static function fromArray(array $array) : Text

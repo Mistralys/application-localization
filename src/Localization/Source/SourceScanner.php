@@ -8,14 +8,14 @@ use AppLocalize\Localization;
 use AppLocalize\Localization\LocalizationException;
 use AppLocalize\Localization\Parser\LocalizationParser;
 use AppLocalize\Localization\Scanner\LocalizationScanner;
-use AppLocalize\Localization_Scanner_StringHash;
-use AppLocalize\Localization_Scanner_StringsCollection;
+use AppLocalize\Localization\Scanner\StringHash;
+use AppLocalize\Localization\Scanner\StringCollection;
 
 class SourceScanner
 {
     private LocalizationScanner $scanner;
     private BaseLocalizationSource $source;
-    private Localization_Scanner_StringsCollection $collection;
+    private StringCollection $collection;
     private LocalizationParser $parser;
 
     public function __construct(BaseLocalizationSource $source, LocalizationScanner $scanner)
@@ -70,7 +70,7 @@ class SourceScanner
     }
 
     /**
-     * @return Localization_Scanner_StringHash[]
+     * @return StringHash[]
      */
     public function getHashes() : array
     {

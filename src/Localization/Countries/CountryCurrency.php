@@ -171,9 +171,22 @@ class CountryCurrency implements CurrencyInterface
         return $examples;
     }
 
-    public function tryParseNumber($number)
+    /**
+     * @param string|int|float|CurrencyNumberInfo|NULL $number
+     * @return CurrencyNumberInfo|NULL
+     */
+    public function tryParseNumber($number) : ?CurrencyNumberInfo
     {
-        $parts = explode('.', $this->normalizeNumber($number));
+        if($number instanceof CurrencyNumberInfo) {
+            return $number;
+        }
+
+        $normalized = $this->normalizeNumber($number);
+        if(empty($normalized)) {
+            return null;
+        }
+
+        $parts = explode('.', $normalized);
 
         if (count($parts) > 1)
         {
@@ -193,11 +206,15 @@ class CountryCurrency implements CurrencyInterface
     }
 
     /**
-     * @param int|float|string|NULL $number
+     * @param int|float|string|CurrencyNumberInfo|NULL $number
      * @return string
      */
     public function normalizeNumber($number) : string
     {
+        if($number instanceof CurrencyNumberInfo) {
+            return $number->getString();
+        }
+
         if($number === '' || $number === null) {
             return '';
         }
@@ -223,11 +240,16 @@ class CountryCurrency implements CurrencyInterface
         return str_replace(',', '.', $normalized);
     }
 
+    /**
+     * @param string|int|float|CurrencyNumberInfo|NULL $number
+     * @return CurrencyNumberInfo
+     * @throws LocalizationException
+     */
     public function parseNumber($number) : CurrencyNumberInfo
     {
         $parsed = $this->tryParseNumber($number);
 
-        if ($parsed instanceof CurrencyNumberInfo) {
+        if ($parsed !== null) {
             return $parsed;
         }
 
@@ -236,7 +258,8 @@ class CountryCurrency implements CurrencyInterface
             sprintf(
                 'The number [%1$s] did not yield a currency number object.',
                 $number
-            )
+            ),
+            CountryException::ERROR_CANNOT_PARSE_CURRENCY_NUMBER
         );
     }
 
@@ -245,10 +268,20 @@ class CountryCurrency implements CurrencyInterface
         return $this->currency->isSymbolOnFront();
     }
 
+    /**
+     * @param string|int|float|CurrencyNumberInfo|NULL $number
+     * @param int $decimalPositions
+     * @return string
+     */
     public function formatNumber($number, int $decimalPositions = 2) : string
     {
+        $info = $this->tryParseNumber($number);
+        if($info === null) {
+            return '';
+        }
+
         return number_format(
-            (float)$number,
+            $info->getFloat(),
             $decimalPositions,
             $this->getDecimalsSeparator(),
             $this->getThousandsSeparator()
@@ -265,13 +298,18 @@ class CountryCurrency implements CurrencyInterface
         return $this->country->getNumberDecimalsSeparator();
     }
 
+    /**
+     * @param string|int|float|CurrencyNumberInfo|NULL $number
+     * @param int $decimalPositions
+     * @param bool $addSymbol
+     * @return string
+     */
     public function makeReadable($number, int $decimalPositions = 2, bool $addSymbol=true) : string
     {
-        if ($number === null || $number === '') {
+        $parsed = $this->tryParseNumber($number);
+        if($parsed === null) {
             return '';
         }
-
-        $parsed = $this->parseNumber($number);
 
         $number = $this->formatNumber(
             str_replace('-', '', $parsed->getString()),

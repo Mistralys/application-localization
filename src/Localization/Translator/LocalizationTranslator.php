@@ -11,11 +11,12 @@ namespace AppLocalize\Localization\Translator;
 use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\Parser\LocalizationParser;
 use AppLocalize\Localization\LocalizationException;
-use AppLocalize\Localization_Scanner_StringHash;
-use AppLocalize\Localization_Scanner_StringsCollection;
+use AppLocalize\Localization\Scanner\StringCollection;
+use AppLocalize\Localization\Scanner\StringHash;
 use AppLocalize\Localization\Source\BaseLocalizationSource;
 use AppUtils\ConvertHelper\JSONConverter;
 use AppUtils\IniHelper;
+use AppUtils\Interfaces\StringableInterface;
 use Throwable;
 
 /**
@@ -34,9 +35,8 @@ use Throwable;
  */
 class LocalizationTranslator
 {
-    const ERROR_NO_STRINGS_AVAILABLE_FOR_LOCALE = 333101;
-    const ERROR_CANNOT_SAVE_LOCALE_FILE = 333102;
-    const ERROR_CANNOT_PARSE_LOCALE_FILE = 333103;
+    public const ERROR_NO_STRINGS_AVAILABLE_FOR_LOCALE = 333101;
+    public const ERROR_CANNOT_PARSE_LOCALE_FILE = 333103;
     
     private LocaleInterface $targetLocale;
 
@@ -56,7 +56,7 @@ class LocalizationTranslator
     protected array $reverseStrings = array();
 
     /**
-    * @var \AppLocalize\Localization\Source\BaseLocalizationSource[]
+    * @var BaseLocalizationSource[]
     */
     private array $sources = array();
 
@@ -64,7 +64,7 @@ class LocalizationTranslator
      * Indexed array with locale names for which the strings
      * have been loaded, used to avoid loading them repeatedly.
      *
-     * @var array
+     * @var string[]
      */
     private array $loaded = array();
 
@@ -74,7 +74,7 @@ class LocalizationTranslator
     }
 
     /**
-     * @param \AppLocalize\Localization\Source\BaseLocalizationSource[] $sources
+     * @param BaseLocalizationSource[] $sources
      */
     public function addSources(array $sources) : void
     {
@@ -94,7 +94,7 @@ class LocalizationTranslator
     public function setTargetLocale(LocaleInterface $locale) : void
     {
         // don't do anything if it's the same locale
-        if (isset($this->targetLocale) && $locale->getName() == $this->targetLocale->getName()) {
+        if (isset($this->targetLocale) && $locale->getName() === $this->targetLocale->getName()) {
             return;
         }
 
@@ -107,7 +107,7 @@ class LocalizationTranslator
      * Loads the strings for the specified locale if the
      * according storage file exists.
      *
-     * @param \AppLocalize\Localization\Locales\LocaleInterface $locale
+     * @param LocaleInterface $locale
      * @return boolean
      * @throws LocalizationException
      */
@@ -115,7 +115,7 @@ class LocalizationTranslator
     {
         // initialize the storage array regardless of success
         $localeName = $locale->getName();
-        if (in_array($localeName, $this->loaded)) {
+        if (in_array($localeName, $this->loaded, true)) {
             return true;
         }
 
@@ -130,7 +130,7 @@ class LocalizationTranslator
                 continue;
             }
             
-            $data = parse_ini_file($file, false);
+            $data = parse_ini_file($file);
             
             if($data === false) 
             {
@@ -164,10 +164,10 @@ class LocalizationTranslator
      * but new strings can only be added via the UI because
      * the hashes have to be created.
      *
-     * @param \AppLocalize\Localization\Source\BaseLocalizationSource $source
-     * @param Localization_Scanner_StringsCollection $collection
+     * @param BaseLocalizationSource $source
+     * @param StringCollection $collection
      */
-    public function save(BaseLocalizationSource $source, Localization_Scanner_StringsCollection $collection) : void
+    public function save(BaseLocalizationSource $source, StringCollection $collection) : void
     {
         // the serverside strings file gets all available hashes,
         // which are filtered by source.
@@ -233,8 +233,8 @@ class LocalizationTranslator
 
     /**
      * @param string $type
-     * @param \AppLocalize\Localization\Source\BaseLocalizationSource $source
-     * @param Localization_Scanner_StringHash[] $hashes
+     * @param BaseLocalizationSource $source
+     * @param StringHash[] $hashes
      * @param string $file
      * @param LocaleInterface $locale
      * @param boolean $editable
@@ -259,7 +259,7 @@ class LocalizationTranslator
             $text = $this->getHashTranslation($hash->getHash(), $locale);
 
             // skip any empty strings
-            if($text === null || trim($text) == '') {
+            if($text === null || trim($text) === '') {
                 continue;
             }
             
@@ -273,7 +273,7 @@ class LocalizationTranslator
      * Retrieves the full path to the translation storage ini file.
      *
      * @param LocaleInterface $locale
-     * @param \AppLocalize\Localization\Source\BaseLocalizationSource $source
+     * @param BaseLocalizationSource $source
      * @return string
      */
     protected function resolveStorageFile(LocaleInterface $locale, BaseLocalizationSource $source) : string
@@ -291,7 +291,7 @@ class LocalizationTranslator
      * for the clientside strings.
      *
      * @param LocaleInterface $locale
-     * @param \AppLocalize\Localization\Source\BaseLocalizationSource $source
+     * @param BaseLocalizationSource $source
      * @return string
      */
     protected function getClientStorageFile(LocaleInterface $locale, BaseLocalizationSource $source) : string
@@ -329,7 +329,7 @@ class LocalizationTranslator
      * into the string.
      *
      * @param string $text
-     * @param array $args
+     * @param array<int,string|int|float|StringableInterface|NULL> $args
      * @return string
      * @throws LocalizationException
      */
@@ -418,18 +418,14 @@ class LocalizationTranslator
         }
         
         $localeName = $locale->getName();
-        
-        if(isset($this->strings[$localeName][$hash])) {
-            return $this->strings[$localeName][$hash];
-        }
 
-        return null;
+        return $this->strings[$localeName][$hash] ?? null;
     }
 
     /**
      * Retrieves only the strings that are available clientside.
      *
-     * @param \AppLocalize\Localization\Locales\LocaleInterface $locale
+     * @param LocaleInterface $locale
      * @return array<string,string>
      */
     public function getClientStrings(LocaleInterface $locale) : array
@@ -438,14 +434,17 @@ class LocalizationTranslator
         
         foreach($this->sources as $source) 
         {
-            $localeFile = self::getClientStorageFile($locale, $source);
+            $localeFile = $this->getClientStorageFile($locale, $source);
             if(!file_exists($localeFile)) {
                 continue;
             }
 
             $strings = IniHelper::createFromFile($localeFile)->toArray();
 
-            $result = array_merge($result, $strings);
+            foreach($strings as $hash => $text)
+            {
+                $result[$hash] = (string)$text;
+            }
         }
         
         return $result;

@@ -12,10 +12,9 @@ use AppLocalize\Localization;
 use AppLocalize\Localization\Editor\Template\PageScaffold;
 use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\LocalizationException;
-use AppLocalize\Localization\Locales\BaseLocale;
 use AppLocalize\Localization\Scanner\LocalizationScanner;
-use AppLocalize\Localization_Scanner_StringHash;
-use AppLocalize\Localization_Scanner_StringsCollection_Warning;
+use AppLocalize\Localization\Scanner\StringHash;
+use AppLocalize\Localization\Scanner\CollectionWarning;
 use AppLocalize\Localization\Source\BaseLocalizationSource;
 use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\OutputBuffering_Exception;
@@ -67,7 +66,7 @@ class LocalizationEditor implements OptionableInterface
     protected array $appLocales = array();
 
    /**
-    * @var array<string,string>
+    * @var array<string,string|int>
     */
     protected array $requestParams = array();
 
@@ -271,7 +270,7 @@ class LocalizationEditor implements OptionableInterface
     }
 
     /**
-     * @return Localization_Scanner_StringsCollection_Warning[]
+     * @return CollectionWarning[]
      */
     public function getScannerWarnings() : array
     {
@@ -294,7 +293,7 @@ class LocalizationEditor implements OptionableInterface
     }
 
     /**
-     * @return Localization_Scanner_StringHash[]
+     * @return StringHash[]
      */
     public function getFilteredStrings() : array
     {
@@ -311,7 +310,10 @@ class LocalizationEditor implements OptionableInterface
 
         return $result;
     }
-    
+
+    /**
+     * @return array<string,string|int>
+     */
     public function getRequestParams() : array
     {
         $params = $this->requestParams;
@@ -340,13 +342,22 @@ class LocalizationEditor implements OptionableInterface
         return $this->activeAppLocale;
     }
 
+    /**
+     * @param int $page
+     * @param array<string, string|int> $params
+     * @return string
+     */
     public function getPaginationURL(int $page, array $params=array()) : string
     {
         $params[$this->getVarName('page')] = $page;
         
         return $this->getURL($params);
     }
-    
+
+    /**
+     * @param string $string
+     * @return string[]
+     */
     public function detectVariables(string $string) : array
     {
         $result = array();
@@ -363,14 +374,24 @@ class LocalizationEditor implements OptionableInterface
     {
         echo $this->render();
     }
-    
+
+    /**
+     * @param BaseLocalizationSource $source
+     * @param array<string, string|int> $params
+     * @return string
+     */
     public function getSourceURL(BaseLocalizationSource $source, array $params=array()) : string
     {
         $params[$this->getVarName('source')] = $source->getID();
         
         return $this->getURL($params);
     }
-    
+
+    /**
+     * @param LocaleInterface $locale
+     * @param array<string, string|int> $params
+     * @return string
+     */
     public function getLocaleURL(LocaleInterface $locale, array $params=array()) : string
     {
         $params[$this->getVarName('locale')] = $locale->getName();
@@ -387,7 +408,11 @@ class LocalizationEditor implements OptionableInterface
     {
         return $this->getSourceURL($this->activeSource, array($this->getVarName(self::VARIABLE_WARNINGS) => 'yes'));
     }
-    
+
+    /**
+     * @param array<string, string|int> $params
+     * @return string
+     */
     public function getURL(array $params=array()) : string
     {
         $persist = $this->getRequestParams();

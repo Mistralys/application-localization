@@ -64,13 +64,17 @@ class FolderLocalizationSource extends BaseLocalizationSource
     
     public function excludeFolder(string $folder) : FolderLocalizationSource
     {
-        if(!in_array($folder, $this->excludes['folders'])) {
+        if(!in_array($folder, $this->excludes['folders'], true)) {
             $this->excludes['folders'][] = $folder;
         }
         
         return $this;
     }
-    
+
+    /**
+     * @param string[] $folders
+     * @return $this
+     */
     public function excludeFolders(array $folders) : FolderLocalizationSource
     {
         foreach($folders as $folder) {
@@ -79,7 +83,11 @@ class FolderLocalizationSource extends BaseLocalizationSource
         
         return $this;
     }
-    
+
+    /**
+     * @param string[] $files
+     * @return $this
+     */
     public function excludeFiles(array $files) : FolderLocalizationSource
     {
         $this->excludes['files'] = array_merge($this->excludes['files'], $files);

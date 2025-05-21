@@ -7,6 +7,9 @@ namespace AppLocalize\Localization\Parser;
 use function AppLocalize\t;
 use function AppLocalize\tex;
 
+/**
+ * @phpstan-type SerializedWarning array{languageID:string, file:string, line:int, message:string}
+ */
 class ParserWarning
 {
     protected BaseLanguage $language;
@@ -46,7 +49,7 @@ class ParserWarning
     }
 
     /**
-     * @return array<string,mixed>
+     * @return SerializedWarning
      */
     public function toArray() : array
     {

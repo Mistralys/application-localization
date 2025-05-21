@@ -92,6 +92,11 @@ class ClientFilesGenerator
 
     private static bool $logging = false;
 
+    /**
+     * @param string $message
+     * @param string|int|float|NULL ...$args
+     * @return void
+     */
     private static function log(string $message, ...$args) : void
     {
         if(self::$logging === false) {
@@ -239,6 +244,9 @@ class ClientFilesGenerator
         return $result;
     }
 
+    /**
+     * @return string[]
+     */
     protected static function getTargetLocaleIDs() : array
     {
         $result = array();

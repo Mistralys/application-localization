@@ -6,10 +6,13 @@ namespace AppLocalize\Localization\Parser;
 
 use AppUtils\ConvertHelper;
 
+/**
+ * @phpstan-import-type RawParsedToken from BaseLanguage
+ */
 abstract class BaseParsedToken
 {
    /**
-    * @var array|string
+    * @var RawParsedToken
     */
     protected $definition;
     
@@ -24,7 +27,7 @@ abstract class BaseParsedToken
     protected array $nameLookup = array();
 
     /**
-     * @param array|string $definition
+     * @param RawParsedToken $definition
      * @param BaseParsedToken|null $parentToken
      */
     public function __construct($definition, ?BaseParsedToken $parentToken=null)
@@ -55,7 +58,10 @@ abstract class BaseParsedToken
     abstract public function isOpeningFuncParams() : bool;
     
     abstract public function isClosingFuncParams() : bool;
-    
+
+    /**
+     * @return string[]
+     */
     abstract public function getFunctionNames() : array;
     
     abstract public function isEncapsedString() : bool;

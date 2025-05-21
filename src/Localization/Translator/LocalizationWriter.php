@@ -53,16 +53,6 @@ class LocalizationWriter
         return $this;
     }
     
-    public function addHashes(array $hashes) : LocalizationWriter
-    {
-        foreach($hashes as $hash => $text)
-        {
-            $this->addHash($hash, $text);
-        }
-        
-        return $this;
-    }
-    
     public function writeFile() : void
     {
         $content = 
@@ -120,7 +110,15 @@ class LocalizationWriter
         
         return implode(PHP_EOL, $lines);
     }
-    
+
+    /**
+     * Collects and sorts the strings to ensure they always
+     * appear in the same order: First by text, and same strings
+     * by their hashes. This is important for strings that have
+     * the same translation to avoid them changing order between sorts.
+     *
+     * @return array<int, array{hash:string, text:string}>
+     */
     private function compileHashes() : array
     {
         $hashes = array();
@@ -133,30 +131,17 @@ class LocalizationWriter
             );
         }
         
-        usort($hashes, array($this, 'callback_sortStrings'));
+        usort($hashes, static function(array $a, array $b) : int {
+            $result = strnatcasecmp($a['text'], $b['text']);
+
+            if($result !== 0)
+            {
+                return $result;
+            }
+
+            return strnatcmp($a['hash'], $b['hash']);
+        });
         
         return $hashes;
-    }
-    
-   /**
-    * Sort the strings to ensure they always appear in the same order:
-    * first by text, and same strings by their hashes. This is important
-    * for strings that have the same translation to avoid them changing
-    * order between sorts.
-    *
-    * @param array $a
-    * @param array $b
-    * @return int
-    */
-    public function callback_sortStrings(array $a, array $b) : int
-    {
-        $result = strnatcasecmp($a['text'], $b['text']);
-        
-        if($result === 0) 
-        {
-            return strnatcmp($a['hash'], $b['hash']);
-        }
-        
-        return $result;
     }
 }

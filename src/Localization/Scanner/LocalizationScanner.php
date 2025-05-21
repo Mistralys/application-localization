@@ -13,8 +13,8 @@ namespace AppLocalize\Localization\Scanner;
 
 use AppLocalize\Localization;
 use AppLocalize\Localization\Parser\LocalizationParser;
-use AppLocalize\Localization_Scanner_StringsCollection;
-use AppLocalize\Localization_Scanner_StringsCollection_Warning;
+use AppLocalize\Localization\Scanner\StringCollection;
+use AppLocalize\Localization\Scanner\CollectionWarning;
 use AppUtils\FileHelper;
 
 /**
@@ -34,10 +34,10 @@ class LocalizationScanner
     protected bool $loaded = false;
 
     /**
-     * @var Localization_Scanner_StringsCollection|NULL
+     * @var StringCollection|NULL
      * @see LocalizationScanner::getCollection()
      */
-    protected ?Localization_Scanner_StringsCollection $collection = null;
+    protected ?StringCollection $collection = null;
     protected ?LocalizationParser $parser = null;
 
     public function __construct(string $storageFile)
@@ -108,10 +108,10 @@ class LocalizationScanner
         return $this->parser;
     }
     
-    public function getCollection() : Localization_Scanner_StringsCollection
+    public function getCollection() : StringCollection
     {
         if(!isset($this->collection)) {
-            $this->collection = new Localization_Scanner_StringsCollection($this);
+            $this->collection = new StringCollection($this);
         }
         
         return $this->collection;
@@ -156,7 +156,7 @@ class LocalizationScanner
     * Retrieves all warnings that have been registered
     * during the last search for translatable texts.
     * 
-    * @return Localization_Scanner_StringsCollection_Warning[]
+    * @return CollectionWarning[]
     */
     public function getWarnings() : array
     {

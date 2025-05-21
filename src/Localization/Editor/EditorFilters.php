@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Editor;
 
 use AppLocalize\Localization\Editor\LocalizationEditor;
-use AppLocalize\Localization_Scanner_StringHash;
+use AppLocalize\Localization\Scanner\StringHash;
 use AppUtils\OutputBuffering;
 use AppUtils\OutputBuffering_Exception;
 use AppUtils\Request;
@@ -142,7 +142,7 @@ class EditorFilters
         $this->searchString = implode(' ', $keep);
     }
     
-    public function isStringMatch(Localization_Scanner_StringHash $string) : bool
+    public function isStringMatch(StringHash $string) : bool
     {
         if(!empty($this->searchTerms)) 
         {

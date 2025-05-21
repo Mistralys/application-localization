@@ -1,54 +1,57 @@
 <?php
 
-namespace AppLocalize;
+declare(strict_types=1);
 
+namespace AppLocalize\Localization\Scanner;
+
+use AppLocalize\Localization;
 use AppLocalize\Localization\Parser\Text;
+use AppLocalize\Localization\Scanner\StringCollection;
 
 /**
  * Container for a single string hash: collects all instances
- * of the same string hash accross all places where the same
+ * of the same string hash across all places where the same
  * string has been found.
  * 
  * @package Localization
  * @subpackage Scanner
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @phpstan-import-type SerializedStringInfo from StringInfo
+ * @phpstan-type SerializedStringHash array<int,SerializedStringInfo>
  */
-class Localization_Scanner_StringHash
+class StringHash
 {
-   /**
-    * @var Localization_Scanner_StringsCollection
-    */
-    protected $collection;
+    protected StringCollection $collection;
+    protected string $hash;
     
    /**
-    * @var string
+    * @var StringInfo[]
     */
-    protected $hash;
-    
-   /**
-    * @var Localization_Scanner_StringInfo[]
-    */
-    protected $strings = array();
+    protected array $strings = array();
 
     /**
      * @var array<string,bool>
      */
-    protected $sourceIDs = array();
+    protected array $sourceIDs = array();
     
-    public function __construct(Localization_Scanner_StringsCollection $collection, string $hash)
+    public function __construct(StringCollection $collection, string $hash)
     {
         $this->collection = $collection;
         $this->hash = $hash;
     }
     
-    public function addString(Localization_Scanner_StringInfo $string) : Localization_Scanner_StringHash
+    public function addString(StringInfo $string) : StringHash
     {
         $this->strings[] = $string;
         $this->sourceIDs[$string->getSourceID()] = true;
         
         return $this;
     }
-    
+
+    /**
+     * @return SerializedStringHash
+     */
     public function toArray() : array
     {
         $entries = array();
@@ -62,7 +65,7 @@ class Localization_Scanner_StringHash
     
    /**
     * Retrieves all individual string locations where this text was found.
-    * @return Localization_Scanner_StringInfo[]
+    * @return StringInfo[]
     */
     public function getStrings() : array
     {
@@ -90,7 +93,7 @@ class Localization_Scanner_StringHash
     public function hasLanguageType(string $type) : bool
     {
         foreach($this->strings as $string) {
-            if($string->getLanguageType() == $type) {
+            if($string->getLanguageType() === $type) {
                 return true;
             }
         }
@@ -114,8 +117,7 @@ class Localization_Scanner_StringHash
     
     public function isTranslated() : bool
     {
-        $translator = Localization::getTranslator();
-        return $translator->hashExists($this->getHash());
+        return Localization::getTranslator()->hashExists($this->getHash());
     }
     
     public function countStrings() : int
@@ -129,14 +131,7 @@ class Localization_Scanner_StringHash
     */
     public function getTranslatedText() : string
     {
-        $translator = Localization::getTranslator();
-        $text = $translator->getHashTranslation($this->getHash());
-        
-        if($text !== null) {
-            return $text;
-        }
-        
-        return '';
+        return Localization::getTranslator()->getHashTranslation($this->getHash()) ?? '';
     }
     
    /**
@@ -154,7 +149,7 @@ class Localization_Scanner_StringHash
             }
             
             $file = $string->getSourceFile();
-            if(!in_array($file, $files)) {
+            if(!in_array($file, $files, true)) {
                 $files[] = $file;
             }
         }
@@ -183,7 +178,7 @@ class Localization_Scanner_StringHash
     }
     
    /**
-    * Retrieves a text comprised of all strings that are relevant
+    * Retrieves a text made up of all strings that are relevant
     * for a full text search, imploded together. Used in the search
     * function to find matching strings.
     * 

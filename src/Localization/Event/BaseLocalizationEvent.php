@@ -22,7 +22,10 @@ abstract class BaseLocalizationEvent implements LocalizationEventInterface
     * @var array<int,mixed>
     */
     protected array $args;
-    
+
+    /**
+     * @param array<int, mixed> $args
+     */
     public function __construct(array $args)
     {
         $this->args = $args;
