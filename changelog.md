@@ -1,4 +1,4 @@
-## v2.0.0 - Namespacing and new countries (Breaking-XL)
+## v2.0.0 - Core revamp and new countries (Breaking-XL)
 - Countries: Added Finland (`FI`).
 - Countries: Added Belgium (`BE`).
 - Countries: Added Singapore (`SG`). 
