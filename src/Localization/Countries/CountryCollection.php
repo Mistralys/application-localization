@@ -137,6 +137,16 @@ class CountryCollection extends BaseClassLoaderCollection
         return $country;
     }
 
+    /**
+     * Gets all country ISO code aliases.
+     *
+     * @return array<string, string> Alias => ISO code pairs.
+     */
+    public function getAliases() : array
+    {
+        return $this->aliases;
+    }
+
     public function getInstanceOfClassName(): ?string
     {
         return CountryInterface::class;
