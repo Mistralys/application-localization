@@ -20,4 +20,11 @@ final class CountryCollectionTests extends TestCase
 
         $this->assertSame('gb', $country->getID());
     }
+
+    public function test_filterISOs() : void
+    {
+        $this->assertSame('gb', CountryCollection::getInstance()->filterCode('uk'));
+        $this->assertSame('gb', CountryCollection::getInstance()->filterCode('gb'));
+        $this->assertSame('fr', CountryCollection::getInstance()->filterCode('fr'));
+    }
 }
