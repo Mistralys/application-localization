@@ -10,12 +10,12 @@
 
 declare(strict_types=1);
 
-use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
+use AppLocalize\Localization;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
 echo 'Clearing class cache...';
 
-ClassRepositoryManager::create(__DIR__.'/cache')->clearCache();
+Localization::clearClassCache();
 
 echo 'DONE.' . PHP_EOL;
