@@ -10,7 +10,6 @@ namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\en_GB;
-use AppLocalize\Localization\Locale\en_UK;
 use AppLocalize\Localization\Currency\CurrencyGBP;
 use function AppLocalize\t;
 
