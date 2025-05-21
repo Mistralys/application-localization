@@ -64,7 +64,18 @@ PHP;
                 strtolower($country->getCode()),
                 ClassHelper::getClassTypeName($country)
             );
+
+            foreach($country->getAliases() as $alias) {
+                $methods[] = sprintf(
+                    self::CODE_COUNTRY,
+                    $alias,
+                    ClassHelper::getClassTypeName($country)
+                );
+            }
         }
+
+        sort($imports);
+        sort($methods);
 
         $placeholders = array(
             '{IMPORTS}' => implode("\n", $imports),
