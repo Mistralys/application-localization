@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Translator;
 
 use AppLocalize\Localization;
+use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\LocalizationException;
 use AppLocalize\Localization\Locales\BaseLocale;
 use AppUtils\ConvertHelper\JSONConverter;
@@ -117,14 +118,17 @@ class ClientFilesGenerator
     }
 
     /**
-     * @throws \AppLocalize\Localization\LocalizationException
+     * Writes the localization client files to disk.
+     *
+     * @param bool $force
+     * @throws LocalizationException
      * @throws FileHelper_Exception
      */
-    public function writeFiles() : void
+    public function writeFiles(bool $force=false) : void
     {
         self::log('Write Files');
 
-        if($this->getCacheKey() === self::getSystemKey()) {
+        if(!$force && $this->getCacheKey() === self::getSystemKey()) {
             self::log('Write Files | SKIP | Still up to date.');
             return;
         }
@@ -191,7 +195,7 @@ class ClientFilesGenerator
 
     /**
      * @throws FileHelper_Exception
-     * @throws \AppLocalize\Localization\LocalizationException
+     * @throws LocalizationException
      */
     protected function writeLibraryFiles() : void
     {
@@ -219,7 +223,7 @@ class ClientFilesGenerator
     }
 
     /**
-     * @return \AppLocalize\Localization\Locales\BaseLocale[]
+     * @return LocaleInterface[]
      */
     protected static function getTargetLocales() : array
     {

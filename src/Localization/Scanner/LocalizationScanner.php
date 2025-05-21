@@ -28,41 +28,17 @@ use AppUtils\FileHelper;
  */
 class LocalizationScanner
 {
-   /**
-    * @var float
-    */
-    protected $timeStart;
-    
-   /**
-    * @var float
-    */
-    protected $timeEnd;
-    
-   /**
-    * @var array
-    */
-    protected $stringInfos = array();
-    
-   /**
-    * @var string
-    */
-    protected $storageFile;
-
-    /**
-     * @var bool
-     */
-    protected $loaded = false;
+    protected float $timeStart;
+    protected float $timeEnd;
+    protected string $storageFile;
+    protected bool $loaded = false;
 
     /**
      * @var Localization_Scanner_StringsCollection|NULL
      * @see LocalizationScanner::getCollection()
      */
-    protected $collection;
-
-    /**
-     * @var LocalizationParser
-     */
-    protected $parser;
+    protected ?Localization_Scanner_StringsCollection $collection = null;
+    protected ?LocalizationParser $parser = null;
 
     public function __construct(string $storageFile)
     {
@@ -80,7 +56,7 @@ class LocalizationScanner
             $this->collection = null;
         }
         
-        $this->timeStart = microtime(true);
+        $this->timeStart = (float)microtime(true);
         
         $sources = Localization::getSources();
         foreach($sources as $source) 
@@ -88,7 +64,7 @@ class LocalizationScanner
             $source->scan($this);
         }
         
-        $this->timeEnd = microtime(true);
+        $this->timeEnd = (float)microtime(true);
         
         $this->save();
     }

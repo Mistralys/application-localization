@@ -10,6 +10,7 @@ namespace AppLocalize\Localization\Editor;
 
 use AppLocalize\Localization;
 use AppLocalize\Localization\Editor\Template\PageScaffold;
+use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\LocalizationException;
 use AppLocalize\Localization\Locales\BaseLocale;
 use AppLocalize\Localization\Scanner\LocalizationScanner;
@@ -33,24 +34,24 @@ class LocalizationEditor implements OptionableInterface
 {
     use OptionableTrait;
     
-    const MESSAGE_INFO = 'info';
-    const MESSAGE_ERROR = 'danger';
-    const MESSAGE_WARNING = 'warning';
-    const MESSAGE_SUCCESS = 'success';
+    public const MESSAGE_INFO = 'info';
+    public const MESSAGE_ERROR = 'danger';
+    public const MESSAGE_WARNING = 'warning';
+    public const MESSAGE_SUCCESS = 'success';
     
-    const ERROR_NO_SOURCES_AVAILABLE = 40001;
-    const ERROR_LOCAL_PATH_NOT_FOUND = 40002;
-    const ERROR_STRING_HASH_WITHOUT_TEXT = 40003;
-    const VARIABLE_STRINGS = 'strings';
-    const VARIABLE_SAVE = 'save';
-    const VARIABLE_SCAN = 'scan';
-    const VARIABLE_WARNINGS = 'warnings';
+    public const ERROR_NO_SOURCES_AVAILABLE = 40001;
+    public const ERROR_LOCAL_PATH_NOT_FOUND = 40002;
+    public const ERROR_STRING_HASH_WITHOUT_TEXT = 40003;
+    public const VARIABLE_STRINGS = 'strings';
+    public const VARIABLE_SAVE = 'save';
+    public const VARIABLE_SCAN = 'scan';
+    public const VARIABLE_WARNINGS = 'warnings';
 
     protected string $installPath;
     protected Request $request;
     protected BaseLocalizationSource $activeSource;
     protected LocalizationScanner $scanner;
-    protected BaseLocale $activeAppLocale;
+    protected LocaleInterface $activeAppLocale;
     protected EditorFilters $filters;
     protected string $varPrefix = 'applocalize_';
     protected int $perPage = 20;
@@ -61,7 +62,7 @@ class LocalizationEditor implements OptionableInterface
     protected array $sources;
 
     /**
-    * @var \AppLocalize\Localization\Locales\BaseLocale[]
+    * @var LocaleInterface[]
     */
     protected array $appLocales = array();
 
@@ -125,7 +126,7 @@ class LocalizationEditor implements OptionableInterface
     
     protected function initSession() : void
     {
-        if(session_status() != PHP_SESSION_ACTIVE) {
+        if(session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
         
@@ -202,7 +203,7 @@ class LocalizationEditor implements OptionableInterface
     }
 
     /**
-     * @return \AppLocalize\Localization\Locales\BaseLocale[]
+     * @return LocaleInterface[]
      */
     public function getAppLocales() : array
     {
@@ -219,12 +220,12 @@ class LocalizationEditor implements OptionableInterface
 
     public function getBackURL() : string
     {
-        return strval($this->getOption('back-url'));
+        return (string)$this->getOption('back-url');
     }
 
     public function getBackButtonLabel() : string
     {
-        return strval($this->getOption('back-label'));
+        return (string)$this->getOption('back-label');
     }
 
     public function getSaveVariableName() : string
@@ -328,14 +329,13 @@ class LocalizationEditor implements OptionableInterface
     
     public function getPageNumber() : int
     {
-        return intval($this->request
+        return (int)$this->request
             ->registerParam($this->getVarName('page'))
             ->setInteger()
-            ->get(0)
-        );
+            ->get(0);
     }
     
-    public function getActiveLocale() : BaseLocale
+    public function getActiveLocale() : LocaleInterface
     {
         return $this->activeAppLocale;
     }
@@ -352,7 +352,7 @@ class LocalizationEditor implements OptionableInterface
         $result = array();
         preg_match_all('/%[0-9]+d|%s|%[0-9]+\$s/i', $string, $result, PREG_PATTERN_ORDER);
 
-        if(isset($result[0]) && !empty($result[0])) {
+        if(!empty($result[0])) {
             return $result[0];
         }
         
@@ -371,7 +371,7 @@ class LocalizationEditor implements OptionableInterface
         return $this->getURL($params);
     }
     
-    public function getLocaleURL(BaseLocale $locale, array $params=array()) : string
+    public function getLocaleURL(LocaleInterface $locale, array $params=array()) : string
     {
         $params[$this->getVarName('locale')] = $locale->getName();
         
@@ -512,8 +512,8 @@ class LocalizationEditor implements OptionableInterface
     }
     
    /**
-    * Sets an URL that the translators can use to go back to
-    * the main application, for example if it is integrated into
+    * Sets a URL that the translators can use to go back to
+    * the main application, for example, if it is integrated into
     * an existing application.
     * 
     * @param string $url The URL to use for the link

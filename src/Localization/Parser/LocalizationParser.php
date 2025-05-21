@@ -13,6 +13,8 @@ use AppLocalize\Localization\Parser\Language\JavaScriptLanguage;
 use AppLocalize\Localization\Parser\Language\PHPLanguage;
 use AppLocalize\Localization\Scanner\LocalizationScanner;
 use AppLocalize\Localization_Scanner_StringsCollection;
+use AppUtils\ClassHelper;
+use AppUtils\ClassHelper\BaseClassHelperException;
 use AppUtils\FileHelper;
 use function AppUtils\parseVariable;
 
@@ -29,9 +31,9 @@ use function AppUtils\parseVariable;
  */
 class LocalizationParser
 {
-    const ERROR_INVALID_LANGUAGE_ID = 40601;
-    const ERROR_UNSUPPORTED_FILE_EXTENSION = 40602;
-    const ERROR_INVALID_LANGUAGE_CLASS = 40603;
+    public const ERROR_INVALID_LANGUAGE_ID = 40601;
+    public const ERROR_UNSUPPORTED_FILE_EXTENSION = 40602;
+    public const ERROR_INVALID_LANGUAGE_CLASS = 40603;
     
     protected LocalizationScanner $scanner;
     protected Localization_Scanner_StringsCollection $collection;
@@ -193,28 +195,15 @@ class LocalizationParser
     }
 
     /**
-     * @param class-string<BaseLanguage> $class
+     * @param class-string<BaseLanguage>|string $class
      * @return BaseLanguage
-     * @throws LocalizationException
-     * @see LocalizationParser::ERROR_INVALID_LANGUAGE_CLASS
+     * @throws BaseClassHelperException
      */
     private function createLanguageInstance(string $class) : BaseLanguage
     {
-        $object = new $class($this);
-
-        if($object instanceof BaseLanguage)
-        {
-            return $object;
-        }
-
-        throw new LocalizationException(
-            'Invalid parser language class',
-            sprintf(
-                'The created instance [%s] does not extend the base class [%s].',
-                parseVariable($object)->enableType()->toString(),
-                BaseLanguage::class
-            ),
-            self::ERROR_INVALID_LANGUAGE_CLASS
+        return ClassHelper::requireObjectInstanceOf(
+            BaseLanguage::class,
+            new $class($this)
         );
     }
 

@@ -75,8 +75,10 @@ class CountryCurrency implements CurrencyInterface
     /**
      * Checks if the specified number string is a valid
      * numeric notation for this currency.
-     * @param string|number $number
+     *
+     * @param string|int|float $number
      * @return bool
+     * @throws LocalizationException
      */
     public function isNumberValid($number) : bool
     {
@@ -87,9 +89,10 @@ class CountryCurrency implements CurrencyInterface
         return preg_match($this->getRegex(), (string)$number) !== false;
     }
 
-    protected $regex = '/\A([0-9%1$s]+)\z|([0-9%1$s]+),-\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
-    protected $regexGBP = '/\A([0-9%1$s]+)\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
-    protected $regexUSD = '/\A([0-9%1$s]+)\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
+    protected string $regex = '/\A([0-9%1$s]+)\z|([0-9%1$s]+),-\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
+    protected string $regexGBP = '/\A([0-9%1$s]+)\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
+    protected string $regexUSD = '/\A([0-9%1$s]+)\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
+    private ?string $cachedRegex = null;
 
     /**
      * @return string

@@ -12,6 +12,8 @@ use AppLocalize\Localization;
 use AppLocalize\Localization\Country\CountryUS;
 use AppUtils\ClassHelper;
 use AppUtils\ClassHelper\BaseClassHelperException;
+use AppUtils\ClassHelper\ClassNotExistsException;
+use AppUtils\ClassHelper\ClassNotImplementsException;
 use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
 use AppUtils\Collections\BaseClassLoaderCollection;
 use AppUtils\Collections\CollectionException;
@@ -67,13 +69,18 @@ class CountryCollection extends BaseClassLoaderCollection
     /**
      * @param string $id
      * @return CountryInterface
+     *
+     * @throws BaseClassHelperException
      * @throws CollectionException
      */
     public function getByID(string $id): StringPrimaryRecordInterface
     {
         $this->initItems();
 
-        return parent::getByID($this->filterCode($id));
+        return ClassHelper::requireObjectInstanceOf(
+            CountryInterface::class,
+            parent::getByID($this->filterCode($id))
+        );
     }
 
     public function idExists(string $id): bool

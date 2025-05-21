@@ -6,16 +6,14 @@ namespace AppLocalize\Localization\Parser;
 
 use AppLocalize\Localization;
 use AppLocalize\Localization\LocalizationException;
-use AppLocalize\Localization\Parser\ParserWarning;
-use AppLocalize\Localization\Parser\Text;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
 use function AppLocalize\t;
 
 abstract class BaseLanguage
 {
-    const ERROR_SOURCE_FILE_NOT_FOUND = 40501;
-    const ERROR_FAILED_READING_SOURCE_FILE = 40502;
+    public const ERROR_SOURCE_FILE_NOT_FOUND = 40501;
+    public const ERROR_FAILED_READING_SOURCE_FILE = 40502;
 
     protected bool $debug = false;
     protected LocalizationParser $parser;

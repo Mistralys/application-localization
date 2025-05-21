@@ -96,7 +96,10 @@ class LocalesCollection extends BaseClassLoaderCollection
      */
     public function getByID(string $id): StringPrimaryRecordInterface
     {
-        return parent::getByID($this->filterName($id));
+        return ClassHelper::requireObjectInstanceOf(
+            LocaleInterface::class,
+            parent::getByID($this->filterName($id))
+        );
     }
 
     public function filterName(string $name) : string
