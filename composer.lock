@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c0168ea03ac32a0000bbcd685d0b8d2",
+    "content-hash": "1c08120d8bc037d607ac7fec86a2007a",
     "packages": [
         {
             "name": "geshi/geshi",
@@ -490,61 +490,6 @@
                 "source": "https://github.com/Mistralys/HTML_QuickForm2"
             },
             "time": "2025-05-08T14:23:45+00:00"
-        },
-        {
-            "name": "mistralys/jtokenizer",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Mistralys/jtokenizer.git",
-                "reference": "e1cda4df1f56df5693290e9d71237c0d08e96f40"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/jtokenizer/zipball/e1cda4df1f56df5693290e9d71237c0d08e96f40",
-                "reference": "e1cda4df1f56df5693290e9d71237c0d08e96f40",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "phpstan/phpstan": ">=0.12",
-                "phpunit/phpunit": ">=8.2.5"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/Constants.php"
-                ],
-                "classmap": [
-                    "src"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tim Whitlock",
-                    "homepage": "https://timwhitlock.info",
-                    "role": "Lead developer"
-                },
-                {
-                    "name": "Sebastian Mordziol",
-                    "email": "s.mordziol@mistralys.eu",
-                    "homepage": "https://mistralys.eu",
-                    "role": "Contributor"
-                }
-            ],
-            "description": "Modernized, composer compatible version of Tim Whitlock's JTokenizer PHP Javascript parser and tokenizer library.",
-            "homepage": "https://github.com/Mistralys/jtokenizer",
-            "support": {
-                "issues": "https://github.com/Mistralys/jtokenizer/issues",
-                "source": "https://github.com/Mistralys/jtokenizer/tree/1.0.1"
-            },
-            "time": "2021-03-12T08:55:11+00:00"
         },
         {
             "name": "mistralys/php-sprintf-parser",
