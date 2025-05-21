@@ -20,7 +20,7 @@ class StringCollection
     
     public const SOURCE_FILE = 'file';
     
-    public const STORAGE_FORMAT_VERSION = 2;
+    public const STORAGE_FORMAT_VERSION = 3;
     
     protected LocalizationScanner $scanner;
     
@@ -124,7 +124,7 @@ class StringCollection
         
         foreach($this->hashes as $hash)
         {
-            $data['hashes'][] = $hash->toArray();
+            array_push($data['hashes'], ...$hash->toArray());
         }
         
         return $data;
