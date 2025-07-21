@@ -15,6 +15,7 @@ use AppLocalize\Localization\Currency\CurrencyGBP;
 use AppLocalize\Localization\Currency\CurrencyMXN;
 use AppLocalize\Localization\Currency\CurrencyPLN;
 use AppLocalize\Localization\Currency\CurrencyRON;
+use AppLocalize\Localization\Currency\CurrencySEK;
 use AppLocalize\Localization\Currency\CurrencySGD;
 use AppLocalize\Localization\Currency\CurrencyUSD;
 use AppUtils\ClassHelper;
@@ -36,6 +37,13 @@ class CannedCurrencies
         $this->currencies = CurrencyCollection::getInstance();
     }
 
+    /**
+     * Gets the Canadian Dollar currency.
+     * 
+     * This is used by the countries: CA.
+     *
+     * @return CurrencyCAD
+     */
     public function cad() : CurrencyCAD
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -44,6 +52,13 @@ class CannedCurrencies
         );
     }
 
+    /**
+     * Gets the Swiss Franc currency.
+     * 
+     * This is used by the countries: .
+     *
+     * @return CurrencyCHF
+     */
     public function chf() : CurrencyCHF
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -52,6 +67,13 @@ class CannedCurrencies
         );
     }
 
+    /**
+     * Gets the Euro currency.
+     * 
+     * This is used by the countries: AT, BE, CH, DE, ES, FI, FR, IE, IT and NL.
+     *
+     * @return CurrencyEUR
+     */
     public function eur() : CurrencyEUR
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -60,6 +82,13 @@ class CannedCurrencies
         );
     }
 
+    /**
+     * Gets the Pound currency.
+     * 
+     * This is used by the countries: GB.
+     *
+     * @return CurrencyGBP
+     */
     public function gbp() : CurrencyGBP
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -68,6 +97,13 @@ class CannedCurrencies
         );
     }
 
+    /**
+     * Gets the Mexican peso currency.
+     * 
+     * This is used by the countries: MX.
+     *
+     * @return CurrencyMXN
+     */
     public function mxn() : CurrencyMXN
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -76,6 +112,13 @@ class CannedCurrencies
         );
     }
 
+    /**
+     * Gets the złoty currency.
+     * 
+     * This is used by the countries: PL.
+     *
+     * @return CurrencyPLN
+     */
     public function pln() : CurrencyPLN
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -84,6 +127,13 @@ class CannedCurrencies
         );
     }
 
+    /**
+     * Gets the Leu currency.
+     * 
+     * This is used by the countries: RO.
+     *
+     * @return CurrencyRON
+     */
     public function ron() : CurrencyRON
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -92,6 +142,28 @@ class CannedCurrencies
         );
     }
 
+    /**
+     * Gets the Krona currency.
+     * 
+     * This is used by the countries: SE.
+     *
+     * @return CurrencySEK
+     */
+    public function sek() : CurrencySEK
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CurrencySEK::class,
+            $this->currencies->getByID(CurrencySEK::ISO_CODE)
+        );
+    }
+
+    /**
+     * Gets the Singapore Dollar currency.
+     * 
+     * This is used by the countries: SG.
+     *
+     * @return CurrencySGD
+     */
     public function sgd() : CurrencySGD
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -100,6 +172,13 @@ class CannedCurrencies
         );
     }
 
+    /**
+     * Gets the Dollar currency.
+     * 
+     * This is used by the countries: US and ZZ.
+     *
+     * @return CurrencyUSD
+     */
     public function usd() : CurrencyUSD
     {
         return ClassHelper::requireObjectInstanceOf(
