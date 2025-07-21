@@ -77,17 +77,18 @@ PHP;
         $methods = array();
         foreach(CountryCollection::getInstance()->getAll() as $country)
         {
-            self::logLine(' - '.$country->getCode());
+            $code = $country->getCode();
+            self::logLine(' - '.$code);
 
             $imports[] = 'use '.get_class($country).';';
-            $methods[] = sprintf(
+            $methods[$code] = sprintf(
                 self::CODE_COUNTRY,
-                strtolower($country->getCode()),
+                strtolower($code),
                 ClassHelper::getClassTypeName($country)
             );
 
             foreach($country->getAliases() as $alias) {
-                $methods[] = sprintf(
+                $methods[$alias] = sprintf(
                     self::CODE_COUNTRY,
                     $alias,
                     ClassHelper::getClassTypeName($country)
@@ -132,12 +133,13 @@ PHP;
         $methods = array();
         foreach(CurrencyCollection::getInstance()->getAll() as $currency)
         {
-            self::logLine(' - '.$currency->getISO());
+            $iso = $currency->getISO();
+            self::logLine(' - '.$iso);
 
             $imports[] = 'use '.get_class($currency).';';
-            $methods[] = sprintf(
+            $methods[$iso] = sprintf(
                 self::CODE_CURRENCY,
-                strtolower($currency->getISO()),
+                strtolower($iso),
                 ClassHelper::getClassTypeName($currency),
                 $currency->getSingularInvariant(),
                 ConvertHelper::implodeWithAnd(self::compileCountryCodes($currency->getCountries()), ', ', ' and ')
@@ -179,13 +181,15 @@ PHP;
         $methods = array();
         foreach(LocalesCollection::getInstance()->getAll() as $locale)
         {
-            self::logLine(' - '.$locale->getName());
+            $name = $locale->getName();
+
+            self::logLine(' - '.$name);
 
             $imports[] = 'use '.get_class($locale).';';
-            $methods[] = sprintf(
+            $methods[$name] = sprintf(
                 self::CODE_LOCALE,
-                $locale->getName(),
-                $locale->getName(),
+                $name,
+                $name,
                 $locale->getLabelInvariant()
             );
         }
@@ -201,10 +205,17 @@ PHP;
         self::logNL();
     }
 
+    /**
+     * @param string $templateFile
+     * @param string $outputFile
+     * @param array<int,string> $imports Sorted.
+     * @param array<string,string> $methods Sorted by key.
+     * @return void
+     */
     private static function writeClassTemplate(string $templateFile, string $outputFile, array $imports, array $methods) : void
     {
         sort($imports);
-        sort($methods);
+        ksort($methods);
 
         $placeholders = array(
             '{IMPORTS}' => implode("\n", $imports),
