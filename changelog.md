@@ -1,3 +1,13 @@
+## v2.0.1 - Added the Netherlands and Sweden
+- Countries: Added the Netherlands (`NL`).
+- Countries: Added Sweden (`SE`).
+- Currencies: Added the Swedish Krona (`SEK`).
+- Currencies: Added methods `getSingularInvariant()` and `getPluralInvariant()`.
+- Currencies: Canadian Dollars are now called "Canadian Dollars" instead of just "Dollars".
+- Currencies: Singapore Dollars are now called "Singapore Dollars" instead of just "Dollars".
+- Locales: Added the `choose()` method to access known locales by methods.
+- Build: Now generating the canned locales class automatically.
+
 ## v2.0.0 - Core revamp and new countries (Breaking-XL)
 - Countries: Added Finland (`FI`).
 - Countries: Added Belgium (`BE`).
