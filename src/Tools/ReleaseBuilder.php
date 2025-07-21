@@ -6,9 +6,11 @@ namespace AppLocalize\Tools;
 
 use AppLocalize\Localization;
 use AppLocalize\Localization\Countries\CountryCollection;
+use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\CurrencyCollection;
 use AppLocalize\Localization\Locales\LocalesCollection;
 use AppUtils\ClassHelper;
+use AppUtils\ConvertHelper;
 use Mistralys\ChangelogParser\ChangelogParser;
 
 class ReleaseBuilder
@@ -116,6 +118,13 @@ PHP;
     }
 
     private const CODE_CURRENCY = <<<'PHP'
+    /**
+     * Gets the %3$s currency.
+     * 
+     * This is used by the countries: %4$s.
+     *
+     * @return %2$s
+     */
     public function %1$s() : %2$s
     {
         return ClassHelper::requireObjectInstanceOf(
@@ -140,7 +149,9 @@ PHP;
             $methods[] = sprintf(
                 self::CODE_CURRENCY,
                 strtolower($currency->getISO()),
-                ClassHelper::getClassTypeName($currency)
+                ClassHelper::getClassTypeName($currency),
+                $currency->getSingularInvariant(),
+                ConvertHelper::implodeWithAnd(self::compileCountryCodes($currency->getCountries()), ', ', ' and ')
             );
         }
 
@@ -235,5 +246,19 @@ PHP;
         self::logLine(' - Written to '.basename($outputFile));
         self::logLine(' - DONE.');
         self::logNL();
+    }
+
+    /**
+     * @param CountryInterface[] $countries
+     * @return string[]
+     */
+    private static function compileCountryCodes(array $countries) : array
+    {
+        $result = array();
+        foreach($countries as $country) {
+            $result[] = strtoupper($country->getCode());
+        }
+
+        return $result;
     }
 }
