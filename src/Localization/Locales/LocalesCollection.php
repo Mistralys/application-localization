@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Locales;
 
 use AppLocalize\Localization;
+use AppLocalize\Localization\Locales\CannedLocales;
 use AppLocalize\Localization\Locale\en_US;
 use AppUtils\ClassHelper;
 use AppUtils\ClassHelper\Repository\ClassRepositoryManager;
@@ -107,5 +108,20 @@ class LocalesCollection extends BaseClassLoaderCollection
         $this->initItems();
 
         return $this->aliases[$name] ?? $name;
+    }
+
+    private ?CannedLocales $canned = null;
+
+    /**
+     * Choose a locale from a list of known locales.
+     * @return CannedLocales
+     */
+    public function choose() : CannedLocales
+    {
+        if(!isset($this->canned)) {
+            $this->canned = new CannedLocales();
+        }
+
+        return $this->canned;
     }
 }
