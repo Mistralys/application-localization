@@ -21,6 +21,7 @@ class ReleaseBuilder
 
         self::generateCannedCountries();
         self::generateCannedCurrencies();
+        self::generateCannedLocales();
         self::generateOverviewMarkdown();
         self::generateVersionFile();
     }
@@ -94,25 +95,13 @@ PHP;
             }
         }
 
-        sort($imports);
-        sort($methods);
-
-        $placeholders = array(
-            '{IMPORTS}' => implode("\n", $imports),
-            '{METHODS}' => implode("\n\n", $methods),
+        self::writeClassTemplate(
+            'CannedCountriesTemplate.php.spf',
+            __DIR__.'/../Localization/Countries/CannedCountries.php',
+            $imports,
+            $methods
         );
 
-        $code = str_replace(
-            array_keys($placeholders),
-            array_values($placeholders),
-            file_get_contents(__DIR__.'/Templates/CannedCountriesTemplate.php.spf')
-        );
-
-        $outputFile = __DIR__.'/../Localization/Countries/CannedCountries.php';
-
-        file_put_contents($outputFile, $code);
-
-        self::logLine(' - Written to '.basename($outputFile));
         self::logLine(' - DONE.');
         self::logNL();
     }
@@ -155,6 +144,68 @@ PHP;
             );
         }
 
+        self::writeClassTemplate(
+            'CannedCurrenciesTemplate.php.spf',
+            __DIR__.'/../Localization/Currencies/CannedCurrencies.php',
+            $imports,
+            $methods
+        );
+
+        self::logLine(' - DONE.');
+        self::logNL();
+    }
+
+    private const CODE_LOCALE = <<<'PHP'
+    /**
+     * Gets the locale `%1$s` for "%3$s".
+     * 
+     * @return %2$s
+     */
+    public function %1$s() : %2$s
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            %2$s::class,
+            $this->locales->getByID(%2$s::LOCALE_NAME)
+        );
+    }
+PHP;
+
+
+    private static function generateCannedLocales() : void
+    {
+        self::logHeader('Generating canned locales');
+
+        $imports = array();
+        $methods = array();
+        foreach(LocalesCollection::getInstance()->getAll() as $locale)
+        {
+            self::logLine(' - '.$locale->getName());
+
+            $imports[] = 'use '.get_class($locale).';';
+            $methods[] = sprintf(
+                self::CODE_LOCALE,
+                $locale->getName(),
+                $locale->getName(),
+                $locale->getLabelInvariant()
+            );
+        }
+
+        self::writeClassTemplate(
+            'CannedLocalesTemplate.php.spf',
+            __DIR__.'/../Localization/Locales/CannedLocales.php',
+            $imports,
+            $methods
+        );
+
+        self::logLine(' - DONE.');
+        self::logNL();
+    }
+
+    private static function writeClassTemplate(string $templateFile, string $outputFile, array $imports, array $methods) : void
+    {
+        sort($imports);
+        sort($methods);
+
         $placeholders = array(
             '{IMPORTS}' => implode("\n", $imports),
             '{METHODS}' => implode("\n\n", $methods),
@@ -163,16 +214,12 @@ PHP;
         $code = str_replace(
             array_keys($placeholders),
             array_values($placeholders),
-            file_get_contents(__DIR__.'/Templates/CannedCurrenciesTemplate.php.spf')
+            file_get_contents(__DIR__.'/Templates/'.$templateFile)
         );
-
-        $outputFile = __DIR__.'/../Localization/Currencies/CannedCurrencies.php';
 
         file_put_contents($outputFile, $code);
 
         self::logLine(' - Written to '.basename($outputFile));
-        self::logLine(' - DONE.');
-        self::logNL();
     }
 
     private static function generateOverviewMarkdown() : void

@@ -1,0 +1,32 @@
+<?php
+/**
+ * @package Localization
+ * @subpackage Locales
+ */
+
+declare(strict_types=1);
+
+namespace AppLocalize\Localization\Locales;
+
+{IMPORTS}
+use AppUtils\ClassHelper;
+
+/**
+ * Canned list of known locales for easy access.
+ *
+ * Use {@see LocalesCollection::choose()} to access this.
+ *
+ * @package Localization
+ * @subpackage Locales
+ */
+class CannedLocales
+{
+    private LocalesCollection $locales;
+
+    public function __construct()
+    {
+        $this->locales = LocalesCollection::getInstance();
+    }
+
+{METHODS}
+}
