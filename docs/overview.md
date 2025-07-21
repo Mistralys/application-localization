@@ -14,8 +14,10 @@
 - `ie` Ireland
 - `it` Italy
 - `mx` Mexico
+- `nl` Netherlands
 - `pl` Poland
 - `ro` Romania
+- `se` Sweden
 - `sg` Singapore
 - `us` United States
 - `zz` Country-independent
@@ -36,17 +38,20 @@
 - `fr_BE` French (Belgium)
 - `fr_FR` French (France)
 - `it_IT` Italian (Italy)
+- `nl_NL` Dutch (Netherlands)
 - `pl_PL` Polish (Poland)
 - `ro_RO` Romanian (Romania)
+- `sv_SE` Swedish (Sweden)
 
 ## Currencies
 
-- `CAD` Dollars ($)
+- `CAD` Canadian Dollars ($)
 - `CHF` Swiss Francs (F)
 - `EUR` Euros (€)
 - `GBP` Pounds (£)
 - `MXN` Mexican peso ($)
 - `PLN` złotys (zł)
 - `RON` Lei (Lei)
-- `SGD` Dollars (S$)
+- `SEK` Kronor (kr)
+- `SGD` Singapore Dollars (S$)
 - `USD` Dollars ($)
