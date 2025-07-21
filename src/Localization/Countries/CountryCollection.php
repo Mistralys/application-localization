@@ -116,6 +116,10 @@ class CountryCollection extends BaseClassLoaderCollection
 
     private ?CannedCountries $canned = null;
 
+    /**
+     * Chose a country from a list of known countries.
+     * @return CannedCountries
+     */
     public function choose() : CannedCountries
     {
         if(!isset($this->canned)) {
