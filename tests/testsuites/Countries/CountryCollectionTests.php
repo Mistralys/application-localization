@@ -27,4 +27,35 @@ final class CountryCollectionTests extends TestCase
         $this->assertSame('gb', CountryCollection::getInstance()->filterCode('gb'));
         $this->assertSame('fr', CountryCollection::getInstance()->filterCode('fr'));
     }
+
+    public function test_allCountriesAccountedFor() : void
+    {
+        $countries = CountryCollection::getInstance();
+        $expectedCount = 19;
+
+        $checkCountries = array(
+            $countries->choose()->at(),
+            $countries->choose()->be(),
+            $countries->choose()->ca(),
+            $countries->choose()->ch(),
+            $countries->choose()->de(),
+            $countries->choose()->es(),
+            $countries->choose()->fi(),
+            $countries->choose()->fr(),
+            $countries->choose()->gb(),
+            $countries->choose()->ie(),
+            $countries->choose()->it(),
+            $countries->choose()->mx(),
+            $countries->choose()->nl(),
+            $countries->choose()->pl(),
+            $countries->choose()->ro(),
+            $countries->choose()->se(),
+            $countries->choose()->sg(),
+            $countries->choose()->us(),
+            $countries->choose()->zz()
+        );
+
+        $this->assertCount($expectedCount, $countries->getAll());
+        $this->assertCount($expectedCount, $checkCountries);
+    }
 }
