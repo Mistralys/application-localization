@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Currency;
 use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\BaseCurrency;
 use function AppLocalize\t;
+use function AppLocalize\tex;
 
 /**
  * Currency: Canadian Dollar (CAD)
@@ -29,7 +30,12 @@ class CurrencyCAD extends BaseCurrency
 
     public function getSingular() : string
     {
-        return t('Dollar');
+        return tex('Canadian Dollar', 'Singular form of the Canadian currency');
+    }
+
+    public function getSingularInvariant() : string
+    {
+        return 'Canadian Dollar';
     }
 
     public function getSymbol() : string
@@ -39,7 +45,12 @@ class CurrencyCAD extends BaseCurrency
 
     public function getPlural() : string
     {
-        return t('Dollars');
+        return tex('Canadian Dollars', 'Plural form of the Canadian currency');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Canadian Dollars';
     }
 
     public function isNamePreferred() : bool

@@ -28,6 +28,11 @@ class CurrencySEK extends BaseCurrency
         return tex('Krona', 'Singular form of the Swedish currency');
     }
 
+    public function getSingularInvariant() : string
+    {
+        return 'Krona';
+    }
+
     public function getSymbol() : string
     {
         return 'kr';
@@ -36,6 +41,11 @@ class CurrencySEK extends BaseCurrency
     public function getPlural() : string
     {
         return tex('Kronor', 'Plural form of the Swedish currency');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Kronor';
     }
 
     public function isSymbolOnFront() : bool

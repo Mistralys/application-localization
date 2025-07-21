@@ -32,6 +32,11 @@ class CurrencyCHF extends BaseCurrency
         return t('Swiss Franc');
     }
 
+    public function getSingularInvariant() : string
+    {
+        return 'Swiss Franc';
+    }
+
     public function isSymbolOnFront(): bool
     {
         return false;
@@ -50,6 +55,11 @@ class CurrencyCHF extends BaseCurrency
     public function getPlural() : string
     {
         return t('Swiss Francs');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Swiss Francs';
     }
 
     public function getStructuralTemplate(?CountryInterface $country=null): string

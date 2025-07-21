@@ -27,6 +27,11 @@ class CurrencyUSD extends BaseCurrency
         return t('Dollar');
     }
 
+    public function getSingularInvariant() : string
+    {
+        return 'Dollar';
+    }
+
     public function getSymbol() : string
     {
         return '$';
@@ -35,6 +40,11 @@ class CurrencyUSD extends BaseCurrency
     public function getPlural() : string
     {
         return t('Dollars');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Dollars';
     }
     
     public function getISO() : string

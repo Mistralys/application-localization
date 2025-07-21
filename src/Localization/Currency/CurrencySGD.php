@@ -24,7 +24,12 @@ class CurrencySGD extends BaseCurrency
 
     public function getSingular() : string
     {
-        return t('Dollar');
+        return t('Singapore Dollar');
+    }
+
+    public function getSingularInvariant() : string
+    {
+        return 'Singapore Dollar';
     }
 
     public function getSymbol() : string
@@ -34,7 +39,12 @@ class CurrencySGD extends BaseCurrency
 
     public function getPlural() : string
     {
-        return t('Dollars');
+        return t('Singapore Dollars');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Singapore Dollars';
     }
 
     public function getISO() : string

@@ -27,6 +27,11 @@ class CurrencyGBP extends BaseCurrency
         return t('Pound');
     }
 
+    public function getSingularInvariant() : string
+    {
+        return 'Pound';
+    }
+
     public function getSymbol() : string
     {
         return '£';
@@ -35,6 +40,11 @@ class CurrencyGBP extends BaseCurrency
     public function getPlural() : string
     {
         return t('Pounds');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Pounds';
     }
     
     public function getISO() : string

@@ -42,10 +42,22 @@ interface CurrencyInterface
     public function getSingular() : string;
 
     /**
+     * The singular invariant label of the currency, e.g. "Dollar", "Pound"
+     * @return string
+     */
+    public function getSingularInvariant() : string;
+
+    /**
      * The plural label of the currency, e.g. "Dollars", "Pounds"
      * @return string
      */
     public function getPlural() : string;
+
+    /**
+     * The plural invariant label of the currency, e.g. "Dollars", "Pounds"
+     * @return string
+     */
+    public function getPluralInvariant() : string;
 
     /**
      * The currency symbol, e.g. "$", "€"

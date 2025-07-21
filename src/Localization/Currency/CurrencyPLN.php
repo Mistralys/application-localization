@@ -27,6 +27,11 @@ class CurrencyPLN extends BaseCurrency
         return t('złoty');
     }
 
+    public function getSingularInvariant() : string
+    {
+        return 'złoty';
+    }
+
     public function getSymbol() : string
     {
         return 'zł';
@@ -35,6 +40,11 @@ class CurrencyPLN extends BaseCurrency
     public function getPlural() : string
     {
         return t('złotys');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'złotys';
     }
     
     public function getISO() : string

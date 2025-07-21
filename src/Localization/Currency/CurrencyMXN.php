@@ -27,6 +27,11 @@ class CurrencyMXN extends BaseCurrency
         return t('Mexican peso');
     }
 
+    public function getSingularInvariant() : string
+    {
+        return 'Mexican peso';
+    }
+
     public function getSymbol() : string
     {
         return '$';
@@ -35,6 +40,11 @@ class CurrencyMXN extends BaseCurrency
     public function getPlural() : string
     {
         return t('Mexican peso');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Mexican pesos';
     }
     
     public function getISO() : string

@@ -28,6 +28,11 @@ class CurrencyEUR extends BaseCurrency
         return t('Euro');
     }
 
+    public function getSingularInvariant() : string
+    {
+        return 'Euro';
+    }
+
     public function getSymbol() : string
     {
         return '€';
@@ -36,6 +41,11 @@ class CurrencyEUR extends BaseCurrency
     public function getPlural() : string
     {
         return t('Euros');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Euros';
     }
 
     public function isSymbolOnFront() : bool

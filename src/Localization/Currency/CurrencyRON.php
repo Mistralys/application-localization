@@ -27,6 +27,11 @@ class CurrencyRON extends BaseCurrency
         return t('Leu');
     }
 
+    public function getSingularInvariant() : string
+    {
+        return 'Leu';
+    }
+
     public function getSymbol() : string
     {
         return '';
@@ -35,6 +40,11 @@ class CurrencyRON extends BaseCurrency
     public function getPlural() : string
     {
         return t('Lei');
+    }
+
+    public function getPluralInvariant() : string
+    {
+        return 'Lei';
     }
     
     public function getISO() : string
