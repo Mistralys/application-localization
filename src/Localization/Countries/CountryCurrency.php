@@ -47,9 +47,19 @@ class CountryCurrency implements CurrencyInterface
         return $this->currency->getSingular();
     }
 
+    public function getSingularInvariant(): string
+    {
+        return $this->currency->getSingularInvariant();
+    }
+
     public function getPlural(): string
     {
         return $this->currency->getPlural();
+    }
+
+    public function getPluralInvariant(): string
+    {
+        return $this->currency->getPluralInvariant();
     }
 
     public function getSymbol(): string
