@@ -134,11 +134,11 @@ class CannedCountries
         );
     }
 
-    public function se() : CountrySE
+    public function mx() : CountryMX
     {
         return ClassHelper::requireObjectInstanceOf(
-            CountrySE::class,
-            $this->collection->getByID(CountrySE::ISO_CODE)
+            CountryMX::class,
+            $this->collection->getByID(CountryMX::ISO_CODE)
         );
     }
 
@@ -147,14 +147,6 @@ class CannedCountries
         return ClassHelper::requireObjectInstanceOf(
             CountryNL::class,
             $this->collection->getByID(CountryNL::ISO_CODE)
-        );
-    }
-
-    public function mx() : CountryMX
-    {
-        return ClassHelper::requireObjectInstanceOf(
-            CountryMX::class,
-            $this->collection->getByID(CountryMX::ISO_CODE)
         );
     }
 
@@ -171,6 +163,14 @@ class CannedCountries
         return ClassHelper::requireObjectInstanceOf(
             CountryRO::class,
             $this->collection->getByID(CountryRO::ISO_CODE)
+        );
+    }
+
+    public function se() : CountrySE
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountrySE::class,
+            $this->collection->getByID(CountrySE::ISO_CODE)
         );
     }
 
