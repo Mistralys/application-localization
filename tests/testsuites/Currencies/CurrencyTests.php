@@ -38,17 +38,28 @@ class CurrencyTests extends TestCase
     {
         $countries = CountryCollection::getInstance();
         $currency = CurrencyCollection::getInstance()->choose()->eur();
+        $expectedCount = 10;
 
-        $this->assertCount(9, $currency->getCountries());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->at());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->be());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->ch());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->de());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->es());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->fi());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->fr());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->ie());
-        $this->assertCurrencyHasCountry($currency, $countries->choose()->it());
+        $this->assertCount($expectedCount, $currency->getCountries());
+
+        $checkCountries = array(
+            $countries->choose()->at(),
+            $countries->choose()->be(),
+            $countries->choose()->ch(),
+            $countries->choose()->de(),
+            $countries->choose()->es(),
+            $countries->choose()->fi(),
+            $countries->choose()->fr(),
+            $countries->choose()->ie(),
+            $countries->choose()->it(),
+            $countries->choose()->nl()
+        );
+
+        $this->assertCount($expectedCount, $checkCountries);
+
+        foreach ($checkCountries as $country) {
+            $this->assertCurrencyHasCountry($currency, $country);
+        }
     }
 
     public function assertCurrencyHasCountry(CurrencyInterface $currency, CountryInterface $country) : void
