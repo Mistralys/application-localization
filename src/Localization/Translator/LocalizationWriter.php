@@ -84,7 +84,7 @@ class LocalizationWriter
     
     private function renderHead() : string
     {
-        $title = strtoupper($this->fileType).' TRANSLATION FILE FOR ' . strtoupper($this->locale->getLabel());
+        $title = strtoupper($this->fileType).' TRANSLATION FILE FOR ' . strtoupper($this->locale->getLabelInvariant());
         
         $lines = array();
         
