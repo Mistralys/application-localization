@@ -20,8 +20,10 @@ use AppLocalize\Localization\Country\CountryGB;
 use AppLocalize\Localization\Country\CountryIE;
 use AppLocalize\Localization\Country\CountryIT;
 use AppLocalize\Localization\Country\CountryMX;
+use AppLocalize\Localization\Country\CountryNL;
 use AppLocalize\Localization\Country\CountryPL;
 use AppLocalize\Localization\Country\CountryRO;
+use AppLocalize\Localization\Country\CountrySE;
 use AppLocalize\Localization\Country\CountrySG;
 use AppLocalize\Localization\Country\CountryUS;
 use AppLocalize\Localization\Country\CountryZZ;
@@ -129,6 +131,22 @@ class CannedCountries
         return ClassHelper::requireObjectInstanceOf(
             CountryIT::class,
             $this->collection->getByID(CountryIT::ISO_CODE)
+        );
+    }
+
+    public function se() : CountrySE
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountrySE::class,
+            $this->collection->getByID(CountrySE::ISO_CODE)
+        );
+    }
+
+    public function nl() : CountryNL
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            CountryNL::class,
+            $this->collection->getByID(CountryNL::ISO_CODE)
         );
     }
 
