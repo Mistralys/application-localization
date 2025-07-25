@@ -9,6 +9,8 @@ use AppLocalize\Localization\Countries\CountryCollection;
 use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Currencies\CurrencyCollection;
 use AppLocalize\Localization\Locales\LocalesCollection;
+use AppLocalize\Localization\TimeZones\TimeZoneCollection;
+use AppLocalize\Localization\TimeZones\TimeZoneInterface;
 use AppUtils\ClassHelper;
 use AppUtils\ConvertHelper;
 use Mistralys\ChangelogParser\ChangelogParser;
@@ -18,6 +20,8 @@ class ReleaseBuilder
     public static function build() : void
     {
         require_once __DIR__.'/../../vendor/autoload.php';
+
+        ClassHelper::setCacheFolder(__DIR__.'/../../cache');
 
         self::generateCannedCountries();
         self::generateCannedCurrencies();
@@ -292,6 +296,23 @@ PHP;
                 $currency->getISO(),
                 $currency->getPlural(),
                 $symbol
+            );
+        }
+
+        $lines[] = '';
+        $lines[] = '## Time Zones';
+        $lines[] = '';
+
+        $zones = TimeZoneCollection::getInstance()->getAll();
+        usort($zones, static function(TimeZoneInterface $a, TimeZoneInterface $b) : int {
+            return strnatcasecmp($a->getLabel(), $b->getLabel());
+        });
+
+        foreach($zones as $zone) {
+            $lines[] = sprintf(
+                '- %s - `%s`',
+                $zone->getLabel(),
+                $zone->getID()
             );
         }
 
