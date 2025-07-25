@@ -55,3 +55,27 @@
 - `SEK` Kronor (kr)
 - `SGD` Singapore Dollars (S$)
 - `USD` Dollars ($)
+
+## Time Zones
+
+- America/Mexico City - `America/Mexico_City`
+- America/Vancouver - `America/Vancouver`
+- Asia/Singapore - `Asia/Singapore`
+- Europe/Amsterdam - `Europe/Amsterdam`
+- Europe/Berlin - `Europe/Berlin`
+- Europe/Brussels - `Europe/Brussels`
+- Europe/Bucharest - `Europe/Bucharest`
+- Europe/Dublin - `Europe/Dublin`
+- Europe/Helsinki - `Europe/Helsinki`
+- Europe/Madrid - `Europe/Madrid`
+- Europe/Paris - `Europe/London`
+- Europe/Paris - `Europe/Paris`
+- Europe/Rome - `Europe/Rome`
+- Europe/Stockholm - `Europe/Stockholm`
+- Europe/Vienna - `Europe/Vienna`
+- Europe/Warsaw - `Europe/Warsaw`
+- Europe/Zurich - `Europe/Zurich`
+- Global/Central European Time - `CET`
+- Global/Central Standard Time - `CST`
+- Global/Coordinated Universal Time - `UTC`
+- United States/Eastern - `US/Eastern`
