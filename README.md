@@ -15,6 +15,15 @@ localization layer that stores translated strings in ini files.
 
 [List of countries and locales][]
 
+## Limitations
+
+The available locales, countries, currencies and time zones are limited to the ones 
+that have been added to the package. This reflects the locales that are typically 
+used in my projects and applications. The package is not designed nor intended to be 
+a full-fledged i18n library that supports all locales and languages in the world.
+
+See the [list of countries and locales][] for an overview of what is included.
+
 ## Requirements
 
 - PHP 7.4 or higher (PHP 8.4 compatible)
@@ -469,6 +478,33 @@ This will output:
 ```
 1.445,42 €
 ```
+
+## Time Zones
+
+All supported countries have a time zone associated with them, which can be
+accessed like this:
+
+```php
+use AppLocalize\Localization;
+$timeZone = Localization::createCountries()
+    ->choose()
+    ->de()
+    ->getTimezone();
+
+echo $timeZone->getID(); // Europe/Berlin
+echo $timeZone->getZoneLabel(); // Europe
+echo $timeZone->getLocationLabel(); // Berlin
+echo $timeZone->getLabel(); // Europa/Berlin (de_DE locale)
+```
+
+### Multiple time zone countries
+
+For countries like the US, which have multiple time zones, the time zone 
+returned is one that has been historically defined as the default in my 
+projects:
+
+- US:  US/Eastern
+- CA: America/Vancouver
 
 ## Examples
 
