@@ -1,3 +1,8 @@
+## v2.1.0 - Added timezone support
+- Countries: Added the `getTimezone()` method to get the timezone of a country.
+- Countries: Added the `CountryBasket` utility class for freeform country selections.
+- Timezones: Added time zone classes.
+
 ## v2.0.1 - Added the Netherlands and Sweden
 - Countries: Added the Netherlands (`NL`).
 - Countries: Added Sweden (`SE`).
