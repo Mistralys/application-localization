@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AppLocalize\Localization\TimeZone\Europe;
+namespace AppLocalize\Localization\TimeZone\Globals;
 
-use AppLocalize\Localization\TimeZones\BaseEuropeTimeZone;
+use AppLocalize\Localization\TimeZones\BaseGlobalTimeZone;
 use function AppLocalize\t;
 
-class EuropeCETTimeZone extends BaseEuropeTimeZone
+class GlobalCETTimeZone extends BaseGlobalTimeZone
 {
     public const ZONE_ID = 'CET';
 
