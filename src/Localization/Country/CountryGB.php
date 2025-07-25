@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\en_GB;
 use AppLocalize\Localization\Currency\CurrencyGBP;
+use AppLocalize\Localization\TimeZone\Europe\EuropeLondonTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -66,5 +67,10 @@ class CountryGB extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return en_GB::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeLondonTimeZone::ZONE_ID;
     }
 }

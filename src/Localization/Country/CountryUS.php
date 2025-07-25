@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\en_US;
 use AppLocalize\Localization\Currency\CurrencyUSD;
+use AppLocalize\Localization\TimeZone\US\USEasternTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryUS extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return en_US::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return USEasternTimeZone::ZONE_ID;
     }
 }

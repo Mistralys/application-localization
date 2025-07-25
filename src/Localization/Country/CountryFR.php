@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\fr_FR;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\TimeZone\Europe\EuropeParisTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryFR extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return fr_FR::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeParisTimeZone::ZONE_ID;
     }
 }

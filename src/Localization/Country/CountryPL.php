@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\pl_PL;
 use AppLocalize\Localization\Currency\CurrencyPLN;
+use AppLocalize\Localization\TimeZone\Europe\EuropeWarsawTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryPL extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return pl_PL::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeWarsawTimeZone::ZONE_ID;
     }
 }

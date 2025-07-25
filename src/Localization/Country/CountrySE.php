@@ -9,6 +9,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\sv_SE;
 use AppLocalize\Localization\Currency\CurrencySEK;
+use AppLocalize\Localization\TimeZone\Europe\EuropeStockholmTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -55,5 +56,10 @@ class CountrySE extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return sv_SE::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeStockholmTimeZone::ZONE_ID;
     }
 }

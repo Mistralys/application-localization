@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\es_MX;
 use AppLocalize\Localization\Currency\CurrencyMXN;
+use AppLocalize\Localization\TimeZone\America\AmericaMexicoCityTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryMX extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return es_MX::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return AmericaMexicoCityTimeZone::ZONE_ID;
     }
 }

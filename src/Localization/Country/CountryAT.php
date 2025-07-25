@@ -7,8 +7,9 @@
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
-use AppLocalize\Localization\Locale\de_AT;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\Locale\de_AT;
+use AppLocalize\Localization\TimeZone\Europe\EuropeViennaTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -56,5 +57,10 @@ class CountryAT extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return de_AT::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeViennaTimeZone::ZONE_ID;
     }
 }

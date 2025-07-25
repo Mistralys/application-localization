@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
-use AppLocalize\Localization\Locale\en_CA;
 use AppLocalize\Localization\Currency\CurrencyCAD;
+use AppLocalize\Localization\Locale\en_CA;
+use AppLocalize\Localization\TimeZone\America\AmericaVancouverTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryCA extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return en_CA::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return AmericaVancouverTimeZone::ZONE_ID;
     }
 }

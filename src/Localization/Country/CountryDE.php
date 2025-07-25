@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\de_DE;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\TimeZone\Europe\EuropeBerlinTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryDE extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return de_DE::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeBerlinTimeZone::ZONE_ID;
     }
 }

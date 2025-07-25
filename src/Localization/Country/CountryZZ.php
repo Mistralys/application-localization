@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
-use AppLocalize\Localization\Locale\en_US;
 use AppLocalize\Localization\Currency\CurrencyUSD;
+use AppLocalize\Localization\Locale\en_US;
+use AppLocalize\Localization\TimeZone\Globals\GlobalUTCTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryZZ extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return en_US::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return GlobalUTCTimeZone::ZONE_ID;
     }
 }

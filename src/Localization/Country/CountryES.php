@@ -10,6 +10,7 @@ namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\es_ES;
+use AppLocalize\Localization\TimeZone\Europe\EuropeMadridTimeZone;
 use AppLocalize\Localization_Country_ES;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use function AppLocalize\t;
@@ -59,5 +60,10 @@ class CountryES extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return es_ES::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeMadridTimeZone::ZONE_ID;
     }
 }

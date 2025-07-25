@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\it_IT;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\TimeZone\Europe\EuropeRomeTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryIT extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return it_IT::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeRomeTimeZone::ZONE_ID;
     }
 }

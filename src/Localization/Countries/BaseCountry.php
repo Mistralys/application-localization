@@ -11,6 +11,8 @@ namespace AppLocalize\Localization\Countries;
 use AppLocalize\Localization;
 use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\Locales\LocalesCollection;
+use AppLocalize\Localization\TimeZones\TimeZoneCollection;
+use AppLocalize\Localization\TimeZones\TimeZoneInterface;
 
 /**
  * Individual country representation for handling country-related
@@ -64,5 +66,10 @@ abstract class BaseCountry implements CountryInterface
     public function getMainLocale() : LocaleInterface
     {
         return LocalesCollection::getInstance()->getByID($this->getMainLocaleCode());
+    }
+
+    public function getTimeZone() : TimeZoneInterface
+    {
+        return TimeZoneCollection::getInstance()->getByID($this->getTimeZoneID());
     }
 }

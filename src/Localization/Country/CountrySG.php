@@ -10,6 +10,7 @@ namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Currency\CurrencySGD;
+use AppLocalize\Localization\TimeZone\Europe\AsiaSingaporeTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -57,5 +58,10 @@ class CountrySG extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return 'en_SG';
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return AsiaSingaporeTimeZone::ZONE_ID;
     }
 }

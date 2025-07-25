@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use AppLocalize\Localization\Locale\en_IE;
+use AppLocalize\Localization\TimeZone\Europe\EuropeDublinTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryIE extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return en_IE::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeDublinTimeZone::ZONE_ID;
     }
 }

@@ -6,6 +6,7 @@ namespace AppLocalize\Localization\Countries;
 
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use AppLocalize\Localization\Locales\LocaleInterface;
+use AppLocalize\Localization\TimeZones\TimeZoneInterface;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
 
 /**
@@ -70,4 +71,11 @@ interface CountryInterface extends StringPrimaryRecordInterface
      * @return string[]
      */
     public function getAliases() : array;
+
+    public function getTimeZone() : TimeZoneInterface;
+
+    /**
+     * @return string e.g. "Europe/Paris", "US/Eastern", "Europe/Berlin"
+     */
+    public function getTimeZoneID() : string;
 }

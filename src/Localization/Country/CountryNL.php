@@ -9,6 +9,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use AppLocalize\Localization\Locale\nl_NL;
+use AppLocalize\Localization\TimeZone\Europe\EuropeAmsterdamTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -55,5 +56,10 @@ class CountryNL extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return nl_NL::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeAmsterdamTimeZone::ZONE_ID;
     }
 }

@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use AppLocalize\Localization\Locale\fi_FI;
+use AppLocalize\Localization\TimeZone\Europe\EuropeHelsinkiTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryFI extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return fi_FI::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeHelsinkiTimeZone::ZONE_ID;
     }
 }

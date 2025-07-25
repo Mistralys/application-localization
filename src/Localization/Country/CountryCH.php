@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\de_CH;
 use AppLocalize\Localization\Currency\CurrencyEUR;
+use AppLocalize\Localization\TimeZone\Europe\EuropeZurichTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryCH extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return de_CH::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeZurichTimeZone::ZONE_ID;
     }
 }

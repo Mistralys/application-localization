@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Country;
 use AppLocalize\Localization\Countries\BaseCountry;
 use AppLocalize\Localization\Locale\ro_RO;
 use AppLocalize\Localization\Currency\CurrencyRON;
+use AppLocalize\Localization\TimeZone\Europe\EuropeBucharestTimeZone;
 use function AppLocalize\t;
 
 /**
@@ -58,5 +59,10 @@ class CountryRO extends BaseCountry
     public function getMainLocaleCode(): string
     {
         return ro_RO::LOCALE_NAME;
+    }
+
+    public function getTimeZoneID(): string
+    {
+        return EuropeBucharestTimeZone::ZONE_ID;
     }
 }
