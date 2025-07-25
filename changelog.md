@@ -2,6 +2,7 @@
 - Countries: Added the `getTimezone()` method to get the timezone of a country.
 - Countries: Added the `CountryBasket` utility class for freeform country selections.
 - Timezones: Added time zone classes.
+- Dependencies: Bumped up AppUtils Collections to [v1.2.0](https://github.com/Mistralys/application-utils-collections/releases/tag/1.2.0).
 
 ## v2.0.1 - Added the Netherlands and Sweden
 - Countries: Added the Netherlands (`NL`).
