@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\TimeZones;
 
+use AppUtils\ClassHelper;
 use AppUtils\Collections\BaseClassLoaderCollection;
 use AppUtils\FileHelper\FolderInfo;
 use AppUtils\Interfaces\StringPrimaryRecordInterface;
@@ -37,7 +38,10 @@ class TimeZoneCollection extends BaseClassLoaderCollection
 
     protected function createItemInstance(string $class): StringPrimaryRecordInterface
     {
-        return new $class();
+        return ClassHelper::requireObjectInstanceOf(
+            TimeZoneInterface::class,
+            new $class()
+        );
     }
 
     public function getInstanceOfClassName(): ?string

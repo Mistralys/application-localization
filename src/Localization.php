@@ -40,6 +40,8 @@ use HTML_QuickForm2_Element_Select;
  * @package Localization
  * @subpackage Core
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @phpstan-type ListenerDef array{callback:callable,args:array<int,mixed>,id:int}
  */
 class Localization
 {
@@ -102,7 +104,7 @@ class Localization
     
    /**
     * Stores event listener instances.
-    * @var array<string,array{callback:callable,args:array<int,mixed>,id:int}>
+    * @var array<string,ListenerDef[]>
     */
     protected static array $listeners = array();
     

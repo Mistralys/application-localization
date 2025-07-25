@@ -11,6 +11,7 @@ namespace AppLocalize\Localization\Countries;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
 use AppLocalize\Localization\Currencies\CurrencyNumberInfo;
 use AppLocalize\Localization\LocalizationException;
+use function AppUtils\parseVariable;
 
 /**
  * @package Localization
@@ -267,7 +268,7 @@ class CountryCurrency implements CurrencyInterface
             'Could not parse number',
             sprintf(
                 'The number [%1$s] did not yield a currency number object.',
-                $number
+                parseVariable($number)->enableType()->toString()
             ),
             CountryException::ERROR_CANNOT_PARSE_CURRENCY_NUMBER
         );

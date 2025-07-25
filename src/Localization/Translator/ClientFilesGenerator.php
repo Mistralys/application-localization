@@ -330,18 +330,22 @@ class ClientFilesGenerator
 
     public static function getSystemKey() : string
     {
-        if(!isset(self::$systemKey)) {
-            self::$systemKey = sprintf(
-                'Lib:%s|System:%s|Locales:%s',
-                Localization::getClientLibrariesCacheKey(),
-                Localization::getVersion(),
-                implode(',', self::getTargetLocaleIDs())
-            );
-
-            self::log('System Key generated: [%s].', self::$systemKey);
+        if(isset(self::$systemKey)) {
+            return self::$systemKey;
         }
 
-        return self::$systemKey;
+        $systemKey = sprintf(
+            'Lib:%s|System:%s|Locales:%s',
+            Localization::getClientLibrariesCacheKey(),
+            Localization::getVersion(),
+            implode(',', self::getTargetLocaleIDs())
+        );
+
+        self::log('System Key generated: [%s].', $systemKey);
+
+        self::$systemKey = $systemKey;
+
+        return $systemKey;
     }
 
    /**

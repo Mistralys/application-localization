@@ -13,6 +13,7 @@ use AppLocalize\Localization\TimeZones\TimeZoneCollection;
 use AppLocalize\Localization\TimeZones\TimeZoneInterface;
 use AppUtils\ClassHelper;
 use AppUtils\ConvertHelper;
+use AppUtils\FileHelper\FileInfo;
 use Mistralys\ChangelogParser\ChangelogParser;
 
 class ReleaseBuilder
@@ -229,7 +230,7 @@ PHP;
         $code = str_replace(
             array_keys($placeholders),
             array_values($placeholders),
-            file_get_contents(__DIR__.'/Templates/'.$templateFile)
+            FileInfo::factory(__DIR__.'/Templates/'.$templateFile)->getContents()
         );
 
         file_put_contents($outputFile, $code);

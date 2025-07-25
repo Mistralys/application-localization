@@ -354,7 +354,7 @@ class LocalizationTranslator
 
         try
         {
-            return sprintf(...$args);
+            return sprintf(...array_map('strval', $args));
         }
         catch (Throwable $e)
         {
