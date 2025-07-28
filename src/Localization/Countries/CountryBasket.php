@@ -19,7 +19,7 @@ use AppUtils\Baskets\GenericStringPrimaryBasket;
  *
  * @method CountryInterface[] getAll()
  * @method CountryInterface getByID(string $id)
- * @method static CountryBasket create()
+ * @method static CountryBasket create(...$initialRecords)
  */
 class CountryBasket extends GenericStringPrimaryBasket
 {
