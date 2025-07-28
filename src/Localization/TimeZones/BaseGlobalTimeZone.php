@@ -29,16 +29,14 @@ abstract class BaseGlobalTimeZone extends BaseTimeZone implements GlobalTimeZone
             return $this->countries;
         }
 
-        $this->countries = CountryBasket::create();
-
-        $zoneID = $this->getID();
-        foreach(CountryCollection::getInstance()->getAll() as $country) {
-            if($country->getTimeZoneID() === $zoneID) {
-                $this->countries->addItem($country);
-            }
-        }
+        $this->countries = CountryBasket::create($this->resolveCountries());
 
         return $this->countries;
+    }
+
+    protected function resolveCountries() : array
+    {
+        return CountryCollection::getInstance()->getAll();
     }
 
     public function getLocales(): LocaleBasket
