@@ -6,7 +6,7 @@ namespace AppLocalize\Localization\TimeZones;
 
 use function AppLocalize\t;
 
-abstract class BaseAsiaTimeZone extends BaseTimeZone
+abstract class BaseAsiaTimeZone extends BaseCountryTimeZone
 {
     public function getZoneLabel(): string
     {
