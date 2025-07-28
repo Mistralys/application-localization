@@ -33,7 +33,7 @@
 		"mistralys/application-utils-core" : ">=2.3.11",
 		"mistralys/php-sprintf-parser" : "^1.0",
 		"mistralys/html_quickform2": ">=2.3.5",
-		"mistralys/application-utils-collections": ">=1.2.0",
+		"mistralys/application-utils-collections": ">=1.2.1",
 		"mistralys/changelog-parser": ">=1.0.2",
 		"mck89/peast": ">=v1.17.0",
 		"php": "^7.4|^8.0",
