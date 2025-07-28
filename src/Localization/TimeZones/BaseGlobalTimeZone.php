@@ -45,7 +45,7 @@ abstract class BaseGlobalTimeZone extends BaseTimeZone implements GlobalTimeZone
     {
         $basket = LocaleBasket::create();
 
-        foreach($this->getCountries() as $country) {
+        foreach($this->getCountries()->getAll() as $country) {
             $basket->addItem($country->getMainLocale());
         }
 
