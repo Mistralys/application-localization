@@ -2,6 +2,7 @@
 - Timezones: Added getters for countries and locales.
 - Timezones: Added an interfaces to split global and country timezones.
 - Timezones: Added basket collection classes for global and country timezones.
+- Timezones: Fixed London being labeled as Paris.
 - Countries: Fixed `filterCode()` not initializing the collection.
 - Locales: Added a locale basket collection class.
 - Dependencies: Bumped up AppUtils Collections to [v1.2.1](https://github.com/Mistralys/application-utils-collections/releases/tag/1.2.1).
