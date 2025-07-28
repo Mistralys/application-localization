@@ -94,6 +94,8 @@ class CountryCollection extends BaseClassLoaderCollection
 
     public function filterCode(string $code) : string
     {
+        $this->initItems();
+
         $code = strtolower($code);
 
         return $this->aliases[$code] ?? $code;
@@ -155,6 +157,8 @@ class CountryCollection extends BaseClassLoaderCollection
      */
     public function getAliases() : array
     {
+        $this->initItems();
+
         return $this->aliases;
     }
 
