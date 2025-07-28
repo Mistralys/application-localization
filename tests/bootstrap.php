@@ -10,6 +10,7 @@
 declare(strict_types=1);
 
 use AppLocalize\Localization;
+use AppUtils\ClassHelper;
 
 const TESTS_ROOT = __DIR__;
 
@@ -17,6 +18,8 @@ $sourcesPath = __DIR__.'/../example/sources';
 if(!is_dir($sourcesPath)) {
     die('Cannot run tests: the example sources could not be found.');
 }
+
+ClassHelper::setCacheFolder(__DIR__.'/../cache');
 
 // where the test files are stored
 $storageFolder = TESTS_ROOT.'/storage';
