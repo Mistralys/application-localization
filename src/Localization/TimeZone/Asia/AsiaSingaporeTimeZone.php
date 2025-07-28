@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\TimeZone\Europe;
 
+use AppLocalize\Localization\Country\CountrySG;
 use AppLocalize\Localization\TimeZones\BaseAsiaTimeZone;
 use function AppLocalize\t;
 
@@ -24,5 +25,10 @@ class AsiaSingaporeTimeZone extends BaseAsiaTimeZone
     public function getLocationLabelInvariant(): string
     {
         return 'Singapore';
+    }
+
+    public function getCountryCode(): string
+    {
+        return CountrySG::ISO_CODE;
     }
 }

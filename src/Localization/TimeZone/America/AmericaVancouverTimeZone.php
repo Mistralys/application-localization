@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\TimeZone\America;
 
+use AppLocalize\Localization\Country\CountryCA;
 use AppLocalize\Localization\TimeZones\BaseAmericaTimeZone;
 use function AppLocalize\t;
 
@@ -24,5 +25,10 @@ class AmericaVancouverTimeZone extends BaseAmericaTimeZone
     public function getLocationLabelInvariant(): string
     {
         return 'Vancouver';
+    }
+
+    public function getCountryCode(): string
+    {
+        return CountryCA::ISO_CODE;
     }
 }

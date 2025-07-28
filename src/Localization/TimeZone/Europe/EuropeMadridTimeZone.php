@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\TimeZone\Europe;
 
+use AppLocalize\Localization\Country\CountryES;
 use AppLocalize\Localization\TimeZones\BaseEuropeTimeZone;
 use function AppLocalize\t;
 
@@ -24,5 +25,10 @@ class EuropeMadridTimeZone extends BaseEuropeTimeZone
     public function getLocationLabelInvariant(): string
     {
         return 'Madrid';
+    }
+
+    public function getCountryCode(): string
+    {
+        return CountryES::ISO_CODE;
     }
 }

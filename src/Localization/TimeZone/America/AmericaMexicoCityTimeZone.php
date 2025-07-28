@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\TimeZone\America;
 
+use AppLocalize\Localization\Country\CountryMX;
 use AppLocalize\Localization\TimeZones\BaseAmericaTimeZone;
 use function AppLocalize\t;
 
@@ -24,5 +25,10 @@ class AmericaMexicoCityTimeZone extends BaseAmericaTimeZone
     public function getLocationLabelInvariant(): string
     {
         return 'Mexico City';
+    }
+
+    public function getCountryCode(): string
+    {
+        return CountryMX::ISO_CODE;
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\TimeZone\Europe;
 
+use AppLocalize\Localization\Country\CountryIT;
 use AppLocalize\Localization\TimeZones\BaseEuropeTimeZone;
 use function AppLocalize\t;
 
@@ -24,5 +25,10 @@ class EuropeRomeTimeZone extends BaseEuropeTimeZone
     public function getLocationLabelInvariant(): string
     {
         return 'Rome';
+    }
+
+    public function getCountryCode(): string
+    {
+        return CountryIT::ISO_CODE;
     }
 }
