@@ -1,3 +1,11 @@
+## v2.1.1 - Timezone improvements
+- Timezones: Added getters for countries and locales.
+- Timezones: Added an interfaces to split global and country timezones.
+- Timezones: Added basket collection classes for global and country timezones.
+- Countries: Fixed `filterCode()` not initializing the collection.
+- Locales: Added a locale basket collection class.
+- Dependencies: Bumped up AppUtils Collections to [v1.2.1](https://github.com/Mistralys/application-utils-collections/releases/tag/1.2.1).
+
 ## v2.1.0 - Added timezone support
 - Countries: Added the `getTimezone()` method to get the timezone of a country.
 - Countries: Added the `CountryBasket` utility class for freeform country selections.
