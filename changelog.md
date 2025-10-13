@@ -1,3 +1,7 @@
+## v2.1.2 - Minor improvements 
+- Currencies: Added an interface for country currencies.
+- Currencies: Adjusted return types so country currency methods are visible.
+
 ## v2.1.1 - Timezone improvements
 - Timezones: Added getters for countries and locales.
 - Timezones: Added an interfaces to split global and country timezones.
