@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Countries;
 
+use AppLocalize\Localization\Currencies\CountryCurrencyInterface;
 use AppLocalize\Localization\Currency\CurrencyEUR;
 use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\TimeZones\TimeZoneInterface;
@@ -35,9 +36,9 @@ interface CountryInterface extends StringPrimaryRecordInterface
      * is different from a regular currency in that it
      * retains a reference to the country: {@see CountryCurrency::getCountry()}.
      *
-     * @return CountryCurrency
+     * @return CountryCurrencyInterface
      */
-    public function getCurrency() : CountryCurrency;
+    public function getCurrency() : CountryCurrencyInterface;
     
     /**
      * Human-readable label for the locale, translated for the

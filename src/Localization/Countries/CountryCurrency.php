@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Countries;
 
+use AppLocalize\Localization\Currencies\CountryCurrencyInterface;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
 use AppLocalize\Localization\Currencies\CurrencyNumberInfo;
 use AppLocalize\Localization\LocalizationException;
@@ -17,7 +18,7 @@ use function AppUtils\parseVariable;
  * @package Localization
  * @subpackage Currencies
  */
-class CountryCurrency implements CurrencyInterface
+class CountryCurrency implements CountryCurrencyInterface
 {
     private CurrencyInterface $currency;
     private CountryInterface $country;
@@ -83,14 +84,6 @@ class CountryCurrency implements CurrencyInterface
         return $this->currency->getStructuralTemplate($this->country);
     }
 
-    /**
-     * Checks if the specified number string is a valid
-     * numeric notation for this currency.
-     *
-     * @param string|int|float $number
-     * @return bool
-     * @throws LocalizationException
-     */
     public function isNumberValid($number) : bool
     {
         if (empty($number)) {
@@ -142,17 +135,6 @@ class CountryCurrency implements CurrencyInterface
         return null;
     }
 
-    /**
-     * Returns examples of the currency's numeric notation, as
-     * an indexed array with examples which are used in forms
-     * as input help for users.
-     *
-     * The optional parameter sets how many decimal positions
-     * should be included in the examples.
-     *
-     * @param int $decimalPositions
-     * @return string[]
-     */
     public function getExamples(int $decimalPositions = 0) : array
     {
         $dSep = $this->getDecimalsSeparator();
@@ -182,10 +164,6 @@ class CountryCurrency implements CurrencyInterface
         return $examples;
     }
 
-    /**
-     * @param string|int|float|CurrencyNumberInfo|NULL $number
-     * @return CurrencyNumberInfo|NULL
-     */
     public function tryParseNumber($number) : ?CurrencyNumberInfo
     {
         if($number instanceof CurrencyNumberInfo) {
@@ -216,10 +194,6 @@ class CountryCurrency implements CurrencyInterface
         return new CurrencyNumberInfo((int)$thousands, (int)$decimals);
     }
 
-    /**
-     * @param int|float|string|CurrencyNumberInfo|NULL $number
-     * @return string
-     */
     public function normalizeNumber($number) : string
     {
         if($number instanceof CurrencyNumberInfo) {
@@ -251,11 +225,6 @@ class CountryCurrency implements CurrencyInterface
         return str_replace(',', '.', $normalized);
     }
 
-    /**
-     * @param string|int|float|CurrencyNumberInfo|NULL $number
-     * @return CurrencyNumberInfo
-     * @throws LocalizationException
-     */
     public function parseNumber($number) : CurrencyNumberInfo
     {
         $parsed = $this->tryParseNumber($number);
@@ -279,11 +248,6 @@ class CountryCurrency implements CurrencyInterface
         return $this->currency->isSymbolOnFront();
     }
 
-    /**
-     * @param string|int|float|CurrencyNumberInfo|NULL $number
-     * @param int $decimalPositions
-     * @return string
-     */
     public function formatNumber($number, int $decimalPositions = 2) : string
     {
         $info = $this->tryParseNumber($number);
@@ -309,12 +273,6 @@ class CountryCurrency implements CurrencyInterface
         return $this->country->getNumberDecimalsSeparator();
     }
 
-    /**
-     * @param string|int|float|CurrencyNumberInfo|NULL $number
-     * @param int $decimalPositions
-     * @param bool $addSymbol
-     * @return string
-     */
     public function makeReadable($number, int $decimalPositions = 2, bool $addSymbol=true) : string
     {
         $parsed = $this->tryParseNumber($number);

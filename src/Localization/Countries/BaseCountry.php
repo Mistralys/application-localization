@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace AppLocalize\Localization\Countries;
 
 use AppLocalize\Localization;
+use AppLocalize\Localization\Currencies\CountryCurrencyInterface;
 use AppLocalize\Localization\Locales\LocaleInterface;
 use AppLocalize\Localization\Locales\LocalesCollection;
 use AppLocalize\Localization\TimeZones\TimeZoneCollection;
@@ -29,9 +30,9 @@ abstract class BaseCountry implements CountryInterface
         return array();
     }
 
-    protected ?CountryCurrency $currency;
+    protected ?CountryCurrencyInterface $currency;
 
-    public function getCurrency() : CountryCurrency
+    public function getCurrency() : CountryCurrencyInterface
     {
         if(!isset($this->currency)) {
             $this->currency = new CountryCurrency(
