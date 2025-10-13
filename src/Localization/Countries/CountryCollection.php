@@ -27,8 +27,8 @@ use AppUtils\Interfaces\StringPrimaryRecordInterface;
  * @package Localization
  * @subpackage Countries
  *
- * @method BaseCountry getDefault()
- * @method BaseCountry[] getAll()
+ * @method CountryInterface getDefault()
+ * @method CountryInterface[] getAll()
  */
 class CountryCollection extends BaseClassLoaderCollection
 {
