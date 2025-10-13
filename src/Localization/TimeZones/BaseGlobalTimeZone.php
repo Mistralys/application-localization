@@ -6,6 +6,7 @@ namespace AppLocalize\Localization\TimeZones;
 
 use AppLocalize\Localization\Countries\CountryBasket;
 use AppLocalize\Localization\Countries\CountryCollection;
+use AppLocalize\Localization\Countries\CountryInterface;
 use AppLocalize\Localization\Locales\LocaleBasket;
 use function AppLocalize\t;
 
@@ -34,6 +35,9 @@ abstract class BaseGlobalTimeZone extends BaseTimeZone implements GlobalTimeZone
         return $this->countries;
     }
 
+    /**
+     * @return CountryInterface[]
+     */
     protected function resolveCountries() : array
     {
         return CountryCollection::getInstance()->getAll();
