@@ -30,3 +30,5 @@ tests/phpstan/result.txt
 .idea/copilot.data.migration.ask.xml
 .idea/copilot.data.migration.ask2agent.xml
 .idea/copilot.data.migration.edit.xml
+/docs/agents/**/work.md
+/docs/agents/**/work/
