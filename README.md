@@ -26,11 +26,8 @@ See the [list of countries and locales][] for an overview of what is included.
 
 ## Requirements
 
-- PHP 7.4 or higher (PHP 8.4 compatible)
+- PHP 8.4 or higher
 - [Composer](https://getcomposer.org/) 
-
-> Note: The target platform is currently still PHP 7.4, but the package
-> is tested compatible up to PHP 8.4. 
 
 ## Installation
 
