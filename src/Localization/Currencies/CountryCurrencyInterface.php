@@ -30,7 +30,10 @@ interface CountryCurrencyInterface extends CurrencyInterface
      * Checks if the specified number string is a valid
      * numeric notation for this currency.
      *
-     * @param string|int|float $number
+     * Passing `null` or an empty string is always considered valid
+     * (treated as "no value entered").
+     *
+     * @param string|int|float|null $number
      * @return bool
      * @throws LocalizationException
      */

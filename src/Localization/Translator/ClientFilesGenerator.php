@@ -19,8 +19,6 @@ class ClientFilesGenerator
     public const ERROR_TARGET_FOLDER_NOT_WRITABLE = 39303;
 
     protected LocalizationTranslator $translator;
-    protected ?FolderInfo $targetFolder = null;
-    protected ?FileInfo $cacheKeyFile = null;
     protected ?string $cacheKey = null;
 
     public function __construct()
@@ -81,8 +79,8 @@ class ClientFilesGenerator
     {
         self::log('EVENT | Client folder changed | Resetting internal cache.');
 
-        $this->targetFolder = null;
-        $this->cacheKeyFile = null;
+        $this->cacheKey = null;
+        self::$systemKey = null;
     }
 
     public static function setLoggingEnabled(bool $enabled) : void
@@ -119,6 +117,30 @@ class ClientFilesGenerator
         }
 
         return $this->cacheKey;
+    }
+
+    /**
+     * Returns the reason why file writing would be skipped on the next
+     * {@see writeFiles()} call, or NULL if files would be written (no skip).
+     *
+     * Useful for diagnosing cache key issues in consuming applications.
+     *
+     * @return string|null Descriptive skip reason, or NULL if files would be written.
+     */
+    public function getWriteSkipReason() : ?string
+    {
+        $stored = $this->getCacheKey();
+        $system = self::getSystemKey();
+
+        if($stored === $system) {
+            return sprintf('Cache key match: stored=[%s] === system=[%s]', $stored, $system);
+        }
+
+        if($stored === null) {
+            return null; // no stored key — files will be written
+        }
+
+        return null; // keys differ — files will be written
     }
 
     /**

@@ -22,21 +22,18 @@ namespace AppLocalize\Localization\Currencies;
 class CurrencyNumberInfo
 {
     protected int $number;
-    protected int $decimals;
-
-    /**
-     * @var float
-     */
-    protected $float;
+    protected string $decimals;
 
     /**
      * @param int $number
-     * @param int $decimals
+     * @param int|string $decimals Decimal digits as string to preserve leading zeros (e.g. '05').
+     *                             Passing an int is accepted for backward compatibility but cannot
+     *                             represent leading zeros.
      */
-    public function __construct(int $number, int $decimals = 0)
+    public function __construct(int $number, int|string $decimals = 0)
     {
         $this->number = $number;
-        $this->decimals = $decimals;
+        $this->decimals = (string)$decimals;
     }
 
     public function isNegative() : bool
@@ -63,25 +60,25 @@ class CurrencyNumberInfo
     }
 
     /**
-     * Returns the decimals of the number, if any.
-     * @return int
+     * Returns the decimals of the number as a string, preserving leading zeros (e.g. '05').
+     * @return string
      */
-    public function getDecimals() : int
+    public function getDecimals() : string
     {
         return $this->decimals;
     }
 
     /**
-     * Counts the number of decimals in the number.
+     * Counts the number of decimal digits. Returns 0 when decimals are '0'.
      * @return int
      */
     public function countDecimals() : int
     {
-        if ($this->decimals === 0) {
+        if($this->decimals === '0') {
             return 0;
         }
 
-        return strlen((string)$this->decimals);
+        return strlen($this->decimals);
     }
 
     public function getString() : string

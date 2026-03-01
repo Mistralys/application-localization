@@ -90,7 +90,7 @@ class CountryCurrency implements CountryCurrencyInterface
             return true;
         }
 
-        return preg_match($this->getRegex(), (string)$number) !== false;
+        return preg_match($this->getRegex(), (string)$number) === 1;
     }
 
     protected string $regex = '/\A([0-9%1$s]+)\z|([0-9%1$s]+),-\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
@@ -182,16 +182,16 @@ class CountryCurrency implements CountryCurrencyInterface
             $decimals = array_pop($parts);
             $thousands = implode('', $parts);
             if ($decimals === '-') {
-                $decimals = 0;
+                $decimals = '0';
             }
         }
         else
         {
-            $decimals = 0;
+            $decimals = '0';
             $thousands = implode('', $parts);
         }
 
-        return new CurrencyNumberInfo((int)$thousands, (int)$decimals);
+        return new CurrencyNumberInfo((int)$thousands, $decimals);
     }
 
     public function normalizeNumber($number) : string

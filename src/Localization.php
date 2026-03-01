@@ -1112,6 +1112,13 @@ class Localization
      * sets the location of the required files and folders.
      * Also updated the client library files as needed.
      *
+     * > **Call-ordering constraint:** {@see setClientLibrariesCacheKey()} and all
+     * > {@see addAppLocale()} calls MUST be made BEFORE calling this method.
+     * > The system cache key is computed at write time from the cache key and the
+     * > registered locale IDs. Calling this method before those are set results in
+     * > an incomplete system key being persisted, which can cause unnecessary file
+     * > regeneration on subsequent requests.
+     *
      * @param string $storageFile Where to store the file analysis storage file.
      * @param string $clientLibrariesFolder Where to put the client libraries and translation files. Will be created if it does not exist. Optional: if not set, client libraries will not be created.
      * @throws FileHelper_Exception
@@ -1211,6 +1218,42 @@ class Localization
         }
 
         return self::$generator;
+    }
+
+   /**
+    * Returns diagnostic information about the client files generation,
+    * useful for consumers to debug cache key issues without enabling
+    * echo-based logging.
+    *
+    * Keys returned:
+    * - `storedKey`   — The key stored in the cachekey.txt file (null if not yet written).
+    * - `systemKey`   — The system key computed from the current configuration.
+    * - `match`       — Whether the stored key matches the system key (i.e. files are up to date).
+    * - `folder`      — The resolved client libraries folder path.
+    * - `cacheKeyFile`— The resolved path to the cachekey.txt file, or null if no folder is set.
+    *
+    * @return array{storedKey:string|null,systemKey:string,match:bool,folder:string,cacheKeyFile:string|null}
+    */
+    public static function getClientFilesDiagnostics() : array
+    {
+        $generator = self::createGenerator();
+        $folder = self::$clientFolder;
+        $cacheKeyFile = null;
+
+        if(!empty($folder)) {
+            $cacheKeyFile = $folder.'/cachekey.txt';
+        }
+
+        $storedKey = $generator->getCacheKey();
+        $systemKey = ClientFilesGenerator::getSystemKey();
+
+        return array(
+            'storedKey'    => $storedKey,
+            'systemKey'    => $systemKey,
+            'match'        => $storedKey === $systemKey,
+            'folder'       => $folder,
+            'cacheKeyFile' => $cacheKeyFile,
+        );
     }
 
     /**
@@ -1324,7 +1367,7 @@ class Localization
      */
     public static function getSupportedLocaleNames() : array
     {
-        return LocalesCollection::getInstance()->getIDs();
+        return array_values(array_map('strval', LocalesCollection::getInstance()->getIDs()));
     }
     
    /**

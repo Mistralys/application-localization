@@ -12,7 +12,8 @@ use AppLocalize\Localization\Scanner\CollectionWarning;
 /**
  * @phpstan-import-type SerializedWarning from ParserWarning
  * @phpstan-import-type SerializedStringHash from StringHash
- * @phpstan-type SerializedStringCollection array{formatVersion:int,hashes:array<int,SerializedStringHash>,warnings:array<int,SerializedWarning>}
+ * @phpstan-import-type SerializedStringInfo from StringInfo
+ * @phpstan-type SerializedStringCollection array{formatVersion:int,hashes:array<int,SerializedStringInfo>,warnings:array<int,SerializedWarning>}
  */
 class StringCollection
 {
