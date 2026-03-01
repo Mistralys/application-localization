@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
+<phpunit colors="true"
          stopOnFailure="false"
          bootstrap="tests/bootstrap.php">
     <testsuites>
-        <testsuite name="Application Localization Tests">
-            <directory suffix=".php">./tests/testsuites</directory>
+        <testsuite name="Core">
+            <directory suffix=".php">./tests/testsuites/Core</directory>
+        </testsuite>
+        <testsuite name="Countries">
+            <directory suffix=".php">./tests/testsuites/Countries</directory>
+        </testsuite>
+        <testsuite name="Currencies">
+            <directory suffix=".php">./tests/testsuites/Currencies</directory>
+        </testsuite>
+        <testsuite name="Events">
+            <directory suffix=".php">./tests/testsuites/Events</directory>
+        </testsuite>
+        <testsuite name="Locale">
+            <directory suffix=".php">./tests/testsuites/Locale</directory>
+        </testsuite>
+        <testsuite name="Parser">
+            <directory suffix=".php">./tests/testsuites/Parser</directory>
+        </testsuite>
+        <testsuite name="Scanner">
+            <directory suffix=".php">./tests/testsuites/Scanner</directory>
+        </testsuite>
+        <testsuite name="TimeZones">
+            <directory suffix=".php">./tests/testsuites/TimeZones</directory>
+        </testsuite>
+        <testsuite name="Translator">
+            <directory suffix=".php">./tests/testsuites/Translator</directory>
         </testsuite>
     </testsuites>
 </phpunit>
