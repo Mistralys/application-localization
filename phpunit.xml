@@ -30,5 +30,8 @@
         <testsuite name="Translator">
             <directory suffix=".php">./tests/testsuites/Translator</directory>
         </testsuite>
+        <testsuite name="Tools">
+            <directory suffix=".php">./tests/testsuites/Tools</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
