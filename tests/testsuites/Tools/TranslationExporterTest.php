@@ -23,6 +23,11 @@ class TranslationExporterTest extends TestCase
     private string $deJsonFile;
     private string $frJsonFile;
 
+    /**
+     * Backup of the original de_DE server INI content, restored in tearDown.
+     */
+    private string $deServerIniBackup = '';
+
     // -------------------------------------------------------------------------
     // Setup
     // -------------------------------------------------------------------------
@@ -33,6 +38,31 @@ class TranslationExporterTest extends TestCase
         $this->assertIsString($root);
 
         $this->localizationDir = $root . '/localization';
+
+        // Temporarily strip one translation entry from the de_DE server INI so
+        // that the subsequent export always contains at least one untranslated
+        // hash, regardless of whether composer import-translations was run
+        // before this test.
+        $deServerIni = $this->localizationDir . '/de_DE-application-localization-server.ini';
+        $backup = file_get_contents($deServerIni);
+        $this->assertIsString($backup);
+        $this->deServerIniBackup = $backup;
+
+        $entries = parse_ini_file($deServerIni);
+        if (is_array($entries)) {
+            // Find the last key with a non-empty value and remove it.
+            $keys = array_keys(array_filter($entries, static fn($v) => $v !== ''));
+            if (!empty($keys)) {
+                $keyToRemove = end($keys);
+                unset($entries[$keyToRemove]);
+            }
+            // Write the modified INI back.
+            $lines = [];
+            foreach ($entries as $key => $value) {
+                $lines[] = $key . ' = "' . $value . '"';
+            }
+            file_put_contents($deServerIni, implode("\n", $lines) . "\n");
+        }
 
         Localization::reset();
         Localization::addAppLocale('de_DE');
@@ -50,6 +80,18 @@ class TranslationExporterTest extends TestCase
 
         $this->deJsonFile = $this->localizationDir . '/de_DE-application-localization-translations.json';
         $this->frJsonFile = $this->localizationDir . '/fr_FR-application-localization-translations.json';
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        // Restore the original de_DE server INI so the localization/ directory
+        // is left in its original state after each test run.
+        if ($this->deServerIniBackup !== '') {
+            $deServerIni = $this->localizationDir . '/de_DE-application-localization-server.ini';
+            file_put_contents($deServerIni, $this->deServerIniBackup);
+        }
     }
 
     // -------------------------------------------------------------------------

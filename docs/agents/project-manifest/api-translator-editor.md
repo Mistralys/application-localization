@@ -190,7 +190,12 @@ this order when invoked via their Composer entry point (`run()`):
 
 1. PHP constant `LOCALIZATION_TOOLS_CONFIG` (absolute file path string).
 2. Environment variable `LOCALIZATION_TOOLS_CONFIG` (absolute file path string).
-3. Default fallback: `localization-tools-config.php` at the Composer project root.
+3. Default fallback: `getcwd() . '/localization-tools-config.php'` — resolves to the **project root of the application running Composer**.
+
+> **Consumer note:** When a consuming application runs `composer export-translations` or
+> `composer import-translations`, `getcwd()` returns the consumer's project root, so
+> placing `localization-tools-config.php` there is sufficient — no constant or
+> environment variable is required.
 
 If none is found, an error message is printed to stdout and the process exits with code `1`.
 

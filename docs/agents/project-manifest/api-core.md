@@ -95,6 +95,8 @@ public static function addExcludeFile(string $fileName) : void;
 public static function createScanner() : LocalizationScanner;
 public static function createEditor() : LocalizationEditor;
 public static function createGenerator() : ClientFilesGenerator;
+public static function createExporter() : TranslationExporter;  // Generates per-locale per-source JSON translation export files. Requires configure(). PHPDoc: yes.
+public static function createImporter() : TranslationImporter;  // Reads JSON translation export files and writes them back into INI translation files. Requires configure(). PHPDoc: yes.
 public static function createCountries() : CountryCollection;
 public static function createCurrencies() : CurrencyCollection;
 public static function getTranslator(?LocaleInterface $locale = null) : LocalizationTranslator;

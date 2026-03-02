@@ -118,7 +118,7 @@ class TranslationExporter
         }
 
         // 3. Default fallback
-        $defaultPath = __DIR__ . '/../../localization-tools-config.php';
+        $defaultPath = getcwd() . '/localization-tools-config.php';
         if (file_exists($defaultPath)) {
             require_once $defaultPath;
             return;

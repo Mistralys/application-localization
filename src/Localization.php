@@ -22,6 +22,8 @@ use AppLocalize\Localization\Locales\LocalesCollection;
 use AppLocalize\Localization\LocalizationException;
 use AppLocalize\Localization\Scanner\LocalizationScanner;
 use AppLocalize\Localization\Source\BaseLocalizationSource;
+use AppLocalize\Tools\TranslationExporter;
+use AppLocalize\Tools\TranslationImporter;
 use AppLocalize\Localization\Source\FolderLocalizationSource;
 use AppLocalize\Localization\Translator\ClientFilesGenerator;
 use AppLocalize\Localization\Translator\LocalizationTranslator;
@@ -1102,6 +1104,33 @@ class Localization
         self::requireConfiguration();
         
         return new LocalizationScanner(self::$storageFile);
+    }
+
+    /**
+     * Creates a new exporter instance used to generate per-locale
+     * per-source JSON translation export files.
+     *
+     * Requires {@see configure()} to have been called beforehand.
+     *
+     * @return TranslationExporter
+     */
+    public static function createExporter() : TranslationExporter
+    {
+        return TranslationExporter::create();
+    }
+
+    /**
+     * Creates a new importer instance used to read per-locale
+     * per-source JSON translation export files and write them
+     * back into the INI translation files.
+     *
+     * Requires {@see configure()} to have been called beforehand.
+     *
+     * @return TranslationImporter
+     */
+    public static function createImporter() : TranslationImporter
+    {
+        return TranslationImporter::create();
     }
     
     /**
