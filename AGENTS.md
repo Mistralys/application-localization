@@ -117,6 +117,13 @@ Do not scan source files when the answer is already in the manifest.
 | `composer build` | Generate canned classes + docs |
 | `composer clear-class-cache` | Clear the class loader cache |
 
+#### Translation
+
+| Command | Description |
+|---|---|
+| `composer export-translations` | Generate per-locale JSON translation export files |
+| `composer import-translations` | Import JSON translation files into INI files |
+
 #### PHPStan (Static Analysis)
 
 | Command | Description |

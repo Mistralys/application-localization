@@ -47,6 +47,8 @@
 		"post-autoload-dump": "@php tests/clear-class-cache.php",
 		"clear-class-cache": "@php tests/clear-class-cache.php",
 		"build": "\\AppLocalize\\Tools\\ReleaseBuilder::build",
+		"export-translations": "\\AppLocalize\\Tools\\TranslationExporter::run",
+		"import-translations": "\\AppLocalize\\Tools\\TranslationImporter::run",
 		"analyze": "php vendor/bin/phpstan analyse --configuration phpstan.neon --memory-limit=900M",
 		"analyze-save": "php vendor/bin/phpstan analyse --configuration phpstan.neon --memory-limit=900M > phpstan-result.txt || true",
 		"analyze-clear": "php vendor/bin/phpstan clear-result-cache",
