@@ -19,4 +19,6 @@ class LocalizationException extends BaseException
     public const ERROR_LOCALE_NOT_FOUND = 39011;
     public const ERROR_COUNTRY_NOT_FOUND = 39012;
     public const ERROR_INCORRECTLY_TRANSLATED_STRING = 39013;
+    public const ERROR_UNKNOWN_SOURCE_ID = 39014;
+    public const ERROR_UNKNOWN_SOURCE_ALIAS = 39015;
 }

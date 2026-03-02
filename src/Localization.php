@@ -1058,7 +1058,8 @@ class Localization
                 'The source [%s] has not been added. Available sources are: [%s].',
                 $sourceID,
                 implode(', ', self::getSourceIDs())
-            )
+            ),
+            LocalizationException::ERROR_UNKNOWN_SOURCE_ID
         );
     }
     
@@ -1084,7 +1085,8 @@ class Localization
                 'The source [%s] has not been added. Available sources are: [%s].',
                 $sourceAlias,
                 implode(', ', self::getSourceAliases())
-            )
+            ),
+            LocalizationException::ERROR_UNKNOWN_SOURCE_ALIAS
         );
     }
 
@@ -1102,11 +1104,6 @@ class Localization
         return new LocalizationScanner(self::$storageFile);
     }
     
-    public static function log(string $message) : void
-    {
-        // FIXME: TODO: Add this
-    }
-
     /**
      * Configures the localization for the application:
      * sets the location of the required files and folders.
@@ -1346,12 +1343,21 @@ class Localization
     }
     
    /**
-    * Resets all locales to the built-in locale.
+    * Resets all locales to the built-in locale and clears
+    * event listeners and cached translator state. Source
+    * registrations and configuration are preserved.
     */
     public static function reset() : void
     {
         self::$locales = array();
         self::$selected = array();
+        self::$listeners = array();
+        self::$listenersCounter = 0;
+        self::$translator = null;
+        self::$generator = null;
+        self::$clientCacheKey = '';
+
+        ClientFilesGenerator::resetCache();
 
         self::addAppLocale(self::BUILTIN_LOCALE_NAME);
         self::addContentLocale(self::BUILTIN_LOCALE_NAME);

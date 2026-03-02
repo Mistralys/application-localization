@@ -20,6 +20,8 @@ use AppUtils\Interfaces\OptionableInterface;
 use AppUtils\OutputBuffering_Exception;
 use AppUtils\Traits\OptionableTrait;
 use AppUtils\Request;
+use Mistralys\SprintfParser\FormatParser;
+use Mistralys\SprintfParser\FormatParser\ParserException;
 use function AppLocalize\t;
 
 /**
@@ -355,19 +357,83 @@ class LocalizationEditor implements OptionableInterface
     }
 
     /**
+     * Detects all sprintf format placeholders in the given string
+     * and returns their matched format-string tokens (e.g. `%1$s`, `%2$d`).
+     *
      * @param string $string
      * @return string[]
      */
     public function detectVariables(string $string) : array
     {
-        $result = array();
-        preg_match_all('/%[0-9]+d|%s|%[0-9]+\$s/i', $string, $result, PREG_PATTERN_ORDER);
-
-        if(!empty($result[0])) {
-            return $result[0];
+        try
+        {
+            $parser = new FormatParser($string);
+            $placeholders = $parser->getPlaceholders();
+            $result = array();
+            foreach($placeholders as $placeholder) {
+                $result[] = $placeholder->getFormatString();
+            }
+            return $result;
         }
-        
-        return array();
+        catch(ParserException $e)
+        {
+            return array();
+        }
+    }
+
+    /**
+     * Returns the sorted list of unique numbered argument indices
+     * found in the given sprintf string (e.g. `[1, 2]` for `"%1$s %2$d"`).
+     *
+     * @param string $text
+     * @return int[]
+     */
+    public function getPlaceholderNumbers(string $text) : array
+    {
+        try
+        {
+            $parser = new FormatParser($text);
+            $placeholders = $parser->getPlaceholders();
+            $numbers = array();
+            foreach($placeholders as $placeholder) {
+                if($placeholder->isNumbered()) {
+                    $numbers[] = $placeholder->getNumber();
+                }
+            }
+            $numbers = array_values(array_unique($numbers));
+            sort($numbers);
+            return $numbers;
+        }
+        catch(ParserException $e)
+        {
+            return array();
+        }
+    }
+
+    /**
+     * Returns whether the given text contains any sprintf placeholder
+     * that is not a numbered argument (e.g. `%s`, `%d` without a
+     * positional argument number like `%1$s`).
+     *
+     * @param string $text
+     * @return bool
+     */
+    public function hasUnnumberedPlaceholders(string $text) : bool
+    {
+        try
+        {
+            $parser = new FormatParser($text);
+            foreach($parser->getPlaceholders() as $placeholder) {
+                if(!$placeholder->isNumbered()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        catch(ParserException $e)
+        {
+            return false;
+        }
     }
     
     public function display() : void
@@ -455,14 +521,37 @@ class LocalizationEditor implements OptionableInterface
         $translator = Localization::getTranslator($this->activeAppLocale);
         
         $strings = $data[$this->getVarName(self::VARIABLE_STRINGS)];
+        $collection = $this->scanner->getCollection();
         foreach($strings as $hash => $text) 
         {
             $text = trim($text);
             
             if(empty($text)) {
                 continue;
-            } 
-            
+            }
+
+            // Guard: compare placeholder number sets between source and translation
+            if($collection->hashExists($hash)) {
+                $sourceText = $collection->getHash($hash)->getText();
+                if($sourceText !== null) {
+                    $sourceNumbers = $this->getPlaceholderNumbers($sourceText->getText());
+                    $translationNumbers = $this->getPlaceholderNumbers($text);
+                    if($sourceNumbers !== $translationNumbers) {
+                        $this->addMessage(
+                            t('The translation for "%1$s" was not saved: placeholder mismatch.', mb_substr($sourceText->getText(), 0, 60))
+                            . ' '
+                            . t(
+                                '(source uses %1$s, translation uses %2$s)',
+                                !empty($sourceNumbers) ? implode(', ', array_map(static fn(int $n) => '%'.$n.'$…', $sourceNumbers)) : t('none'),
+                                !empty($translationNumbers) ? implode(', ', array_map(static fn(int $n) => '%'.$n.'$…', $translationNumbers)) : t('none')
+                            ),
+                            self::MESSAGE_WARNING
+                        );
+                        continue;
+                    }
+                }
+            }
+
             $translator->setTranslation($hash, $text);
         }
         

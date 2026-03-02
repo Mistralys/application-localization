@@ -398,4 +398,14 @@ class ClientFilesGenerator
     {
         return $this->getCacheKey() === self::getSystemKey();
     }
+
+    /**
+     * Resets the static system key cache. Called by
+     * {@see \AppLocalize\Localization::reset()} to ensure
+     * the system key is recomputed after configuration changes.
+     */
+    public static function resetCache() : void
+    {
+        self::$systemKey = null;
+    }
 }

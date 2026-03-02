@@ -11,7 +11,7 @@ namespace AppLocalize\Localization\Countries;
 use AppLocalize\Localization\Currencies\CountryCurrencyInterface;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
 use AppLocalize\Localization\Currencies\CurrencyNumberInfo;
-use AppLocalize\Localization\LocalizationException;
+use AppLocalize\Localization\Countries\CountryException;
 use function AppUtils\parseVariable;
 
 /**
@@ -100,17 +100,18 @@ class CountryCurrency implements CountryCurrencyInterface
 
     /**
      * @return string
-     * @throws \AppLocalize\Localization\LocalizationException
+     * @throws CountryException
      */
     protected function getRegex() : string
     {
         if (!isset($this->regex)) {
-            throw new LocalizationException(
+            throw new CountryException(
                 'No regex defined',
                 sprintf(
                     'To use this method, set the regex class property for currency %1$s.',
                     $this->getID()
-                )
+                ),
+                CountryException::ERROR_NO_REGEX_DEFINED
             );
         }
 
@@ -233,7 +234,7 @@ class CountryCurrency implements CountryCurrencyInterface
             return $parsed;
         }
 
-        throw new LocalizationException(
+        throw new CountryException(
             'Could not parse number',
             sprintf(
                 'The number [%1$s] did not yield a currency number object.',

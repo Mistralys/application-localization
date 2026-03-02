@@ -40,6 +40,11 @@ class PageScaffold
         $this->editor = $editor;
     }
 
+    private function esc(string $value) : string
+    {
+        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    }
+
     /**
      * @return string
      * @throws OutputBuffering_Exception
@@ -55,7 +60,7 @@ class PageScaffold
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
             <meta name="description" content="">
-            <title><?php echo $this->editor->getAppName() ?></title>
+            <title><?php echo $this->esc($this->editor->getAppName()) ?></title>
             <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -66,7 +71,7 @@ class PageScaffold
         </head>
         <body>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-            <a class="navbar-brand" href="<?php echo $this->editor->getURL() ?>"><?php echo $this->editor->getAppName() ?></a>
+            <a class="navbar-brand" href="<?php echo $this->esc($this->editor->getURL()) ?>"><?php echo $this->esc($this->editor->getAppName()) ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -77,9 +82,9 @@ class PageScaffold
                 if(!empty($backURL))
                 {
                     ?>
-                    <a href="<?php echo $backURL ?>" class="btn btn-light btn-sm">
+                    <a href="<?php echo $this->esc($backURL) ?>" class="btn btn-light btn-sm">
                         <i class="fas fa-arrow-circle-left"></i>
-                        <?php echo $this->editor->getBackButtonLabel(); ?>
+                        <?php echo $this->esc($this->editor->getBackButtonLabel()); ?>
                     </a>
                     <?php
                 }
@@ -114,8 +119,8 @@ class PageScaffold
             foreach($warnings as $warning)
             {
                 ?>
-                <dt><?php echo FileHelper::relativizePath((string)realpath($warning->getFile()), (string)realpath(__DIR__.'/../../../../')) ?>:<?php echo $warning->getLine() ?></dt>
-                <dd><?php echo $warning->getMessage() ?></dd>
+                <dt><?php echo $this->esc(FileHelper::relativizePath((string)realpath($warning->getFile()), (string)realpath(__DIR__.'/../../../../'))) ?>:<?php echo $warning->getLine() ?></dt>
+                <dd><?php echo $this->esc($warning->getMessage()) ?></dd>
                 <?php
             }
 
@@ -152,7 +157,7 @@ class PageScaffold
                 $params = $this-> editor->getRequestParams();
                 foreach($params as $name => $value) {
                     ?>
-                    <input type="hidden" name="<?php echo $name ?>" value="<?php echo $value ?>">
+                    <input type="hidden" name="<?php echo $this->esc($name) ?>" value="<?php echo $this->esc((string)$value) ?>">
                     <?php
                 }
                 ?>
@@ -185,7 +190,7 @@ class PageScaffold
                 <nav aria-label="<?php pt('Navigate available pages of texts.') ?>">
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="<?php echo $prevUrl ?>">
+                            <a class="page-link" href="<?php echo $this->esc($prevUrl) ?>">
                                 <i class="fa fa-arrow-left"></i>
                             </a>
                         </li>
@@ -197,7 +202,7 @@ class PageScaffold
 
                             ?>
                             <li class="page-item <?php if($pager->isCurrentPage($number)) { echo 'active'; } ?>">
-                                <a class="page-link" href="<?php echo $url ?>">
+                                <a class="page-link" href="<?php echo $this->esc($url) ?>">
                                     <?php echo $number ?>
                                 </a>
                             </li>
@@ -205,7 +210,7 @@ class PageScaffold
                         }
                         ?>
                         <li class="page-item">
-                            <a class="page-link" href="<?php echo $nextUrl ?>">
+                            <a class="page-link" href="<?php echo $this->esc($nextUrl) ?>">
                                 <i class="fa fa-arrow-right"></i>
                             </a>
                         </li>
@@ -251,7 +256,7 @@ class PageScaffold
         $labelID = JSHelper::nextElementID();
 
         ?>
-        <tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $hash ?>')" data-hash="<?php echo $hash ?>">
+        <tr class="string-entry inactive" onclick="Editor.Toggle('<?php echo $this->esc($hash) ?>')" data-hash="<?php echo $this->esc($hash) ?>" data-native-text="<?php echo $this->esc($text->getText()) ?>">
             <td class="string-text"><?php echo $shortText ?></td>
             <td class="align-center string-status"><?php echo $this->renderStatus($string) ?></td>
             <td class="align-center"><?php echo $this->renderTypes($string) ?></td>
@@ -262,7 +267,7 @@ class PageScaffold
                 <label for="<?php echo $labelID ?>"><?php pt('Native text:') ?></label>
                 <p class="native-text"><?php echo $this->renderText($text->getText()) ?></p>
                 <p>
-                    <textarea rows="4" id="<?php echo $labelID ?>" class="form-control" name="<?php echo $this->editor->getStringsVariableName() ?>[<?php echo $hash ?>]"><?php echo $string->getTranslatedText() ?></textarea>
+                    <textarea rows="4" id="<?php echo $labelID ?>" class="form-control" name="<?php echo $this->esc($this->editor->getStringsVariableName()) ?>[<?php echo $this->esc($hash) ?>]"><?php echo $this->esc($string->getTranslatedText()) ?></textarea>
                 </p>
                 <?php
                 $explanation = $text->getExplanation();
@@ -271,16 +276,33 @@ class PageScaffold
                     ?>
                     <p>
                         <?php pt('Context information:') ?><br>
-                        <span class="native-text"><?php echo $explanation ?></span>
+                        <span class="native-text"><?php echo $this->esc($explanation) ?></span>
                     </p>
                     <?php
                 }
                 ?>
+                <?php
+                if($this->editor->hasUnnumberedPlaceholders($text->getText()))
+                {
+                    ?>
+                    <div class="alert alert-warning py-1 mt-1 mb-1">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <?php
+                        echo t('This source text contains unnumbered placeholders')
+                            . ' '
+                            . t('(e.g. %1$s instead of %2$s)', '%s', '%1$s')
+                            . '. '
+                            . t('Renumber them to ensure translations are language-independent.');
+                        ?>
+                    </div>
+                    <?php
+                }
+                ?>
                 <p>
-                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="Editor.Confirm('<?php echo $hash ?>')">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="Editor.Confirm('<?php echo $this->esc($hash) ?>')">
                         <?php ptex('OK', 'Button') ?>
                     </button>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="Editor.Toggle('<?php echo $hash ?>')">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="Editor.Toggle('<?php echo $this->esc($hash) ?>')">
                         <?php ptex('Cancel', 'Button') ?>
                     </button>
                 </p>
@@ -322,7 +344,7 @@ class PageScaffold
                                 ?>
                                 <li>
                                     <i class="<?php echo $icon ?>"></i>
-                                    <?php echo $file ?><span class="line-number">:<?php echo $line ?></span>
+                                    <?php echo $this->esc($file) ?><span class="line-number">:<?php echo $line ?></span>
                                 </li>
                                 <?php
                             }
@@ -391,15 +413,15 @@ class PageScaffold
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <?php echo $activeLocale->getLabel() ?>
+                    <?php echo $this->esc($activeLocale->getLabel()) ?>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <?php
                     foreach ($locales as $locale)
                     {
                         ?>
-                        <a class="dropdown-item" href="<?php echo $this->editor->getLocaleURL($locale) ?>">
-                            <?php echo $locale->getLabel() ?>
+                        <a class="dropdown-item" href="<?php echo $this->esc($this->editor->getLocaleURL($locale)) ?>">
+                            <?php echo $this->esc($locale->getLabel()) ?>
                         </a>
                         <?php
                     }
@@ -407,7 +429,7 @@ class PageScaffold
                 </div>
             </li>
             <li class="nav-item">
-                <a href="<?php echo $this->editor->getScanURL() ?>"
+                <a href="<?php echo $this->esc($this->editor->getScanURL()) ?>"
                    class="btn btn-light btn-sm"
                    title="<?php pt('Scan all source files to find translatable texts.') ?>"
                    data-toggle="tooltip">
@@ -437,9 +459,9 @@ class PageScaffold
 
         ?>
         <li class="nav-item">
-            <a href="<?php echo $this->editor->getWarningsURL() ?>">
+            <a href="<?php echo $this->esc($this->editor->getWarningsURL()) ?>">
                 <span class="badge badge-warning"
-                      title="<?php echo $title ?>"
+                      title="<?php echo $this->esc((string)$title) ?>"
                       data-toggle="tooltip">
                     <i class="fa fa-exclamation-triangle"></i>
                     <?php echo $scanner->countWarnings() ?>
@@ -458,17 +480,17 @@ class PageScaffold
         foreach ($sources as $source)
         {
             ?>
-            <a class="dropdown-item" href="<?php echo $this->editor->getSourceURL($source) ?>">
+            <a class="dropdown-item" href="<?php echo $this->esc($this->editor->getSourceURL($source)) ?>">
                 <?php
                 if ($source->getID() === $activeSourceID)
                 {
                     ?>
-                    <b><?php echo $source->getLabel() ?></b>
+                    <b><?php echo $this->esc($source->getLabel()) ?></b>
                     <?php
                 }
                 else
                 {
-                    echo $source->getLabel();
+                    echo $this->esc($source->getLabel());
                 }
                 ?>
                 <?php
@@ -482,7 +504,7 @@ class PageScaffold
                     );
 
                     ?>
-                    (<span class="text-danger" title="<?php echo $title ?>">
+                    (<span class="text-danger" title="<?php echo $this->esc((string)$title) ?>">
                         <?php echo $untranslated ?>
                     </span>)
                     <?php
@@ -528,13 +550,13 @@ class PageScaffold
         $scanner = $this->editor->getScanner();
 
         ?>
-        <h1><?php echo $activeSource->getLabel() ?></h1>
+        <h1><?php echo $this->esc($activeSource->getLabel()) ?></h1>
         <?php $this->renderUIMessages(); ?>
         <p>
             <?php
             pt(
                 'You are translating to %1$s',
-                '<span class="badge badge-info">' . $activeLocale->getLabel() . '</span>'
+                '<span class="badge badge-info">' . $this->esc($activeLocale->getLabel()) . '</span>'
             );
             ?><br>
 
@@ -550,7 +572,7 @@ class PageScaffold
                 <?php pt('The source folders have not been scanned yet.') ?>
             </div>
             <p>
-                <a href="<?php echo $this->editor->getScanURL() ?>" class="btn btn-primary">
+                <a href="<?php echo $this->esc($this->editor->getScanURL()) ?>" class="btn btn-primary">
                     <i class="fa fa-refresh"></i>
                     <?php pt('Scan files now') ?>
                 </a>
@@ -622,8 +644,8 @@ class PageScaffold
         foreach ($_SESSION['localization_messages'] as $def)
         {
             ?>
-            <div class="alert alert-<?php echo $def['type'] ?>" role="alert">
-                <?php echo $def['text'] ?>
+            <div class="alert alert-<?php echo $this->esc($def['type']) ?>" role="alert">
+                <?php echo $this->esc($def['text']) ?>
                 <button type="button" class="close" data-dismiss="alert" aria-label="<?php pt('Close') ?>"
                         title="<?php pt('Dismiss this message.') ?>" data-toggle="tooltip">
                     <span aria-hidden="true">&times;</span>

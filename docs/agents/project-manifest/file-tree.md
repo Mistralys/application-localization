@@ -19,8 +19,10 @@ application-localization/
 ├── localization/                   # INI translation files for this package's own UI strings
 │   ├── de_DE-application-localization-client.ini
 │   ├── de_DE-application-localization-server.ini
+│   ├── de_DE-application-localization-translations.json  # Export/import JSON (generated)
 │   ├── fr_FR-application-localization-client.ini
 │   ├── fr_FR-application-localization-server.ini
+│   ├── fr_FR-application-localization-translations.json  # Export/import JSON (generated)
 │   ├── index.php                   # Directory listing guard
 │   └── storage.json                # Scanner results cache
 ├── src/
@@ -123,6 +125,8 @@ application-localization/
 │   │       └── LocalizationWriter.php
 │   └── Tools/
 │       ├── ReleaseBuilder.php         # Composer build script
+│       ├── TranslationExporter.php    # Composer export-translations script
+│       ├── TranslationImporter.php    # Composer import-translations script
 │       └── Templates/                 # Code generation templates
 │           ├── CannedCountriesTemplate.php.spf
 │           ├── CannedCurrenciesTemplate.php.spf
@@ -144,11 +148,16 @@ application-localization/
 │       ├── Locale/
 │       ├── Parser/
 │       ├── TimeZones/
+│       ├── Tools/
+│       │   ├── TranslationExporterTest.php  # Tests for TranslationExporter (6 tests)
+│       │   ├── TranslationImporterTest.php  # Tests for TranslationImporter (5 tests)
+│       │   └── RoundTripTest.php            # Export → import round-trip integration (2 tests)
 │       └── Translator/
 ├── vendor/                            # Composer dependencies (auto-generated)
 ├── changelog.md
 ├── composer.json
 ├── LICENSE
+├── localization-tools-config.php      # Default Localization bootstrap for export/import tools
 ├── phpunit.xml
 ├── README.md
 ├── run-tests.bat

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AppLocalize\Localization\Parser;
 
-use AppLocalize\Localization;
 use AppLocalize\Localization\LocalizationException;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
@@ -200,8 +199,6 @@ abstract class BaseLanguage
 
     protected function addResult(string $text, int $line=0, string $explanation='') : void
     {
-        $this->log(sprintf('Line [%1$s] | Found string [%2$s]', $line, $text));
-
         $explanation = strip_tags($explanation, '<'.implode('><', self::$allowedContextTags).'>');
 
 
@@ -216,11 +213,6 @@ abstract class BaseLanguage
     public function getFunctionNames() : array
     {
         return $this->createToken('dummy')->getFunctionNames();
-    }
-
-    protected function log(string $message) : void
-    {
-        Localization::log(sprintf('%1$s parser | %2$s', $this->getID(), $message));
     }
 
    /**

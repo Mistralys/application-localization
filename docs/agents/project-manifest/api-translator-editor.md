@@ -118,7 +118,24 @@ public function getAmountPerPage() : int;
 public function getPageNumber() : int;
 public function getActiveLocale() : LocaleInterface;
 public function getPaginationURL(int $page, array $params = []) : string;
+/**
+ * Detects all sprintf format placeholders in $string using FormatParser.
+ * Returns an array of matched format-string tokens (e.g. ['%1$s', '%2$d']).
+ * Used by PageScaffold::renderText() to highlight placeholders in the UI.
+ */
 public function detectVariables(string $string) : string[];
+/**
+ * Returns the sorted list of unique numbered argument indices found in $text
+ * (e.g. [1, 2] for "Hello %1$s, you have %2$d messages").
+ * Returns [] if no numbered placeholders exist or on FormatParser exception.
+ */
+public function getPlaceholderNumbers(string $text) : int[];
+/**
+ * Returns true if $text contains any sprintf placeholder without a positional
+ * argument number (e.g. %s, %d). Returns false for fully numbered strings or
+ * strings with no placeholders. Safe: returns false on FormatParser exception.
+ */
+public function hasUnnumberedPlaceholders(string $text) : bool;
 public function getSourceURL(BaseLocalizationSource $source, array $params = []) : string;
 public function getLocaleURL(LocaleInterface $locale, array $params = []) : string;
 public function getScanURL() : string;
@@ -156,3 +173,140 @@ No additional public members.
 | `editor.css` | `src/css/editor.css` | Editor UI stylesheet |
 | `editor.js` | `src/js/editor.js` | Client-side toggle/confirm for inline editing (jQuery) |
 | `PageScaffold.php` | `src/Localization/Editor/Template/PageScaffold.php` | HTML page scaffold template |
+
+---
+
+## Translation Tools
+
+**Namespace:** `AppLocalize\Tools`
+
+Command-line / programmatic utilities for exporting and importing translated strings in
+a portable JSON format. Both classes share the same config resolution strategy.
+
+### Config Resolution Order
+
+Both `TranslationExporter` and `TranslationImporter` resolve the bootstrap config file in
+this order when invoked via their Composer entry point (`run()`):
+
+1. PHP constant `LOCALIZATION_TOOLS_CONFIG` (absolute file path string).
+2. Environment variable `LOCALIZATION_TOOLS_CONFIG` (absolute file path string).
+3. Default fallback: `localization-tools-config.php` at the Composer project root.
+
+If none is found, an error message is printed to stdout and the process exits with code `1`.
+
+---
+
+### `TranslationExporter`
+
+**Location:** `src/Tools/TranslationExporter.php`
+
+Generates per-locale, per-source JSON export files from `storage.json` scan results and
+the existing INI translation files.
+
+Output file naming convention (written to the source's storage folder):
+```
+{storageFolder}/{locale}-{source-alias}-translations.json
+```
+
+```php
+/**
+ * Composer entry point: `composer export-translations`
+ * Resolves the config file, then exports all locales × sources.
+ */
+public static function run(): void;
+
+/**
+ * Programmatic / test factory.
+ * Requires Localization to have been configured before calling.
+ */
+public static function create(): self;
+
+/**
+ * Run the export programmatically (without loading config).
+ * Localization must have been configured before calling.
+ */
+public function export(): void;
+```
+
+#### Export JSON Format (`format_version: 1`)
+
+Top-level keys:
+
+| Key | Type | Description |
+|---|---|---|
+| `format_version` | `int` | Always `1` |
+| `locale` | `string` | Locale name (e.g. `de_DE`) |
+| `locale_label` | `string` | Human-readable locale label |
+| `source_alias` | `string` | Source alias (used in file name) |
+| `source_label` | `string` | Human-readable source label |
+| `exported_at` | `string` | ISO 8601 timestamp |
+| `strings` | `array` | Array of string entry objects |
+
+Each object in `strings`:
+
+| Key | Type | Description |
+|---|---|---|
+| `hash` | `string` | MD5 hash of the source text |
+| `source_text` | `string` | Original translatable string |
+| `context` | `string` | Optional translator hint / explanation |
+| `files` | `string[]` | `"relative/path.php:line"` occurrences |
+| `translation` | `string` | Translated text, or `""` if not yet translated |
+
+#### Key Behaviours
+
+- **Native locale excluded:** The built-in locale (`en_GB`, `Localization::BUILTIN_LOCALE_NAME`) is never exported.
+- **Empty translation:** A string with no INI entry produces `"translation": ""`.
+- **Relative file paths:** All occurrences in `files` are relative to the Composer project root.
+- **Source deduplication:** Sources registered more than once (same alias + storage folder) are exported only once.
+
+---
+
+### `TranslationImporter`
+
+**Location:** `src/Tools/TranslationImporter.php`
+
+Reads per-locale, per-source JSON export files (produced by `TranslationExporter`) and
+writes the translated strings into the corresponding INI translation files via
+`LocalizationWriter`.
+
+```php
+/**
+ * Composer entry point: `composer import-translations`
+ * Resolves the config file, then imports all locales × sources.
+ */
+public static function run(): void;
+
+/**
+ * Programmatic / test factory.
+ * Requires Localization to have been configured before calling.
+ */
+public static function create(): self;
+
+/**
+ * Run the import programmatically (without loading config).
+ * Localization must have been configured before calling.
+ */
+public function import(): void;
+```
+
+#### Import Logic
+
+1. Load `storage.json` via `Localization::createScanner()`.
+2. For each non-native app locale × registered source, locate the JSON file at
+   `{storageFolder}/{locale}-{source-alias}-translations.json`.
+3. Validate `format_version === 1`; skip with a warning if mismatched or missing.
+4. Build a `hash → translation` map:
+   - Entries with an empty or missing `translation` field are silently skipped.
+   - Entries whose hash is absent from the current `StringCollection` are logged as
+     stale and skipped.
+5. Write INI files:
+   - **Server INI** (`{locale}-{source-alias}-server.ini`) — all hashes that have a
+     non-empty translation.
+   - **Client INI** (`{locale}-{source-alias}-client.ini`) — subset: only hashes where
+     `StringHash::hasLanguageType('JavaScript')` is true.
+
+#### Key Behaviours
+
+- **Missing file warning:** If no JSON file exists for a locale/source, a warning is printed and processing continues without throwing.
+- **Stale hash warning:** A hash in the JSON that is no longer in the current scan emits a warning and is skipped.
+- **Source deduplication:** Same deduplication logic as `TranslationExporter` — the same physical source is imported only once.

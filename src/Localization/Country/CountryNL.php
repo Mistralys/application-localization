@@ -4,6 +4,8 @@
  * @subpackage Countries
  */
 
+declare(strict_types=1);
+
 namespace AppLocalize\Localization\Country;
 
 use AppLocalize\Localization\Countries\BaseCountry;

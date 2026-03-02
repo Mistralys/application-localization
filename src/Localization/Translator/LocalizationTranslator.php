@@ -130,7 +130,7 @@ class LocalizationTranslator
                 continue;
             }
             
-            $data = parse_ini_file($file);
+            $data = parse_ini_file($file, false, INI_SCANNER_RAW);
             
             if($data === false) 
             {
@@ -143,6 +143,16 @@ class LocalizationTranslator
                     self::ERROR_CANNOT_PARSE_LOCALE_FILE
                 );
             }
+
+            // Unescape INI escape sequences that the writer encodes
+            $data = array_map(
+                static fn(string $value): string => str_replace(
+                    ['\\n', '\\r', '\\"', '\\\\'],
+                    ["\n", "\r", '"', '\\'],
+                    $value
+                ),
+                $data
+            );
     
             $this->strings[$localeName] = array_merge(
                 $this->strings[$localeName],

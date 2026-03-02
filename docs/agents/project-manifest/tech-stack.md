@@ -22,11 +22,11 @@
 
 | Package | Purpose |
 |---|---|
-| `mistralys/application-utils-core` ≥ 2.3.11 | Base utilities (ClassHelper, FileHelper, BaseException, etc.) |
+| `mistralys/application-utils-core` ≥ 2.5.0 | Base utilities (ClassHelper, FileHelper, BaseException, etc.) |
 | `mistralys/application-utils-collections` ≥ 1.2.1 | `BaseClassLoaderCollection`, `GenericStringPrimaryBasket` base classes |
 | `mistralys/php-sprintf-parser` ^1.0 | Placeholder validation in translated strings |
 | `mistralys/html_quickform2` ≥ 2.3.5 | Form elements for the Editor UI locale selectors |
-| `mistralys/changelog-parser` ≥ 1.0.2 | Changelog parsing for release tooling |
+| `mistralys/changelog-parser` ≥ 1.1.0 | Changelog parsing for release tooling |
 | `mck89/peast` ≥ 1.17.0 | JavaScript AST parser (replaced legacy JTokenizer) |
 | `ext-json` | JSON encode/decode for storage |
 | `ext-mbstring` | Multibyte string handling |
@@ -35,8 +35,10 @@
 
 | Package | Purpose |
 |---|---|
-| `phpunit/phpunit` ≥ 9.6 | Unit testing |
-| `phpstan/phpstan` ≥ 0.12 | Static analysis (clean at level 8) |
+| `phpunit/phpunit` ≥ 12.0 | Unit testing |
+| `phpstan/phpstan` ≥ 2.1 | Static analysis (clean at level 8) |
+| `phpstan/phpstan-phpunit` ≥ 2.0 | PHPStan PHPUnit extension |
+| `roave/security-advisories` dev-latest | Security vulnerability detection |
 
 ## Architectural Patterns
 
@@ -57,6 +59,8 @@
 | Class Cache Clear | `composer clear-class-cache` | Clears the dynamic class loader cache (also runs on `post-autoload-dump`) |
 | Release Builder | `composer build` | Invokes `ReleaseBuilder::build()` to regenerate canned classes and docs |
 | Tests (Windows) | `run-tests.bat` | Batch shortcut for running PHPUnit |
+| Translation Export | `composer export-translations` | Generate per-locale per-source JSON export files from `storage.json` + INI translations |
+| Translation Import | `composer import-translations` | Read JSON export files and write/update INI translation files |
 
 ## JavaScript Components
 

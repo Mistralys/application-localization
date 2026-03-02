@@ -73,7 +73,7 @@ class LocalizationWriter
             $lines[] = sprintf(
                 '%s= "%s"',
                 $entry['hash'],
-                str_replace('"', '\"', $entry['text'])
+                $this->escapeIniValue($entry['text'])
             );
         }
         
@@ -82,6 +82,15 @@ class LocalizationWriter
         return implode(PHP_EOL, $lines);
     }
     
+    private function escapeIniValue(string $text) : string
+    {
+        return str_replace(
+            ['\\', '"', "\n", "\r"],
+            ['\\\\', '\\"', '\\n', '\\r'],
+            $text
+        );
+    }
+
     private function renderHead() : string
     {
         $title = strtoupper($this->fileType).' TRANSLATION FILE FOR ' . strtoupper($this->locale->getLabelInvariant());

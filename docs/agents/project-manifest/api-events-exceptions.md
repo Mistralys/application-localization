@@ -87,6 +87,8 @@ public const ERROR_UNKNOWN_EVENT_NAME = 39010;
 public const ERROR_LOCALE_NOT_FOUND = 39011;
 public const ERROR_COUNTRY_NOT_FOUND = 39012;
 public const ERROR_INCORRECTLY_TRANSLATED_STRING = 39013;
+public const ERROR_UNKNOWN_SOURCE_ID = 39014;
+public const ERROR_UNKNOWN_SOURCE_ALIAS = 39015;
 ```
 
 ### Exception Hierarchy
@@ -96,7 +98,8 @@ AppUtils\BaseException
 └── LocalizationException
     ├── CountryException
     │   ├── ERROR_CANNOT_PARSE_CURRENCY_NUMBER (177701)
-    │   └── ERROR_INVALID_BASKET_COUNTRY_SELECTION (177702)
+    │   ├── ERROR_INVALID_BASKET_COUNTRY_SELECTION (177702)
+    │   └── ERROR_NO_REGEX_DEFINED (177703)
     └── EditorException
 ```
 
@@ -108,6 +111,8 @@ AppUtils\BaseException
 | 3331xx | Translator |
 | 392xx | Scanner / StringCollection |
 | 393xx | ClientFilesGenerator |
+| 394xx | TranslationExporter |
+| 395xx | TranslationImporter |
 | 400xx | Editor |
 | 405xx | Parser (BaseLanguage) |
 | 406xx | Parser (LocalizationParser) |
