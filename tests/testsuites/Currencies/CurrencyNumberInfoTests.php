@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Currencies;
+namespace AppLocalize\tests\testsuites\Currencies;
 
 use AppLocalize\Localization\Currencies\CurrencyNumberInfo;
 use PHPUnit\Framework\TestCase;
