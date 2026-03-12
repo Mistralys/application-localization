@@ -1,3 +1,23 @@
+# AppLocalize Changelog
+
+## v2.2.0 - Translation Tools and Hardening (Breaking-XS)
+- Localization: Added `createExporter()` and `createImporter()` facade methods for app-level access to the translation tools.
+- Localization: Added `getClientFilesDiagnostics()` to expose cache key debug information without echo-based logging.
+- Tools: Added `TranslationExporter` and `TranslationImporter` tool classes.
+- Tools: Added `localization-tools-config.php` as default bootstrap for out-of-the-box tools use.
+- Composer: Added `export-translations` and `import-translations` scripts.
+- Editor: Refactored placeholder detection to use `SprintfParser`; added `getPlaceholderNumbers()` and `hasUnnumberedPlaceholders()`.
+- Translator: Fixed INI escape sequences being double-interpreted by switching to `INI_SCANNER_RAW`.
+- Currencies: Fixed `CurrencyNumberInfo::getDecimals()` to preserve leading zeros (e.g. `'05'`).
+- Code: Refactored translation functions from `call_user_func` to direct method calls.
+- Tests: Added test suites for currencies, scanner, client file generator, and import/export tools.
+
+### Breaking Changes
+
+`CurrencyNumberInfo::getDecimals()` now returns `string` instead of `int` to preserve leading zeros
+(e.g. `'05'` for amounts like `1.05`). Update any code that compares or casts the return value as an
+integer. The companion `countDecimals()` method is unaffected.
+
 ## v2.1.2 - Minor improvements 
 - Currencies: Added an interface for country currencies.
 - Currencies: Adjusted return types so country currency methods are visible.
