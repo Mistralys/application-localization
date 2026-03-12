@@ -98,13 +98,4 @@ abstract class BaseLocalizationSource
     }
     
     abstract protected function _scan(SourceScanner $scanner) : void;
-
-    protected function log(string $message) : void
-    {
-        Localization::log(sprintf(
-            'Source [%s] | %s',
-            $this->getID(),
-            $message
-        ));
-    }
 }

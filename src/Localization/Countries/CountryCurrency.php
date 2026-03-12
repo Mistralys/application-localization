@@ -11,7 +11,7 @@ namespace AppLocalize\Localization\Countries;
 use AppLocalize\Localization\Currencies\CountryCurrencyInterface;
 use AppLocalize\Localization\Currencies\CurrencyInterface;
 use AppLocalize\Localization\Currencies\CurrencyNumberInfo;
-use AppLocalize\Localization\LocalizationException;
+use AppLocalize\Localization\Countries\CountryException;
 use function AppUtils\parseVariable;
 
 /**
@@ -90,7 +90,7 @@ class CountryCurrency implements CountryCurrencyInterface
             return true;
         }
 
-        return preg_match($this->getRegex(), (string)$number) !== false;
+        return preg_match($this->getRegex(), (string)$number) === 1;
     }
 
     protected string $regex = '/\A([0-9%1$s]+)\z|([0-9%1$s]+),-\z|([0-9%1$s]+)[%2$s]([0-9]+)\z/s';
@@ -100,17 +100,18 @@ class CountryCurrency implements CountryCurrencyInterface
 
     /**
      * @return string
-     * @throws \AppLocalize\Localization\LocalizationException
+     * @throws CountryException
      */
     protected function getRegex() : string
     {
         if (!isset($this->regex)) {
-            throw new LocalizationException(
+            throw new CountryException(
                 'No regex defined',
                 sprintf(
                     'To use this method, set the regex class property for currency %1$s.',
                     $this->getID()
-                )
+                ),
+                CountryException::ERROR_NO_REGEX_DEFINED
             );
         }
 
@@ -182,16 +183,16 @@ class CountryCurrency implements CountryCurrencyInterface
             $decimals = array_pop($parts);
             $thousands = implode('', $parts);
             if ($decimals === '-') {
-                $decimals = 0;
+                $decimals = '0';
             }
         }
         else
         {
-            $decimals = 0;
+            $decimals = '0';
             $thousands = implode('', $parts);
         }
 
-        return new CurrencyNumberInfo((int)$thousands, (int)$decimals);
+        return new CurrencyNumberInfo((int)$thousands, $decimals);
     }
 
     public function normalizeNumber($number) : string
@@ -233,7 +234,7 @@ class CountryCurrency implements CountryCurrencyInterface
             return $parsed;
         }
 
-        throw new LocalizationException(
+        throw new CountryException(
             'Could not parse number',
             sprintf(
                 'The number [%1$s] did not yield a currency number object.',

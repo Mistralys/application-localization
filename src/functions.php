@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace AppLocalize;
 
+use AppUtils\Interfaces\StringableInterface;
+
 /**
  * Translates the specified string by looking up the
  * translations table. Returns the translated string
@@ -34,11 +36,8 @@ namespace AppLocalize;
  */
 function t(string $text, ...$args) : string
 {
-    return call_user_func(
-        array(Localization::getTranslator(), 'translate'),
-        $text,
-        $args
-    );
+    /** @var array<int, string|int|float|StringableInterface|null> $args */
+    return Localization::getTranslator()->translate($text, $args);
 }
 
 /**
@@ -51,11 +50,8 @@ function t(string $text, ...$args) : string
  */
 function pt(string $text, ...$args) : void
 {
-    echo call_user_func(
-        array(Localization::getTranslator(), 'translate'),
-        $text,
-        $args
-    );
+    /** @var array<int, string|int|float|StringableInterface|null> $args */
+    echo Localization::getTranslator()->translate($text, $args);
 }
 
 /**
@@ -69,11 +65,8 @@ function pt(string $text, ...$args) : void
  */
 function pts(string $text, ...$args) : void
 {
-    echo call_user_func(
-        array(Localization::getTranslator(), 'translate'),
-        $text,
-        $args
-    );
+    /** @var array<int, string|int|float|StringableInterface|null> $args */
+    echo Localization::getTranslator()->translate($text, $args);
     
     echo ' ';
 }
@@ -94,11 +87,8 @@ function tex(string $text, string $context, ...$args) : string
 {
     unset($context); // Only used by the parser.
 
-    return call_user_func(
-        array(Localization::getTranslator(), 'translate'),
-        $text,
-        $args
-    );
+    /** @var array<int, string|int|float|StringableInterface|null> $args */
+    return Localization::getTranslator()->translate($text, $args);
 }
 
 /**
@@ -114,11 +104,8 @@ function ptex(string $text, string $context, ...$args) : void
 {
     unset($context); // Only used by the parser.
 
-    echo call_user_func(
-        array(Localization::getTranslator(), 'translate'),
-        $text,
-        $args
-    );
+    /** @var array<int, string|int|float|StringableInterface|null> $args */
+    echo Localization::getTranslator()->translate($text, $args);
 }
 
 /**
@@ -134,11 +121,8 @@ function ptexs(string $text, string $context, ...$args) : void
 {
     unset($context); // Only used by the parser.
 
-    echo call_user_func(
-        array(Localization::getTranslator(), 'translate'),
-        $text,
-        $args
-    );
+    /** @var array<int, string|int|float|StringableInterface|null> $args */
+    echo Localization::getTranslator()->translate($text, $args);
 
     echo ' ';
 }

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use AppLocalize\Localization;
 use AppLocalize\Localization\Parser\Language\PHPLanguage;
 
-final class ParserPHPTest extends TestCase
+final class PHPParserTests extends TestCase
 {
     /**
      * @var string

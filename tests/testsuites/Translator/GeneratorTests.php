@@ -138,4 +138,92 @@ final class GeneratorTests extends TestCase
 
         $this->assertTrue($generator->areFilesWritten(), 'The locale files should have been rewritten.');
     }
+
+    /**
+     * Setting the client libraries cache key before writing files should
+     * result in a cachekey.txt that contains the full system key (including
+     * the Lib: segment), and the second writeFiles() call must be skipped.
+     */
+    public function test_writeFiles_cacheKeyBeforeConfigure(): void
+    {
+        Localization::addAppLocale('de_DE');
+        Localization::setClientLibrariesCacheKey('v1.0.0');
+
+        $generator = Localization::createGenerator();
+        $generator->writeFiles();
+
+        $this->assertTrue($generator->areFilesWritten(), 'Files must be marked as written after initial write.');
+
+        // Verify the stored key contains the custom Lib: segment.
+        $storedKey = $generator->getCacheKey();
+        $this->assertNotNull($storedKey, 'Cache key file must have been written.');
+        $this->assertStringContainsString('Lib:v1.0.0', (string)$storedKey);
+
+        // Second call must NOT rewrite (check via mtime of the cachekey.txt file).
+        $cacheKeyFile = Localization::getClientLibrariesFolder() . '/cachekey.txt';
+        $mtimeBefore = filemtime($cacheKeyFile);
+
+        usleep(3000);
+
+        $generator->writeFiles();
+
+        $this->assertSame($mtimeBefore, filemtime($cacheKeyFile), 'The cachekey.txt must not be rewritten on a cache-hit.');
+    }
+
+    /**
+     * Adding an app locale and invalidating the cache key causes the next
+     * writeFiles() call to regenerate with an updated Locales: segment in the
+     * system key.
+     *
+     * Note: addAppLocale() alone does NOT invalidate the in-memory system key
+     * (no event is fired). setClientLibrariesCacheKey() must also be called to
+     * flush the cached system key so that the new locale list is picked up.
+     */
+    public function test_writeFiles_localeAddedAfterWrite(): void
+    {
+        Localization::addAppLocale('de_DE');
+
+        $generator = Localization::createGenerator();
+        $generator->writeFiles();
+
+        $this->assertTrue($generator->areFilesWritten(), 'Files must be written after first call.');
+
+        // Adding a locale + explicitly invalidating the key causes the system
+        // key to be recomputed with the new locale list.
+        Localization::addAppLocale('fr_FR');
+        Localization::setClientLibrariesCacheKey('refresh-after-locale-add');
+
+        $this->assertFalse($generator->areFilesWritten(), 'After invalidation, files must be out of date.');
+
+        $generator->writeFiles();
+
+        $this->assertTrue($generator->areFilesWritten(), 'Files must be up to date after regeneration.');
+
+        // The stored key must now include fr_FR in the Locales: segment.
+        $storedKey = (string)$generator->getCacheKey();
+        $this->assertStringContainsString('fr_FR', $storedKey, 'Stored key must include the newly added locale.');
+    }
+
+    /**
+     * After files are written, a freshly constructed generator instance must
+     * read the cachekey.txt file and report areFilesWritten() === true,
+     * demonstrating that the cache key persists across calls / requests.
+     */
+    public function test_writeFiles_cacheKeyFilePersistedAcrossCalls(): void
+    {
+        Localization::addAppLocale('de_DE');
+
+        $generator = Localization::createGenerator();
+        $generator->writeFiles();
+
+        $this->assertTrue($generator->areFilesWritten(), 'Pre-condition: files must be written.');
+
+        // Create a brand-new generator instance that has no in-memory state.
+        $freshGenerator = new \AppLocalize\Localization\Translator\ClientFilesGenerator();
+
+        $this->assertTrue(
+            $freshGenerator->areFilesWritten(),
+            'A fresh generator instance must report files as written by reading cachekey.txt.'
+        );
+    }
 }

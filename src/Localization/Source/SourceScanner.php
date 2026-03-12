@@ -45,8 +45,6 @@ class SourceScanner
      */
     public function parseFile(string $file) : void
     {
-        $this->log(sprintf('Parsing file [%s].', $file));
-
         $language = $this->parser->parseFile($file);
 
         $texts = $language->getTexts();
@@ -96,14 +94,5 @@ class SourceScanner
         }
 
         return $amount;
-    }
-
-    protected function log(string $message) : void
-    {
-        Localization::log(sprintf(
-            'Source [%s] | Scanner | %s',
-            $this->source->getID(),
-            $message
-        ));
     }
 }

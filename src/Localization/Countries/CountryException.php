@@ -20,4 +20,5 @@ class CountryException extends LocalizationException
 {
     public const ERROR_CANNOT_PARSE_CURRENCY_NUMBER = 177701;
     public const ERROR_INVALID_BASKET_COUNTRY_SELECTION = 177702;
+    public const ERROR_NO_REGEX_DEFINED = 177703;
 }
