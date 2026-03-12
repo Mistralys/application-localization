@@ -101,7 +101,7 @@ Do not scan source files when the answer is already in the manifest.
 | **Language / Runtime** | PHP 8.4+, JavaScript (vanilla) |
 | **Architecture** | Static facade (`Localization`), dynamic class loading via `BaseClassLoaderCollection` |
 | **Package Manager** | Composer |
-| **Test Framework** | PHPUnit ≥ 13.0 |
+| **Test Framework** | PHPUnit ≥ 12.0 |
 | **Static Analysis** | PHPStan level 8 (`phpstan.neon` in project root) |
 | **Build Tool** | `composer build` → `ReleaseBuilder::build()` (generates canned classes + docs) |
 | **Key Namespace** | `AppLocalize\` → `src/` |

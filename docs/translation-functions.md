@@ -66,7 +66,7 @@ var amount = 50;
 var text = t('We found %1$s entries.', amount);
 ```
 
-> When using placeholders, always use numbered placeholders like `%1$s` or `%02d`.
+> When using placeholders, always use numbered placeholders like `%1$s` or `%1$02d`.
 > Their order often changes in translated texts, so numbered placeholders are critical
 > for correct translation in all languages.
 
